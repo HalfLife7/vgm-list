@@ -8,8 +8,11 @@ import logger from 'morgan';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 
+import history from 'connect-history-api-fallback';
+
 var app = express();
 
+app.use(history());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({
