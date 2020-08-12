@@ -28,7 +28,7 @@ router.get('/all', function (req, res, next) {
       'Accept': 'application/json',
       'user-key': _config["default"].IGDB_KEY
     },
-    data: "fields *; where id = 1942;"
+    data: 'fields name, cover; search "Final Fantasy"; where version_parent = null; limit 10;'
   }).then(function (response) {
     console.log(response.data);
     res.send(response.data);

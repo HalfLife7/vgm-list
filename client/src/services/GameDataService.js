@@ -2,7 +2,7 @@ import http from "../http-common";
 
 class GameDataService {
   getAll() {
-    return http.get("/games");
+    return http.get("games/all");
   }
 
   get(id) {

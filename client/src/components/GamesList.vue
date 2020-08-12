@@ -1,15 +1,11 @@
 <template>
-  <ul class="list-group">
-    <li
-      class="list-group-item"
-      :class="{ active: index == currentIndex }"
-      v-for="(game, index) in games"
-      :key="index"
-      @click="setActiveGame(game, index)"
-    >
-      {{ game.title }}
-    </li>
-  </ul>
+  <div>
+    <ul>
+      <li v-for="(game, index) in games" :key="index">
+        {{ game.name }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -19,25 +15,22 @@ export default {
   data() {
     return {
       games: [],
-      currentGame: null,
-      currentIndex: -1,
-      title: ""
     };
   },
   methods: {
     retrieveGames() {
       GameDataService.getAll()
-        .then(response => {
+        .then((response) => {
           this.games = response.data;
           console.log(response.data);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
         });
-    }
+    },
   },
   mounted() {
-    this.retrieveGames;
-  }
+    this.retrieveGames();
+  },
 };
 </script>

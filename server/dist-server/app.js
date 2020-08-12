@@ -10,11 +10,15 @@ var _cookieParser = _interopRequireDefault(require("cookie-parser"));
 
 var _morgan = _interopRequireDefault(require("morgan"));
 
+var _cors = _interopRequireDefault(require("cors"));
+
 var _index = _interopRequireDefault(require("./routes/index"));
 
 var _games = _interopRequireDefault(require("./routes/games"));
 
 // initial setup - https://www.freecodecamp.org/news/how-to-enable-es6-and-beyond-syntax-with-node-and-express-68d3e11fe1ab/
+// include @babel/plugin-transform-runtime > fix ReferenceError regeneratorRuntime is not defined > https://github.com/babel/babel/issues/9849
+// install cors > fix vue axios request error (Reason: CORS header ‘Access-Control-Allow-Origin’ missing)
 //import history from 'connect-history-api-fallback';
 var app = (0, _express["default"])();
 app.use((0, _morgan["default"])('dev'));
@@ -24,6 +28,9 @@ app.use(_express["default"].urlencoded({
 }));
 app.use((0, _cookieParser["default"])());
 app.use(_express["default"]["static"](_path["default"].join(__dirname, '../public')));
+app.use((0, _cors["default"])({
+  origin: 'http://localhost:8080'
+}));
 app.use('/', _index["default"]);
 app.use('/games', _games["default"]);
 module.exports = app;
