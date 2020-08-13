@@ -7,7 +7,6 @@ var router = express.Router();
 // import igdb from 'igdb-api-node';
 // const client = igdb(config.IGDB_KEY);
 
-/* GET home page. */
 router.get('/all', function (req, res, next) {
   axios({
       url: "https://api-v3.igdb.com/games",
@@ -16,10 +15,19 @@ router.get('/all', function (req, res, next) {
         'Accept': 'application/json',
         'user-key': config.IGDB_KEY
       },
-      data: 'fields name, cover; search "Final Fantasy"; where version_parent = null; limit 10;'
+      data: 'search "Final Fantasy"; fields name, summary, cover.url;  where version_parent = null; limit 10;'
     })
     .then(response => {
       console.log(response.data);
+      response.data.map(game => {
+        let url = game.cover.url;
+        game.cover.url = url.replace("t_thumb", "t_cover_big");
+
+        const truncate = input =>
+          input.length > 250 ? `${input.substring(0, 250)}...` : input;
+
+        game.summary = truncate(game.summary);
+      });
       res.send(response.data);
     })
     .catch(err => {
@@ -27,23 +35,34 @@ router.get('/all', function (req, res, next) {
     });
 });
 
-router.get('/cover', function (req, res, next) {
+router.get('/search/:searchParams', function (req, res, next) {
+  const searchParams = req.params.searchParams;
   axios({
-      url: "https://api-v3.igdb.com/covers",
+      url: "https://api-v3.igdb.com/games",
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'user-key': config.IGDB_KEY
       },
-      data: "fields alpha_channel,animated,checksum,game,height,image_id,url,width; where id = 89386;"
+      data: 'search "' + searchParams + '"; fields name, summary, cover.url;  where version_parent = null; limit 10;'
     })
     .then(response => {
       console.log(response.data);
+      response.data.map(game => {
+        let url = game.cover.url;
+        game.cover.url = url.replace("t_thumb", "t_cover_big");
+
+        const truncate = input =>
+          input.length > 250 ? `${input.substring(0, 250)}...` : input;
+
+        game.summary = truncate(game.summary);
+      });
       res.send(response.data);
     })
     .catch(err => {
       console.error(err);
     });
-})
+});
+
 
 export default router;

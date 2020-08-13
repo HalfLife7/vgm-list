@@ -1,6 +1,5 @@
 <template>
   <div class="GamesList">
-    <h1>This is the games page</h1>
     <GamesList />
   </div>
 </template>

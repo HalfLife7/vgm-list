@@ -8,6 +8,10 @@ class GameDataService {
   get(id) {
     return http.get(`games/${id}`);
   }
+
+  search(searchParams) {
+    return http.get(`games/search/${searchParams}`);
+  }
 }
 
 export default new GameDataService();
