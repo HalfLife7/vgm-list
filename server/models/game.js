@@ -13,8 +13,9 @@ class Game extends Model {
 
     static get relationMappings() {
         const Artwork = require('./artwork');
+        const AlternativeNames = require('./alternativeNames');
         const Cover = require('./cover');
-        const GameVideo = require('./gameVideo');
+        const Video = require('./video');
         const Screenshot = require('./screenshot');
         const Website = require('./website');
         return {
@@ -26,6 +27,14 @@ class Game extends Model {
                     to: 'artworks.game_id'
                 }
             },
+            alternativeNames: {
+                relation: Model.HasManyRelation,
+                modelClass: AlternativeNames,
+                join: {
+                    from: 'games.id',
+                    to: 'alternative_names.game_id'
+                }
+            },
             covers: {
                 relation: Model.HasManyRelation,
                 modelClass: Cover,
@@ -34,20 +43,20 @@ class Game extends Model {
                     to: 'covers.game_id'
                 }
             },
-            game_videos: {
-                relation: Model.HasManyRelation,
-                modelClass: GameVideo,
-                join: {
-                    from: 'games.id',
-                    to: 'game_videos.game_id'
-                }
-            },
             screenshots: {
                 relation: Model.HasManyRelation,
                 modelClass: Screenshot,
                 join: {
                     from: 'games.id',
                     to: 'screenshots.game_id'
+                }
+            },
+            videos: {
+                relation: Model.HasManyRelation,
+                modelClass: Video,
+                join: {
+                    from: 'games.id',
+                    to: 'videos.game_id'
                 }
             },
             websites: {

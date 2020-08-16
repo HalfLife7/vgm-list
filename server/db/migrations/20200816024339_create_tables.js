@@ -12,6 +12,13 @@ exports.up = async (knex) => {
         t.string('slug')
         t.string('summary')
     });
+    const createAlternativeNamesTable = await knex.schema.createTable('alternative_names', t => {
+        t.integer('id').unsigned().primary()
+        t.uuid('checksum')
+        t.text('comment')
+        t.integer('game_id').unsigned().references('id').inTable('games').notNull().onDelete('cascade')
+        t.text('name')
+    });
     const createArtworksTable = await knex.schema.createTable('artworks', t => {
         t.integer('id').unsigned().primary()
         t.boolean('alpha_channel')
@@ -34,13 +41,6 @@ exports.up = async (knex) => {
         t.text('url')
         t.integer('width')
     });
-    const createGameVideosTable = await knex.schema.createTable('game_videos', t => {
-        t.integer('id').unsigned().primary()
-        t.uuid('checksum')
-        t.integer('game_id').unsigned().references('id').inTable('games').notNull().onDelete('cascade')
-        t.text('name')
-        t.text('video_id')
-    });
     const createScreenshotsTable = await knex.schema.createTable('screenshots', t => {
         t.integer('id').unsigned().primary()
         t.boolean('alpha_channel')
@@ -51,6 +51,13 @@ exports.up = async (knex) => {
         t.text('image_id')
         t.text('url')
         t.integer('width')
+    });
+    const createVideosTable = await knex.schema.createTable('videos', t => {
+        t.integer('id').unsigned().primary()
+        t.uuid('checksum')
+        t.integer('game_id').unsigned().references('id').inTable('games').notNull().onDelete('cascade')
+        t.text('name')
+        t.text('video_id')
     });
     const createWebsitesTable = await knex.schema.createTable('websites', t => {
         t.integer('id').unsigned().primary()
@@ -63,17 +70,18 @@ exports.up = async (knex) => {
         t.boolean('trusted')
         t.text('url')
     });
-    return ([createGamesTable, createArtworksTable, createCoversTable, createGameVideosTable, createScreenshotsTable, createWebsitesTable]);
+    return ([createGamesTable, createArtworksTable, createCoversTable, createVideosTable, createScreenshotsTable, createWebsitesTable]);
 };
 
 exports.down = async (knex) => {
     const dropWebsitesTable = await knex.schema.dropTable('websites');
+    const dropVideosTable = await knex.schema.dropTable('videos');
     const dropScreenshotsTable = await knex.schema.dropTable('screenshots');
-    const dropGameVideosTable = await knex.schema.dropTable('game_videos');
     const dropCoversTable = await knex.schema.dropTable('covers');
     const dropArtworksTable = await knex.schema.dropTable('artworks');
+    const dropAlternativeNamesTable = await knex.schema.dropTable('alternative_names');
     const dropGamesTable = await knex.schema.dropTable('games');
     const dropEnumWebsiteCategories = await knex.schema.raw('DROP TYPE website_categories');
     const dropEnumGameCategories = await knex.schema.raw('DROP TYPE game_categories');
-    return ([dropWebsitesTable, dropScreenshotsTable, dropGameVideosTable, dropCoversTable, dropArtworksTable, dropGamesTable, dropEnumWebsiteCategories, dropEnumGameCategories])
+    return ([dropWebsitesTable, dropVideosTable, dropScreenshotsTable, dropCoversTable, dropArtworksTable, dropAlternativeNamesTable, dropGamesTable, dropEnumWebsiteCategories, dropEnumGameCategories])
 };
