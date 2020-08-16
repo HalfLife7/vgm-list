@@ -1,6 +1,6 @@
 exports.up = async (knex) => {
     const createGamesTable = await knex.schema.createTable('games', t => {
-        t.integer('id').primary()
+        t.integer('id').unsigned().primary()
         t.integer('aggregated_rating_count')
         t.float('aggregated_rating')
         t.enu('category', ['main_game', 'dlc_addon', 'expansion', 'bundle', 'standalone_expansion', 'mod', 'episode'], {
@@ -13,7 +13,7 @@ exports.up = async (knex) => {
         t.string('summary')
     });
     const createArtworksTable = await knex.schema.createTable('artworks', t => {
-        t.integer('id').primary()
+        t.integer('id').unsigned().primary()
         t.boolean('alpha_channel')
         t.boolean('animated')
         t.uuid('checksum')
@@ -24,7 +24,7 @@ exports.up = async (knex) => {
         t.integer('width')
     });
     const createCoversTable = await knex.schema.createTable('covers', t => {
-        t.integer('id').primary()
+        t.integer('id').unsigned().primary()
         t.boolean('alpha_channel')
         t.boolean('animated')
         t.uuid('checksum')
@@ -35,14 +35,14 @@ exports.up = async (knex) => {
         t.integer('width')
     });
     const createGameVideosTable = await knex.schema.createTable('game_videos', t => {
-        t.integer('id').primary()
+        t.integer('id').unsigned().primary()
         t.uuid('checksum')
         t.integer('game_id').unsigned().references('id').inTable('games').notNull().onDelete('cascade')
         t.text('name')
         t.text('video_id')
     });
     const createScreenshotsTable = await knex.schema.createTable('screenshots', t => {
-        t.integer('id').primary()
+        t.integer('id').unsigned().primary()
         t.boolean('alpha_channel')
         t.boolean('animated')
         t.uuid('checksum')
@@ -53,7 +53,7 @@ exports.up = async (knex) => {
         t.integer('width')
     });
     const createWebsitesTable = await knex.schema.createTable('websites', t => {
-        t.integer('id').primary()
+        t.integer('id').unsigned().primary()
         t.enu('category', ['official', 'wikia', 'wikipedia', 'facebook', 'twitter', 'twitch', 'instagram', 'youtube', 'iphone', 'ipad', 'android', 'steam', 'reddit', 'itch', 'epicgames', 'gog'], {
             useNative: true,
             enumName: 'website_categories'
