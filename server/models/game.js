@@ -28,7 +28,7 @@ class Game extends Model {
             },
             covers: {
                 relation: Model.HasManyRelation,
-                modelClass: Artwork,
+                modelClass: Cover,
                 join: {
                     from: 'games.id',
                     to: 'covers.game_id'
@@ -36,7 +36,7 @@ class Game extends Model {
             },
             game_videos: {
                 relation: Model.HasManyRelation,
-                modelClass: Artwork,
+                modelClass: GameVideo,
                 join: {
                     from: 'games.id',
                     to: 'game_videos.game_id'
@@ -44,7 +44,7 @@ class Game extends Model {
             },
             screenshots: {
                 relation: Model.HasManyRelation,
-                modelClass: Artwork,
+                modelClass: Screenshot,
                 join: {
                     from: 'games.id',
                     to: 'screenshots.game_id'
@@ -52,7 +52,7 @@ class Game extends Model {
             },
             websites: {
                 relation: Model.HasManyRelation,
-                modelClass: Artwork,
+                modelClass: Website,
                 join: {
                     from: 'games.id',
                     to: 'websites.game_id'
