@@ -46,12 +46,86 @@ exports.seed = function (knex) {
           "checksum": "13c18354-699e-4d58-9554-ef3520d9954e"
         },
         {
-          id: 2,
-          colName: 'rowValue2'
+          "id": 1552,
+          "game": 386,
+          "name": "Final Fantasy 14",
+          "checksum": "c320a7c9-e79a-89b9-2512-fd5d3ca5ac2d"
         },
         {
-          id: 3,
-          colName: 'rowValue3'
+          "id": 4071,
+          "comment": "Japanese title",
+          "game": 386,
+          "name": "ファイナルファンタジーXIV",
+          "checksum": "a2a03551-02b1-e17b-900c-3585a351cc6d"
+        },
+        {
+          "id": 14465,
+          "comment": "Other",
+          "game": 386,
+          "name": "FFXIV",
+          "checksum": "726685bb-6d9f-0cfd-571f-3927dc0a51af"
+        },
+        {
+          "id": 14466,
+          "comment": "Other",
+          "game": 386,
+          "name": "FF14",
+          "checksum": "065380a0-83b1-4281-8fd1-03e786c5a8a8"
+        },
+        {
+          "id": 14467,
+          "comment": "Other",
+          "game": 386,
+          "name": "Final Fantasy XIV Online",
+          "checksum": "f316e6f1-07ff-9de2-b4c0-f1471d97627d"
+        },
+        {
+          "id": 8099,
+          "comment": "Test Client",
+          "game": 2963,
+          "name": "Dota 2 Test",
+          "checksum": "f0803a4e-beef-ef24-5279-ab8da00643a2"
+        },
+        {
+          "id": 13819,
+          "comment": "Other",
+          "game": 2963,
+          "name": "Defence of the Ancients 2",
+          "checksum": "f8fe074a-2513-2754-d7bf-518ddfcd772b"
+        },
+        {
+          "id": 30516,
+          "comment": "Korean title",
+          "game": 2963,
+          "name": "도타 2",
+          "checksum": "f03e9420-6830-627e-1c1a-924d73816c3c"
+        },
+        {
+          "id": 30518,
+          "comment": "Chinese title",
+          "game": 2963,
+          "name": "刀塔2",
+          "checksum": "2fd0b65d-175d-1827-065d-83c104118f83"
+        },
+        {
+          "id": 32016,
+          "comment": "Japanese title",
+          "game": 2963,
+          "name": "ドータ・ツー",
+          "checksum": "cef129f2-15e3-7f60-d1e1-866a583fd30f"
+        },
+        {
+          "id": 37575,
+          "game": 2963,
+          "name": "Defense of the Ancients 2",
+          "checksum": "ffeead55-8cbc-79d4-9629-1e6d7ddfe4ed"
+        },
+        {
+          "id": 37583,
+          "comment": "Russian title",
+          "game": 2963,
+          "name": "Защита Древних 2",
+          "checksum": "3b1628c2-5170-e26b-5bab-9e946f7d9b99"
         }
       ]);
     });

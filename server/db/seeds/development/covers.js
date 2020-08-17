@@ -15,12 +15,26 @@ exports.seed = function (knex) {
           "checksum": "79bd83c0-3d13-048e-be39-6ede3997f078"
         },
         {
-          id: 2,
-          colName: 'rowValue2'
+          "id": 85225,
+          "alpha_channel": false,
+          "animated": false,
+          "game": 386,
+          "height": 800,
+          "image_id": "co1trd",
+          "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1trd.jpg",
+          "width": 600,
+          "checksum": "f5d87456-0339-ce4a-34c0-439b7005e137"
         },
         {
-          id: 3,
-          colName: 'rowValue3'
+          "id": 90923,
+          "alpha_channel": false,
+          "animated": false,
+          "game": 2963,
+          "height": 1600,
+          "image_id": "co1y5n",
+          "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1y5n.jpg",
+          "width": 1200,
+          "checksum": "eb2ae493-56ff-2c88-3e47-1f7ec34d835f"
         }
       ]);
     });
