@@ -46,12 +46,12 @@
       >
         <img
           class="w-full"
-          v-bind:src="game.cover.url"
+          v-bind:src="game.covers[0].url"
           alt="Sunset in the mountains"
         />
         <div class="px-6 py-4">
-          <div class="font-bold text-xl mb-2">{{ game.name }}</div>
-          <p class="text-gray-700 text-base">
+          <div class="font-bold text-xl mb-2 text-center">{{ game.name }}</div>
+          <p class="text-gray-700 text-base text-justify">
             {{ game.summary }}
           </p>
         </div>

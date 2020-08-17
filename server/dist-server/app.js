@@ -19,6 +19,7 @@ var _games = _interopRequireDefault(require("./routes/games"));
 // initial setup - https://www.freecodecamp.org/news/how-to-enable-es6-and-beyond-syntax-with-node-and-express-68d3e11fe1ab/
 // include @babel/plugin-transform-runtime > fix ReferenceError regeneratorRuntime is not defined > https://github.com/babel/babel/issues/9849
 // install cors > fix vue axios request error (Reason: CORS header ‘Access-Control-Allow-Origin’ missing)
+// add quotations around 'NODE_ENV=development' to fix undefined error - https://stackoverflow.com/questions/11104028/process-env-node-env-is-undefined
 //import history from 'connect-history-api-fallback';
 var app = (0, _express["default"])();
 app.use((0, _morgan["default"])('dev'));

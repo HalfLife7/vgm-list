@@ -23,8 +23,7 @@ module.exports = {
     },
     seeds: {
       directory: __dirname + '/db/seeds/development'
-    },
-    client_encoding: 'utf8'
+    }
   },
   production: {
     client: 'pg',
@@ -38,7 +37,6 @@ module.exports = {
     },
     seeds: {
       directory: __dirname + '/db/seeds/production'
-    },
-    client_encoding: 'utf8'
+    }
   }
 }
