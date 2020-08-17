@@ -118,7 +118,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1468,
-          "game": 2963,
+          "game_id": 2963,
           "height": 750,
           "image_id": "q6dxlfgq7e01ktv2zejz",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/q6dxlfgq7e01ktv2zejz.jpg",
@@ -127,7 +127,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1469,
-          "game": 2963,
+          "game_id": 2963,
           "height": 850,
           "image_id": "jkn8kluhsmxnnauyjvna",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/jkn8kluhsmxnnauyjvna.jpg",
@@ -136,7 +136,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1470,
-          "game": 2963,
+          "game_id": 2963,
           "height": 710,
           "image_id": "u8iuxjya1eikvd6oeluy",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/u8iuxjya1eikvd6oeluy.jpg",
@@ -145,7 +145,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1471,
-          "game": 2963,
+          "game_id": 2963,
           "height": 710,
           "image_id": "djbnijqxw24h2iip4ejr",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/djbnijqxw24h2iip4ejr.jpg",
@@ -154,7 +154,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1472,
-          "game": 2963,
+          "game_id": 2963,
           "height": 710,
           "image_id": "oqcplb5mghu31srquwv4",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/oqcplb5mghu31srquwv4.jpg",
@@ -163,7 +163,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1473,
-          "game": 2963,
+          "game_id": 2963,
           "height": 650,
           "image_id": "pk7xsuysk3ijkuavfyr5",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/pk7xsuysk3ijkuavfyr5.jpg",
@@ -172,7 +172,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1475,
-          "game": 2963,
+          "game_id": 2963,
           "height": 710,
           "image_id": "zyihbvbrmw0vrguwm2kv",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/zyihbvbrmw0vrguwm2kv.jpg",
@@ -181,7 +181,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1476,
-          "game": 2963,
+          "game_id": 2963,
           "height": 710,
           "image_id": "a1yfxsbvlvr6ytfcv5pm",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/a1yfxsbvlvr6ytfcv5pm.jpg",
@@ -190,7 +190,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1477,
-          "game": 2963,
+          "game_id": 2963,
           "height": 710,
           "image_id": "oqsdkzo10pkixwe48omt",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/oqsdkzo10pkixwe48omt.jpg",
@@ -199,7 +199,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1478,
-          "game": 2963,
+          "game_id": 2963,
           "height": 1000,
           "image_id": "cjnk8hraz8zbaxpzshxd",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/cjnk8hraz8zbaxpzshxd.jpg",
@@ -208,7 +208,7 @@ exports.seed = function (knex) {
         },
         {
           "id": 1479,
-          "game": 2963,
+          "game_id": 2963,
           "height": 710,
           "image_id": "qcu2ys1jqyfcfoj9bxeo",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/qcu2ys1jqyfcfoj9bxeo.jpg",
@@ -219,7 +219,7 @@ exports.seed = function (knex) {
           "id": 5803,
           "alpha_channel": false,
           "animated": false,
-          "game": 2963,
+          "game_id": 2963,
           "height": 881,
           "image_id": "ar4h7",
           "url": "//images.igdb.com/igdb/image/upload/t_thumb/ar4h7.jpg",

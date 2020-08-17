@@ -70,7 +70,10 @@ exports.up = async (knex) => {
         t.boolean('trusted')
         t.text('url')
     });
-    return ([createGamesTable, createArtworksTable, createCoversTable, createVideosTable, createScreenshotsTable, createWebsitesTable]);
+    // set character_encoding to utf8 since Japanese characters stored in DB lead to the following error:
+    // character with byte sequence 0xe3 0x83 0x87 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+    const setClientEncoding = await knex.schema.raw(`UPDATE pg_database set encoding = pg_char_to_encoding('UTF8') where datname = 'vgm_list'`);
+    return ([createGamesTable, createArtworksTable, createCoversTable, createVideosTable, createScreenshotsTable, createWebsitesTable, setClientEncoding]);
 };
 
 exports.down = async (knex) => {
