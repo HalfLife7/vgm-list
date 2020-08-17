@@ -3,14 +3,18 @@ exports.up = async (knex) => {
         t.integer('id').unsigned().primary()
         t.integer('aggregated_rating_count')
         t.float('aggregated_rating')
-        t.enu('category', ['main_game', 'dlc_addon', 'expansion', 'bundle', 'standalone_expansion', 'mod', 'episode'], {
+        // t.enu('category', ['main_game', 'dlc_addon', 'expansion', 'bundle', 'standalone_expansion', 'mod', 'episode'], {
+        //     useNative: true,
+        //     enumName: 'game_categories'
+        // })
+        t.enu('category', ['0', '2', '3', '4', '5', '6', '7'], {
             useNative: true,
             enumName: 'game_categories'
         })
         t.integer('first_release_date')
-        t.string('name')
-        t.string('slug')
-        t.string('summary')
+        t.text('name')
+        t.text('slug')
+        t.text('summary')
     });
     const createAlternativeNamesTable = await knex.schema.createTable('alternative_names', t => {
         t.integer('id').unsigned().primary()
@@ -61,7 +65,11 @@ exports.up = async (knex) => {
     });
     const createWebsitesTable = await knex.schema.createTable('websites', t => {
         t.integer('id').unsigned().primary()
-        t.enu('category', ['official', 'wikia', 'wikipedia', 'facebook', 'twitter', 'twitch', 'instagram', 'youtube', 'iphone', 'ipad', 'android', 'steam', 'reddit', 'itch', 'epicgames', 'gog'], {
+        // t.enu('category', ['official', 'wikia', 'wikipedia', 'facebook', 'twitter', 'twitch', 'instagram', 'youtube', 'iphone', 'ipad', 'android', 'steam', 'reddit', 'itch', 'epicgames', 'gog'], {
+        //     useNative: true,
+        //     enumName: 'website_categories'
+        // })
+        t.enu('category', ['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'], {
             useNative: true,
             enumName: 'website_categories'
         })

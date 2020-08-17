@@ -34,5 +34,5 @@ exports.seed = function (knex) {
           "summary": "Dota 2 is a multiplayer online battle arena video game and the stand-alone sequel to the Defense of the Ancients (DotA) mod. With regular updates that ensure a constant evolution of gameplay, features, and heroes, Dota 2 has taken on a life of its own.",
         }
       ]);
-    });
+    })
 };
