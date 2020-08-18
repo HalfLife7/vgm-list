@@ -1,9 +1,9 @@
 exports.seed = async function (knex) {
   try {
     // Deletes ALL existing entries
-    await knex('websites').del()
+    await knex('game_websites').del()
     // Inserts seed entries
-    await knex('websites').insert([{
+    await knex('game_websites').insert([{
         "id": 17385,
         "category": 13,
         "game_id": 11800,

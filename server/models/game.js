@@ -12,27 +12,27 @@ class Game extends Model {
     }
 
     static get relationMappings() {
-        const Artwork = require('./artwork');
-        const AlternativeNames = require('./alternativeNames');
-        const Cover = require('./cover');
-        const Video = require('./video');
-        const Screenshot = require('./screenshot');
-        const Website = require('./website');
+        const Artwork = require('./gameArtwork');
+        const AlternativeName = require('./gameAlternativeName');
+        const Cover = require('./gameCover');
+        const Video = require('./gameVideo');
+        const Screenshot = require('./gameScreenshot');
+        const Website = require('./gameWebsite');
         return {
             artworks: {
                 relation: Model.HasManyRelation,
                 modelClass: Artwork,
                 join: {
                     from: 'games.id',
-                    to: 'artworks.game_id'
+                    to: 'game_artworks.game_id'
                 }
             },
             alternativeNames: {
                 relation: Model.HasManyRelation,
-                modelClass: AlternativeNames,
+                modelClass: AlternativeName,
                 join: {
                     from: 'games.id',
-                    to: 'alternative_names.game_id'
+                    to: 'game_alternative_names.game_id'
                 }
             },
             covers: {
@@ -40,7 +40,7 @@ class Game extends Model {
                 modelClass: Cover,
                 join: {
                     from: 'games.id',
-                    to: 'covers.game_id'
+                    to: 'game_covers.game_id'
                 }
             },
             screenshots: {
@@ -48,7 +48,7 @@ class Game extends Model {
                 modelClass: Screenshot,
                 join: {
                     from: 'games.id',
-                    to: 'screenshots.game_id'
+                    to: 'game_screenshots.game_id'
                 }
             },
             videos: {
@@ -56,7 +56,7 @@ class Game extends Model {
                 modelClass: Video,
                 join: {
                     from: 'games.id',
-                    to: 'videos.game_id'
+                    to: 'game_videos.game_id'
                 }
             },
             websites: {
@@ -64,7 +64,7 @@ class Game extends Model {
                 modelClass: Website,
                 join: {
                     from: 'games.id',
-                    to: 'websites.game_id'
+                    to: 'game_websites.game_id'
                 }
             }
         }

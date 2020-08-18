@@ -5,9 +5,9 @@ const knex = require('../db/knex');
 
 Model.knex(knex);
 
-class AlternativeNames extends Model {
+class Video extends Model {
     static get tableName() {
-        return 'alternative_names';
+        return 'game_videos';
     }
 
     static get relationMappings() {
@@ -17,7 +17,7 @@ class AlternativeNames extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Game,
                 join: {
-                    from: 'alternative_names.game_id',
+                    from: 'game_videos.game_id',
                     to: 'games.id'
                 }
             }
@@ -25,4 +25,4 @@ class AlternativeNames extends Model {
     }
 }
 
-module.exports = AlternativeNames;
+module.exports = Video;

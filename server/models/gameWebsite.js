@@ -7,7 +7,7 @@ Model.knex(knex);
 
 class Website extends Model {
     static get tableName() {
-        return 'websites';
+        return 'game_websites';
     }
 
     static get relationMappings() {
@@ -17,7 +17,7 @@ class Website extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Game,
                 join: {
-                    from: 'websites.game_id',
+                    from: 'game_websites.game_id',
                     to: 'games.id'
                 }
             }

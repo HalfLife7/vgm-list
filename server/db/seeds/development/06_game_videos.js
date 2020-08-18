@@ -1,9 +1,9 @@
 exports.seed = async function (knex) {
   try {
     // Deletes ALL existing entries
-    await knex('videos').del()
+    await knex('game_videos').del()
     // Inserts seed entries
-    await knex('videos').insert([{
+    await knex('game_videos').insert([{
         "id": 9564,
         "game_id": 11800,
         "name": "Early Access Announcement Trailer",

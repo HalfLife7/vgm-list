@@ -17,14 +17,14 @@ exports.up = async (knex) => {
             t.text('slug')
             t.text('summary')
         });
-        const createAlternativeNamesTable = await knex.schema.createTable('alternative_names', t => {
+        const createGameAlternativeNamesTable = await knex.schema.createTable('game_alternative_names', t => {
             t.integer('id').unsigned().primary()
             t.uuid('checksum')
             t.text('comment')
             t.integer('game_id').unsigned().references('id').inTable('games').notNull().onDelete('cascade')
             t.text('name')
         });
-        const createArtworksTable = await knex.schema.createTable('artworks', t => {
+        const createGameArtworksTable = await knex.schema.createTable('game_artworks', t => {
             t.integer('id').unsigned().primary()
             t.boolean('alpha_channel')
             t.boolean('animated')
@@ -35,7 +35,7 @@ exports.up = async (knex) => {
             t.text('url')
             t.integer('width')
         });
-        const createCoversTable = await knex.schema.createTable('covers', t => {
+        const createGameCoversTable = await knex.schema.createTable('game_covers', t => {
             t.integer('id').unsigned().primary()
             t.boolean('alpha_channel')
             t.boolean('animated')
@@ -46,7 +46,7 @@ exports.up = async (knex) => {
             t.text('url')
             t.integer('width')
         });
-        const createScreenshotsTable = await knex.schema.createTable('screenshots', t => {
+        const createGameScreenshotsTable = await knex.schema.createTable('game_screenshots', t => {
             t.integer('id').unsigned().primary()
             t.boolean('alpha_channel')
             t.boolean('animated')
@@ -57,14 +57,14 @@ exports.up = async (knex) => {
             t.text('url')
             t.integer('width')
         });
-        const createVideosTable = await knex.schema.createTable('videos', t => {
+        const createGameVideosTable = await knex.schema.createTable('game_videos', t => {
             t.integer('id').unsigned().primary()
             t.uuid('checksum')
             t.integer('game_id').unsigned().references('id').inTable('games').notNull().onDelete('cascade')
             t.text('name')
             t.text('video_id')
         });
-        const createWebsitesTable = await knex.schema.createTable('websites', t => {
+        const createGameWebsitesTable = await knex.schema.createTable('game_websites', t => {
             t.integer('id').unsigned().primary()
             // t.enu('category', ['official', 'wikia', 'wikipedia', 'facebook', 'twitter', 'twitch', 'instagram', 'youtube', 'iphone', 'ipad', 'android', 'steam', 'reddit', 'itch', 'epicgames', 'gog'], {
             //     useNative: true,
@@ -79,8 +79,51 @@ exports.up = async (knex) => {
             t.boolean('trusted')
             t.text('url')
         });
+        const createAlbumsTable = await knex.schema.createTable('albums', t => {
+            t.integer('id').unsigned().primary()
+            t.integer('game_id').unsigned().references('id').inTable('games').notNull().onDelete('cascade')
+            t.text('category')
+            t.text('classification')
+            t.text('name')
+            t.text('game_name') // products field in album json
+            t.date('release_date')
+        });
+        const createAlbumArtistsTable = await knex.schema.createTable('album_artists', t => {
+            t.integer('id').unsigned().primary()
+            t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
+            t.text('name')
+            t.text('type') // arrangers, composers, lyricists, performers
+        });
+        const createAlbumCoversTable = await knex.schema.createTable('album_covers', t => {
+            t.integer('id').unsigned().primary()
+            t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
+            t.text('full')
+            t.text('medium')
+            t.text('name')
+            t.text('thumb')
+        });
+        const createAlbumDiscsTable = await knex.schema.createTable('album_discs', t => {
+            t.increments('id')
+            t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
+            t.text('length')
+            t.text('name')
+        });
+        const createDiscTracksTable = await knex.schema.createTable('disc_tracks', t => {
+            t.increments('id')
+            t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
+            t.text('length')
+            t.text('name')
+            t.integer('number')
+        });
+        const createAlbumStoresTable = await knex.schema.createTable('album_stores', t => {
+            t.increments('id')
+            t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
+            t.text('link')
+            t.text('name')
+        });
         // set character_encoding to utf8 since Japanese characters stored in DB lead to the following error:
         // character with byte sequence 0xe3 0x83 0x87 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+        // https://stackoverflow.com/questions/380924/how-can-i-change-database-encoding-for-a-postgresql-database-using-sql-or-phppga
         const setClientEncoding = await knex.schema.raw(`UPDATE pg_database set encoding = pg_char_to_encoding('UTF8') where datname = 'vgm_list'`);
     } catch (err) {
         console.error(err.name);
@@ -90,12 +133,18 @@ exports.up = async (knex) => {
 
 exports.down = async (knex) => {
     try {
-        const dropWebsitesTable = await knex.schema.dropTable('websites');
-        const dropVideosTable = await knex.schema.dropTable('videos');
-        const dropScreenshotsTable = await knex.schema.dropTable('screenshots');
-        const dropCoversTable = await knex.schema.dropTable('covers');
-        const dropArtworksTable = await knex.schema.dropTable('artworks');
-        const dropAlternativeNamesTable = await knex.schema.dropTable('alternative_names');
+        const dropAlbumStoresTable = await knex.schema.dropTable('album_stores');
+        const dropDiscTracksTable = await knex.schema.dropTable('disc_tracks');
+        const dropAlbumDiscsTable = await knex.schema.dropTable('album_discs');
+        const dropAlbumCoversTable = await knex.schema.dropTable('album_covers');
+        const dropAlbumArtistsTable = await knex.schema.dropTable('album_artists');
+        const dropAlbumsTable = await knex.schema.dropTable('albums');
+        const dropGameWebsitesTable = await knex.schema.dropTable('game_websites');
+        const dropGameVideosTable = await knex.schema.dropTable('game_videos');
+        const dropGameScreenshotsTable = await knex.schema.dropTable('game_screenshots');
+        const dropGameCoversTable = await knex.schema.dropTable('game_covers');
+        const dropGameArtworksTable = await knex.schema.dropTable('game_artworks');
+        const dropGameAlternativeNamesTable = await knex.schema.dropTable('game_alternative_names');
         const dropGamesTable = await knex.schema.dropTable('games');
         const dropEnumWebsiteCategories = await knex.schema.raw('DROP TYPE website_categories');
         const dropEnumGameCategories = await knex.schema.raw('DROP TYPE game_categories');
