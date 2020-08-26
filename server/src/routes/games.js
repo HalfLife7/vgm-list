@@ -42,6 +42,7 @@ router.get('/all', function (req, res, next) {
     .eager('covers')
     .then(games => {
       games.map(game => {
+        // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
         let url = game.covers[0].url;
         game.covers[0].url = url.replace("t_thumb", "t_cover_big");
 

@@ -46,6 +46,7 @@ var Game = require('../../models/game'); // remove for now, cannot get header to
 router.get('/all', function (req, res, next) {
   Game.query().eager('covers').then(function (games) {
     games.map(function (game) {
+      // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
       var url = game.covers[0].url;
       game.covers[0].url = url.replace("t_thumb", "t_cover_big");
 

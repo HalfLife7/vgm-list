@@ -85,14 +85,22 @@ exports.up = async (knex) => {
             t.text('category')
             t.text('classification')
             t.text('name')
+            t.text('notes')
             t.text('game_name') // products field in album json
             t.date('release_date')
         });
-        const createAlbumArtistsTable = await knex.schema.createTable('album_artists', t => {
+        const createArtistsTable = await knex.schema.createTable('artists', t => {
             t.integer('id').unsigned().primary()
-            t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
             t.text('name')
-            t.text('type') // arrangers, composers, lyricists, performers
+        });
+        const createAlbumArtistsTable = await knex.schema.createTable('album_artists', t => {
+            t.integer('artist_id').unsigned().references('id').inTable('artists').notNull().onDelete('cascade')
+            t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
+            t.boolean('arranger')
+            t.boolean('composer')
+            t.boolean('lyricist')
+            t.boolean('performer')
+            t.primary(['artist_id', 'album_id'])
         });
         const createAlbumCoversTable = await knex.schema.createTable('album_covers', t => {
             t.integer('id').unsigned().primary()
@@ -103,17 +111,20 @@ exports.up = async (knex) => {
             t.text('thumb')
         });
         const createAlbumDiscsTable = await knex.schema.createTable('album_discs', t => {
-            t.increments('id')
+            t.integer('id').unsigned()
             t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
             t.text('length')
             t.text('name')
+            t.unique(['id', 'album_id'])
+
         });
-        const createDiscTracksTable = await knex.schema.createTable('disc_tracks', t => {
-            t.increments('id')
+        const createAlbumTracksTable = await knex.schema.createTable('album_tracks', t => {
+            t.integer('id').unsigned()
             t.integer('album_id').unsigned().references('id').inTable('albums').notNull().onDelete('cascade')
+            t.integer('disc_id').unsigned().notNull()
             t.text('length')
             t.text('name')
-            t.integer('number')
+            t.unique(['id', 'disc_id', 'album_id'])
         });
         const createAlbumStoresTable = await knex.schema.createTable('album_stores', t => {
             t.increments('id')
@@ -134,10 +145,11 @@ exports.up = async (knex) => {
 exports.down = async (knex) => {
     try {
         const dropAlbumStoresTable = await knex.schema.dropTable('album_stores');
-        const dropDiscTracksTable = await knex.schema.dropTable('disc_tracks');
+        const dropAlbumTracksTable = await knex.schema.dropTable('album_tracks');
         const dropAlbumDiscsTable = await knex.schema.dropTable('album_discs');
         const dropAlbumCoversTable = await knex.schema.dropTable('album_covers');
         const dropAlbumArtistsTable = await knex.schema.dropTable('album_artists');
+        const dropArtistsTable = await knex.schema.dropTable('artists');
         const dropAlbumsTable = await knex.schema.dropTable('albums');
         const dropGameWebsitesTable = await knex.schema.dropTable('game_websites');
         const dropGameVideosTable = await knex.schema.dropTable('game_videos');
