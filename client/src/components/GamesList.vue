@@ -78,7 +78,7 @@
 import GameDataService from "../services/GameDataService";
 export default {
   name: "games-list",
-  data() {
+  data: () => {
     return {
       games: [],
       query: "",
