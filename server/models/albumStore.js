@@ -2,6 +2,8 @@ const {
     Model
 } = require('objection');
 
+const knex = require('../db/knex');
+
 Model.knex(knex);
 
 class AlbumStores extends Model {

@@ -14,7 +14,7 @@ class Artist extends Model {
     static get relationMappings() {
         const AlbumArtist = require('./albumArtist');
         return {
-            albumArtist: {
+            albumArtists: {
                 relation: Model.HasManyRelation,
                 modelClass: AlbumArtist,
                 join: {

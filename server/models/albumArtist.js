@@ -2,6 +2,8 @@ const {
     Model
 } = require('objection');
 
+const knex = require('../db/knex');
+
 Model.knex(knex);
 
 class AlbumArtists extends Model {
@@ -22,13 +24,11 @@ class AlbumArtists extends Model {
                 }
             },
             artists: {
-                relation: {
-                    relation: Model.BelongsToOneRelation,
-                    modelClass: Artist,
-                    join: {
-                        from: 'album_artists.artist_id',
-                        to: 'artists.id'
-                    }
+                relation: Model.BelongsToOneRelation,
+                modelClass: Artist,
+                join: {
+                    from: 'album_artists.artist_id',
+                    to: 'artists.id'
                 }
             }
         }
