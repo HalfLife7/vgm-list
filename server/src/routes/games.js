@@ -39,7 +39,7 @@ const Game = require('../../models/game');
 
 router.get('/all', function (req, res, next) {
   Game.query()
-    .eager('covers')
+    .withGraphFetched('covers')
     .then(games => {
       games.map(game => {
         // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
@@ -58,6 +58,7 @@ router.get('/all', function (req, res, next) {
 router.get('/search/:searchParams', function (req, res, next) {
   const searchParams = req.params.searchParams;
   console.log(searchParams);
+  console.log(req.params.searchParams)
   Game.query()
     // use ilike for case insensitive search (postgres feature)
     .where('name', 'ilike', `%${searchParams}%`)
