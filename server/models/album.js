@@ -18,8 +18,9 @@ class Album extends Model {
         const AlbumDisc = require('./albumDisc');
         const AlbumStore = require('./albumStore');
         const AlbumTrack = require('./albumTrack');
+        const Game = require('./game');
         return {
-            artist: {
+            artists: {
                 relation: Model.HasManyRelation,
                 modelClass: Artist,
                 join: {
@@ -27,7 +28,7 @@ class Album extends Model {
                     to: 'artists.album_id'
                 }
             },
-            albumArtist: {
+            albumArtists: {
                 relation: Model.HasManyRelation,
                 modelClass: AlbumArtist,
                 join: {
@@ -35,7 +36,7 @@ class Album extends Model {
                     to: 'album_artists.album_id'
                 }
             },
-            albumCover: {
+            albumCovers: {
                 relation: Model.HasManyRelation,
                 modelClass: AlbumCover,
                 join: {
@@ -43,7 +44,7 @@ class Album extends Model {
                     to: 'album_covers.album_id'
                 }
             },
-            albumDisc: {
+            albumDiscs: {
                 relation: Model.HasManyRelation,
                 modelClass: AlbumDisc,
                 join: {
@@ -51,7 +52,7 @@ class Album extends Model {
                     to: 'album_discs.album_id'
                 }
             },
-            albumStore: {
+            albumStores: {
                 relation: Model.HasManyRelation,
                 modelClass: AlbumStore,
                 join: {
@@ -59,12 +60,20 @@ class Album extends Model {
                     to: 'album_stores.album_id'
                 }
             },
-            albumTrack: {
+            albumTracks: {
                 relation: Model.HasManyRelation,
                 modelClass: AlbumTrack,
                 join: {
                     from: 'albums.id',
                     to: 'album_tracks.album_id'
+                }
+            },
+            game: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Game,
+                join: {
+                    from: 'albums.game_id',
+                    to: 'games.id'
                 }
             }
         }

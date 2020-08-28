@@ -18,6 +18,7 @@ class Game extends Model {
         const Video = require('./gameVideo');
         const Screenshot = require('./gameScreenshot');
         const Website = require('./gameWebsite');
+        const Album = require('./album');
         return {
             artworks: {
                 relation: Model.HasManyRelation,
@@ -65,6 +66,14 @@ class Game extends Model {
                 join: {
                     from: 'games.id',
                     to: 'game_websites.game_id'
+                }
+            },
+            albums: {
+                relation: Model.HasManyRelation,
+                modelClass: Album,
+                join: {
+                    from: 'games.id',
+                    to: 'albums.game_id'
                 }
             }
         }

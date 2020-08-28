@@ -62,7 +62,7 @@ router.get('/search/:searchParams', function (req, res, next) {
   Game.query()
     // use ilike for case insensitive search (postgres feature)
     .where('name', 'ilike', `%${searchParams}%`)
-    .eager('covers')
+    .withGraphFetched('covers')
     .then(games => {
       console.log(games);
       games.map(game => {
