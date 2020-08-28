@@ -21,10 +21,10 @@ const routes = [{
     component: () => import("../views/Games.vue"),
     children: [
       // TODO: update url to show that a search has been performed
-      // {
-      // path: '/search/:id',
-      // component: () => ("../views/Games.vue")
-      // }
+      {
+        path: 'search',
+        component: () => import("../views/Games.vue"),
+      }
     ]
   }
 ];

@@ -11,6 +11,7 @@ import cors from 'cors';
 
 import indexRouter from './routes/index';
 import gamesRouter from './routes/games';
+import albumsRouter from './routes/albums';
 
 //import history from 'connect-history-api-fallback';
 
@@ -30,5 +31,6 @@ app.use(cors({
 
 app.use('/', indexRouter);
 app.use('/games', gamesRouter);
+app.use('/albums', albumsRouter);
 
 module.exports = app;

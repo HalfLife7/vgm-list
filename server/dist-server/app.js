@@ -16,6 +16,8 @@ var _index = _interopRequireDefault(require("./routes/index"));
 
 var _games = _interopRequireDefault(require("./routes/games"));
 
+var _albums = _interopRequireDefault(require("./routes/albums"));
+
 // initial setup - https://www.freecodecamp.org/news/how-to-enable-es6-and-beyond-syntax-with-node-and-express-68d3e11fe1ab/
 // include @babel/plugin-transform-runtime > fix ReferenceError regeneratorRuntime is not defined > https://github.com/babel/babel/issues/9849
 // install cors > fix vue axios request error (Reason: CORS header ‘Access-Control-Allow-Origin’ missing)
@@ -34,4 +36,5 @@ app.use((0, _cors["default"])({
 }));
 app.use('/', _index["default"]);
 app.use('/games', _games["default"]);
+app.use('/albums', _albums["default"]);
 module.exports = app;

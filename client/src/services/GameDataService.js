@@ -10,7 +10,7 @@ class GameDataService {
   }
 
   search(searchParams) {
-    return http.get(`games/search/${searchParams}`);
+    return http.get(`games/search?name=${searchParams}`);
   }
 }
 

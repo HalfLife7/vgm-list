@@ -21,7 +21,7 @@ router.get('/all', function (req, res, next) {
         })
 })
 
-router.get('/search/:id', function (req, res, next) {
+router.get('/:id', function (req, res, next) {
     const searchParams = req.params.searchParams;
     console.log(searchParams);
     console.log(req.params.searchParams)
@@ -43,3 +43,28 @@ router.get('/search/:id', function (req, res, next) {
             res.send(games);
         })
 })
+
+router.get('/', function (req, res, next) {
+    const searchParams = req.params.searchParams;
+    console.log(searchParams);
+    console.log(req.params.searchParams)
+    Game.query()
+        // use ilike for case insensitive search (postgres feature)
+        .where('name', 'ilike', `%${searchParams}%`)
+        .withGraphFetched('covers')
+        .then(games => {
+            console.log(games);
+            games.map(game => {
+                let url = game.covers[0].url;
+                game.covers[0].url = url.replace("t_thumb", "t_cover_big");
+
+                const truncate = input =>
+                    input.length > 250 ? `${input.substring(0, 250)}...` : input;
+
+                game.summary = truncate(game.summary);
+            });
+            res.send(games);
+        })
+})
+
+export default router;

@@ -55,10 +55,9 @@ router.get('/all', function (req, res, next) {
     })
 })
 
-router.get('/search/:searchParams', function (req, res, next) {
-  const searchParams = req.params.searchParams;
+router.get('/search', function (req, res, next) {
+  const searchParams = req.query.name;
   console.log(searchParams);
-  console.log(req.params.searchParams)
   Game.query()
     // use ilike for case insensitive search (postgres feature)
     .where('name', 'ilike', `%${searchParams}%`)
