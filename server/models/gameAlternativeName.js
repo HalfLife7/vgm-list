@@ -13,7 +13,7 @@ class AlternativeNames extends Model {
     static get relationMappings() {
         const Game = require('./game');
         return {
-            writer: {
+            game: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Game,
                 join: {

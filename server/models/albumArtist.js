@@ -1,0 +1,38 @@
+const {
+    Model
+} = require('objection');
+
+Model.knex(knex);
+
+class AlbumArtists extends Model {
+    static get tableName() {
+        return 'album_artists';
+    }
+
+    static get relationMappings() {
+        const Album = require('./album');
+        const Artist = require('./artist');
+        return {
+            albums: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Album,
+                join: {
+                    from: 'album_artists.album_id',
+                    to: 'albums.id'
+                }
+            },
+            artists: {
+                relation: {
+                    relation: Model.BelongsToOneRelation,
+                    modelClass: Artist,
+                    join: {
+                        from: 'album_artists.artist_id',
+                        to: 'artists.id'
+                    }
+                }
+            }
+        }
+    }
+}
+
+module.exports = AlbumArtists;
