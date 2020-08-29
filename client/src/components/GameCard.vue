@@ -1,12 +1,13 @@
 <template>
-<div>
-    <div class="max-w-sm rounded overflow-hidden shadow-lg m-5">
+  <div>
+    <router-link :to="'/games/' + game.id">
+      <div class="max-w-sm rounded overflow-hidden shadow-lg m-5">
         <img class="w-full" :src="game.covers[0].url" alt="Game Cover" />
         <div class="px-6 py-4">
-            <div class="font-bold text-xl mb-2 text-center">{{ game.name }}</div>
-            <p class="text-gray-700 text-base text-justify">
-                {{ game.summary }}
-            </p>
+          <div class="font-bold text-xl mb-2 text-center">{{ game.name }}</div>
+          <p class="text-gray-700 text-base text-justify">
+            {{ game.summary }}
+          </p>
         </div>
         <!-- <div class="px-6 py-4">
           <span
@@ -22,18 +23,19 @@
             >#winter</span
           >
         </div> -->
-    </div>
-</div>
+      </div>
+    </router-link>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "game-card",
-    props: {
-        game: {
-            type: Object,
-            // add prop validation
-        },
+  name: "game-card",
+  props: {
+    game: {
+      type: Object,
+      // add prop validation
     },
+  },
 };
 </script>

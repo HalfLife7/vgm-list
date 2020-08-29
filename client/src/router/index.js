@@ -19,13 +19,21 @@ const routes = [{
     path: "/games",
     name: "Games",
     component: () => import("../views/Games.vue"),
-    children: [
-      // TODO: update url to show that a search has been performed
-      {
-        path: 'search',
-        component: () => import("../views/Games.vue"),
-      }
-    ]
+    beforeEnter: (next) => {
+      // ...
+      console.log("before entering");
+      next;
+    },
+    children: [{
+      path: 'search',
+      component: () => import("../views/Games.vue"),
+    }, ]
+  },
+  {
+    path: '/games/:id',
+    name: 'Game',
+    component: () => import("../views/Game.vue")
+
   }
 ];
 

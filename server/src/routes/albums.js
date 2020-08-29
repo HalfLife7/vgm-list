@@ -12,7 +12,6 @@ router.get('/all', function (req, res, next) {
             }
         })
         .then(albums => {
-
             res.send(albums);
         })
 })
