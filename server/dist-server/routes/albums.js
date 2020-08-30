@@ -23,7 +23,14 @@ router.get('/all', function (req, res, next) {
   });
 });
 router.get('/:id', function (req, res, next) {
-  var searchParams = req.params.searchParams;
+  var albumId = req.params.id;
+  Album.query().findById(albumId).withGraphFetched('albumArtists.[artists(selectName)]').modifiers({
+    selectName: function selectName(builder) {
+      builder.select('name');
+    }
+  }).then(function (albums) {
+    res.send(albums);
+  });
 });
 router.get('/', function (req, res, next) {});
 var _default = router;

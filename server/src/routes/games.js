@@ -77,6 +77,63 @@ router.get('/search', function (req, res, next) {
     })
 })
 
+router.get('/:id', function (req, res, next) {
+  const gameId = req.params.id;
+  console.log(gameId);
+
+  Game.query()
+    .findById(gameId)
+    .withGraphFetched('alternativeNames(selectName, onlyEnglish)')
+    .modifiers({
+      selectName: builder => {
+        builder.select('name');
+      },
+      onlyEnglish: builder => {
+        builder.where('comment', 'Other');
+      }
+    })
+    .withGraphFetched('artworks(selectUrl)')
+    .modifiers({
+      selectUrl: builder => {
+        builder.select('url');
+      }
+    })
+    .withGraphFetched('covers(selectUrl)')
+    .modifiers({
+      selectUrl: builder => {
+        builder.select('url');
+      }
+    })
+    .withGraphFetched('screenshots(selectUrl)')
+    .modifiers({
+      selectUrl: builder => {
+        builder.select('url');
+      }
+    })
+    .withGraphFetched('videos(selectVideoIdAndName)')
+    .modifiers({
+      selectVideoIdAndName: builder => {
+        builder.select('name', 'video_id');
+      }
+    })
+    .withGraphFetched('websites(selectCategoryAndUrl)')
+    .modifiers({
+      selectCategoryAndUrl: builder => {
+        builder.select('category', 'url');
+      }
+    })
+    .withGraphFetched('albums(selectId)')
+    .modifiers({
+      selectId: builder => {
+        builder.select('id');
+      }
+    })
+    .then(game => {
+      console.log(game);
+      res.send(game);
+    })
+})
+
 // router.get('/search/:searchParams', function (req, res, next) {
 //   const searchParams = req.params.searchParams;
 //   axios({

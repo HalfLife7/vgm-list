@@ -17,7 +17,19 @@ router.get('/all', function (req, res, next) {
 })
 
 router.get('/:id', function (req, res, next) {
-    const searchParams = req.params.searchParams;
+    const albumId = req.params.id;
+
+    Album.query()
+        .findById(albumId)
+        .withGraphFetched('albumArtists.[artists(selectName)]')
+        .modifiers({
+            selectName: builder => {
+                builder.select('name');
+            }
+        })
+        .then(albums => {
+            res.send(albums);
+        })
 })
 
 router.get('/', function (req, res, next) {

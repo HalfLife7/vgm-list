@@ -77,6 +77,45 @@ router.get('/search', function (req, res, next) {
     });
     res.send(games);
   });
+});
+router.get('/:id', function (req, res, next) {
+  var gameId = req.params.id;
+  console.log(gameId);
+  Game.query().findById(gameId).withGraphFetched('alternativeNames(selectName, onlyEnglish)').modifiers({
+    selectName: function selectName(builder) {
+      builder.select('name');
+    },
+    onlyEnglish: function onlyEnglish(builder) {
+      builder.where('comment', 'Other');
+    }
+  }).withGraphFetched('artworks(selectUrl)').modifiers({
+    selectUrl: function selectUrl(builder) {
+      builder.select('url');
+    }
+  }).withGraphFetched('covers(selectUrl)').modifiers({
+    selectUrl: function selectUrl(builder) {
+      builder.select('url');
+    }
+  }).withGraphFetched('screenshots(selectUrl)').modifiers({
+    selectUrl: function selectUrl(builder) {
+      builder.select('url');
+    }
+  }).withGraphFetched('videos(selectVideoIdAndName)').modifiers({
+    selectVideoIdAndName: function selectVideoIdAndName(builder) {
+      builder.select('name', 'video_id');
+    }
+  }).withGraphFetched('websites(selectCategoryAndUrl)').modifiers({
+    selectCategoryAndUrl: function selectCategoryAndUrl(builder) {
+      builder.select('category', 'url');
+    }
+  }).withGraphFetched('albums(selectId)').modifiers({
+    selectId: function selectId(builder) {
+      builder.select('id');
+    }
+  }).then(function (game) {
+    console.log(game);
+    res.send(game);
+  });
 }); // router.get('/search/:searchParams', function (req, res, next) {
 //   const searchParams = req.params.searchParams;
 //   axios({
