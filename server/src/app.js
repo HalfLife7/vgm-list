@@ -12,25 +12,28 @@ import cors from 'cors';
 import indexRouter from './routes/index';
 import gamesRouter from './routes/games';
 import albumsRouter from './routes/albums';
+import cron from './cron';
 
-//import history from 'connect-history-api-fallback';
+// import history from 'connect-history-api-fallback';
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({
-    extended: false
+  extended: false,
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(cors({
-    origin: 'http://localhost:8080'
+  origin: 'http://localhost:8080',
 }));
 
 app.use('/', indexRouter);
 app.use('/games', gamesRouter);
 app.use('/albums', albumsRouter);
+app.use('/albums', albumsRouter);
+app.use(albumsRouter);
 
 module.exports = app;

@@ -43,12 +43,19 @@ var Game = require('../../models/game'); // remove for now, cannot get header to
 // });
 
 
+router.get('/max', function (req, res, next) {
+  Game.query().max('id').then(function (gameId) {
+    res.send(gameId);
+  })["catch"](function (err) {
+    console.error(err);
+  });
+});
 router.get('/all', function (req, res, next) {
   Game.query().withGraphFetched('covers').then(function (games) {
     games.map(function (game) {
       // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
       var url = game.covers[0].url;
-      game.covers[0].url = url.replace("t_thumb", "t_cover_big");
+      game.covers[0].url = url.replace('t_thumb', 't_cover_big');
 
       var truncate = function truncate(input) {
         return input.length > 250 ? "".concat(input.substring(0, 250), "...") : input;
@@ -67,7 +74,7 @@ router.get('/search', function (req, res, next) {
     console.log(games);
     games.map(function (game) {
       var url = game.covers[0].url;
-      game.covers[0].url = url.replace("t_thumb", "t_cover_big");
+      game.covers[0].url = url.replace('t_thumb', 't_cover_big');
 
       var truncate = function truncate(input) {
         return input.length > 250 ? "".concat(input.substring(0, 250), "...") : input;

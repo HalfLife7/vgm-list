@@ -1,7 +1,7 @@
 import express from 'express';
 // import config from '../config'
 // import axios from 'axios';
-var router = express.Router();
+const router = express.Router();
 
 const Game = require('../../models/game');
 
@@ -37,47 +37,56 @@ const Game = require('../../models/game');
 //     });
 // });
 
-router.get('/all', function (req, res, next) {
+router.get('/max', (req, res, next) => {
+  Game.query()
+    .max('id')
+    .then((gameId) => {
+      res.send(gameId);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+router.get('/all', (req, res, next) => {
   Game.query()
     .withGraphFetched('covers')
-    .then(games => {
-      games.map(game => {
+    .then((games) => {
+      games.map((game) => {
         // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
-        let url = game.covers[0].url;
-        game.covers[0].url = url.replace("t_thumb", "t_cover_big");
+        const { url } = game.covers[0];
+        game.covers[0].url = url.replace('t_thumb', 't_cover_big');
 
-        const truncate = input =>
-          input.length > 250 ? `${input.substring(0, 250)}...` : input;
+        const truncate = (input) => (input.length > 250 ? `${input.substring(0, 250)}...` : input);
 
         game.summary = truncate(game.summary);
       });
       res.send(games);
-    })
-})
+    });
+});
 
-router.get('/search', function (req, res, next) {
+router.get('/search', (req, res, next) => {
   const searchParams = req.query.name;
   console.log(searchParams);
   Game.query()
     // use ilike for case insensitive search (postgres feature)
     .where('name', 'ilike', `%${searchParams}%`)
     .withGraphFetched('covers')
-    .then(games => {
+    .then((games) => {
       console.log(games);
-      games.map(game => {
-        let url = game.covers[0].url;
-        game.covers[0].url = url.replace("t_thumb", "t_cover_big");
+      games.map((game) => {
+        const { url } = game.covers[0];
+        game.covers[0].url = url.replace('t_thumb', 't_cover_big');
 
-        const truncate = input =>
-          input.length > 250 ? `${input.substring(0, 250)}...` : input;
+        const truncate = (input) => (input.length > 250 ? `${input.substring(0, 250)}...` : input);
 
         game.summary = truncate(game.summary);
       });
       res.send(games);
-    })
-})
+    });
+});
 
-router.get('/:id', function (req, res, next) {
+router.get('/:id', (req, res, next) => {
   const gameId = req.params.id;
   console.log(gameId);
 
@@ -85,54 +94,54 @@ router.get('/:id', function (req, res, next) {
     .findById(gameId)
     .withGraphFetched('alternativeNames(selectName, onlyEnglish)')
     .modifiers({
-      selectName: builder => {
+      selectName: (builder) => {
         builder.select('name');
       },
-      onlyEnglish: builder => {
+      onlyEnglish: (builder) => {
         builder.where('comment', 'Other');
-      }
+      },
     })
     .withGraphFetched('artworks(selectUrl)')
     .modifiers({
-      selectUrl: builder => {
+      selectUrl: (builder) => {
         builder.select('url');
-      }
+      },
     })
     .withGraphFetched('covers(selectUrl)')
     .modifiers({
-      selectUrl: builder => {
+      selectUrl: (builder) => {
         builder.select('url');
-      }
+      },
     })
     .withGraphFetched('screenshots(selectUrl)')
     .modifiers({
-      selectUrl: builder => {
+      selectUrl: (builder) => {
         builder.select('url');
-      }
+      },
     })
     .withGraphFetched('videos(selectVideoIdAndName)')
     .modifiers({
-      selectVideoIdAndName: builder => {
+      selectVideoIdAndName: (builder) => {
         builder.select('name', 'video_id');
-      }
+      },
     })
     .withGraphFetched('websites(selectCategoryAndUrl)')
     .modifiers({
-      selectCategoryAndUrl: builder => {
+      selectCategoryAndUrl: (builder) => {
         builder.select('category', 'url');
-      }
+      },
     })
     .withGraphFetched('albums(selectId)')
     .modifiers({
-      selectId: builder => {
+      selectId: (builder) => {
         builder.select('id');
-      }
+      },
     })
-    .then(game => {
+    .then((game) => {
       console.log(game);
       res.send(game);
-    })
-})
+    });
+});
 
 // router.get('/search/:searchParams', function (req, res, next) {
 //   const searchParams = req.params.searchParams;
@@ -162,6 +171,5 @@ router.get('/:id', function (req, res, next) {
 //       console.error(err);
 //     });
 // });
-
 
 export default router;

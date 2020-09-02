@@ -10,11 +10,11 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _app = _interopRequireDefault(require("../app"));
-
 var _debug = _interopRequireDefault(require("debug"));
 
 var _http = _interopRequireDefault(require("http"));
+
+var _app = _interopRequireDefault(require("../app"));
 
 var debug = (0, _debug["default"])('vgm-list:server');
 /**
@@ -67,16 +67,16 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port; // handle specific listen errors with friendly messages
+  var bind = typeof port === 'string' ? "Pipe ".concat(port) : "Port ".concat(port); // handle specific listen errors with friendly messages
 
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      console.error("".concat(bind, " requires elevated privileges"));
       process.exit(1);
       break;
 
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      console.error("".concat(bind, " is already in use"));
       process.exit(1);
       break;
 
@@ -91,6 +91,6 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-  console.log('Listening on ' + bind);
+  var bind = typeof addr === 'string' ? "pipe ".concat(addr) : "port ".concat(addr.port);
+  console.log("Listening on ".concat(bind));
 }

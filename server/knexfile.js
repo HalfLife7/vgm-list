@@ -5,38 +5,38 @@ module.exports = {
     client: 'pg',
     connection: 'postgres://localhost/test_db',
     migrations: {
-      directory: __dirname + '/db/migrations'
+      directory: `${__dirname}/db/migrations`,
     },
     seeds: {
-      directory: __dirname + '/db/seeds/test'
-    }
+      directory: `${__dirname}/db/seeds/test`,
+    },
   },
   development: {
     client: 'pg',
     connection: {
       database: 'vgm_list',
       user: process.env.DB_USER_NAME,
-      password: process.env.DB_USER_PASSWORD
+      password: process.env.DB_USER_PASSWORD,
     },
     migrations: {
-      directory: __dirname + '/db/migrations'
+      directory: `${__dirname}/db/migrations`,
     },
     seeds: {
-      directory: __dirname + '/db/seeds/development'
-    }
+      directory: `${__dirname}/db/seeds/development`,
+    },
   },
   production: {
     client: 'pg',
     connection: {
       database: 'vgm_list',
       user: process.env.DB_USER_NAME,
-      password: process.env.DB_USER_PASSWORD
+      password: process.env.DB_USER_PASSWORD,
     },
     migrations: {
-      directory: __dirname + '/db/migrations'
+      directory: `${__dirname}/db/migrations`,
     },
     seeds: {
-      directory: __dirname + '/db/seeds/production'
-    }
-  }
-}
+      directory: `${__dirname}/db/seeds/production`,
+    },
+  },
+};
