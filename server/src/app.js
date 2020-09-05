@@ -12,6 +12,8 @@ import cors from 'cors';
 import indexRouter from './routes/index';
 import gamesRouter from './routes/games';
 import albumsRouter from './routes/albums';
+import platformsRouter from './routes/platforms';
+import platformLogosRouter from './routes/platformLogos';
 import cron from './cron';
 
 // import history from 'connect-history-api-fallback';
@@ -20,20 +22,25 @@ const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: false,
-}));
+app.use(
+  express.urlencoded({
+    extended: false,
+  }),
+);
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
-app.use(cors({
-  origin: 'http://localhost:8080',
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:8080',
+  }),
+);
 
 app.use('/', indexRouter);
 app.use('/games', gamesRouter);
 app.use('/albums', albumsRouter);
-app.use('/albums', albumsRouter);
+app.use('/platforms', platformsRouter);
+app.use('/platform-logos', platformLogosRouter);
 app.use(albumsRouter);
 
 module.exports = app;

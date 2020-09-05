@@ -1,26 +1,24 @@
-const {
-  Model,
-} = require('objection');
+const { Model } = require("objection");
 
-const knex = require('../db/knex');
+const knex = require("../db/knex");
 
 Model.knex(knex);
 
-class AlbumTracks extends Model {
+class AlbumTrack extends Model {
   static get tableName() {
-    return 'album_tracks';
+    return "album_tracks";
   }
 
   static get relationMappings() {
-    const Album = require('./album');
-    const AlbumDisc = require('./albumDisc');
+    const Album = require("./album");
+    const AlbumDisc = require("./albumDisc");
     return {
       albums: {
         relation: Model.BelongsToOneRelation,
         modelClass: Album,
         join: {
-          from: 'album_tracks.album_id',
-          to: 'albums.id',
+          from: "album_tracks.album_id",
+          to: "albums.id",
         },
       },
       artists: {
@@ -28,8 +26,8 @@ class AlbumTracks extends Model {
           relation: Model.BelongsToOneRelation,
           modelClass: AlbumDisc,
           join: {
-            from: 'album_tracks.disc_id',
-            to: 'album_discs.id',
+            from: "album_tracks.disc_id",
+            to: "album_discs.id",
           },
         },
       },
@@ -37,4 +35,4 @@ class AlbumTracks extends Model {
   }
 }
 
-module.exports = AlbumTracks;
+module.exports = AlbumTrack;

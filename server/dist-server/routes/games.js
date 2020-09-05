@@ -13,35 +13,10 @@ var _express = _interopRequireDefault(require("express"));
 // import axios from 'axios';
 var router = _express["default"].Router();
 
-var Game = require('../../models/game'); // remove for now, cannot get header to send api key
-// import igdb from 'igdb-api-node';
-// const client = igdb(config.IGDB_KEY);
-// router.get('/all', function (req, res, next) {
-//   axios({
-//       url: "https://api-v3.igdb.com/games",
-//       method: 'POST',
-//       headers: {
-//         'Accept': 'application/json',
-//         'user-key': config.IGDB_KEY
-//       },
-//       data: 'search "Final Fantasy"; fields name, summary, cover.url;  where version_parent = null; limit 10;'
-//     })
-//     .then(response => {
-//       console.log(response.data);
-//       response.data.map(game => {
-//         let url = game.cover.url;
-//         game.cover.url = url.replace("t_thumb", "t_cover_big");
-//         const truncate = input =>
-//           input.length > 250 ? `${input.substring(0, 250)}...` : input;
-//         game.summary = truncate(game.summary);
-//       });
-//       res.send(response.data);
-//     })
-//     .catch(err => {
-//       console.error(err);
-//     });
-// });
+var _require = require('objection'),
+    raw = _require.raw;
 
+var Game = require('../../models/game');
 
 router.get('/max', function (req, res, next) {
   Game.query().max('id').then(function (gameId) {
@@ -51,17 +26,25 @@ router.get('/max', function (req, res, next) {
   });
 });
 router.get('/all', function (req, res, next) {
-  Game.query().withGraphFetched('covers').then(function (games) {
+  Game.query().where('category', '=', '0').where('first_release_date', '>', '473385600').whereExists(Game.relatedQuery('covers')).withGraphFetched('covers').limit(20).orderBy(raw('random()')).then(function (games) {
     games.map(function (game) {
       // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
-      var url = game.covers[0].url;
-      game.covers[0].url = url.replace('t_thumb', 't_cover_big');
+      console.log(game.covers);
+
+      if (game.covers !== undefined) {
+        var url = game === null || game === void 0 ? void 0 : game.covers[0].url;
+        console.log(game.covers);
+        console.log(url);
+        game.covers[0].url = url.replace('t_thumb', 't_720p');
+      }
 
       var truncate = function truncate(input) {
         return input.length > 250 ? "".concat(input.substring(0, 250), "...") : input;
       };
 
-      game.summary = truncate(game.summary);
+      if (game.summary !== null) {
+        game.summary = truncate(game.summary);
+      }
     });
     res.send(games);
   });
@@ -70,19 +53,37 @@ router.get('/search', function (req, res, next) {
   var searchParams = req.query.name;
   console.log(searchParams);
   Game.query() // use ilike for case insensitive search (postgres feature)
-  .where('name', 'ilike', "%".concat(searchParams, "%")).withGraphFetched('covers').then(function (games) {
-    console.log(games);
+  .where('name', 'ilike', "%".concat(searchParams, "%")).where(function (builder) {
+    return builder.where('category', '=', '0').orWhere('category', '=', '2').orWhere('category', '=', '4');
+  }).whereExists(Game.relatedQuery('covers')).withGraphFetched('covers').orderBy('first_release_date').then(function (games) {
+    console.log(games.length);
     games.map(function (game) {
-      var url = game.covers[0].url;
-      game.covers[0].url = url.replace('t_thumb', 't_cover_big');
+      var _game$covers$;
+
+      // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
+      if (game.covers !== undefined && ((_game$covers$ = game.covers[0]) === null || _game$covers$ === void 0 ? void 0 : _game$covers$.url) !== undefined) {
+        var _game$covers$2;
+
+        var url = (_game$covers$2 = game.covers[0]) === null || _game$covers$2 === void 0 ? void 0 : _game$covers$2.url;
+        console.log(url);
+        game.covers[0].url = url.replace('t_thumb', 't_720p');
+      } else {
+        game.covers[0] = {
+          url: 'https://via.placeholder.com/318x512'
+        };
+      }
 
       var truncate = function truncate(input) {
         return input.length > 250 ? "".concat(input.substring(0, 250), "...") : input;
       };
 
-      game.summary = truncate(game.summary);
+      if (game.summary !== null) {
+        game.summary = truncate(game.summary);
+      }
     });
     res.send(games);
+  })["catch"](function (err) {
+    console.error(err);
   });
 });
 router.get('/:id', function (req, res, next) {
@@ -123,32 +124,6 @@ router.get('/:id', function (req, res, next) {
     console.log(game);
     res.send(game);
   });
-}); // router.get('/search/:searchParams', function (req, res, next) {
-//   const searchParams = req.params.searchParams;
-//   axios({
-//       url: "https://api-v3.igdb.com/games",
-//       method: 'POST',
-//       headers: {
-//         'Accept': 'application/json',
-//         'user-key': config.IGDB_KEY
-//       },
-//       data: 'search "' + searchParams + '"; fields name, summary, cover.url;  where version_parent = null; limit 10;'
-//     })
-//     .then(response => {
-//       console.log(response.data);
-//       response.data.map(game => {
-//         let url = game.cover.url;
-//         game.cover.url = url.replace("t_thumb", "t_cover_big");
-//         const truncate = input =>
-//           input.length > 250 ? `${input.substring(0, 250)}...` : input;
-//         game.summary = truncate(game.summary);
-//       });
-//       res.send(response.data);
-//     })
-//     .catch(err => {
-//       console.error(err);
-//     });
-// });
-
+});
 var _default = router;
 exports["default"] = _default;

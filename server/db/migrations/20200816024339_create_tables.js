@@ -19,67 +19,66 @@ exports.up = async (knex) => {
     });
     await knex.schema.createTable('game_alternative_names', (t) => {
       t.integer('id').unsigned().primary();
-      t.uuid('checksum');
-      t.text('comment');
       t.integer('game_id')
         .unsigned()
         .references('id')
         .inTable('games')
         .notNull()
         .onDelete('cascade');
+      t.text('comment');
       t.text('name');
+      t.uuid('checksum');
     });
     await knex.schema.createTable('game_artworks', (t) => {
       t.integer('id').unsigned().primary();
-      t.boolean('alpha_channel');
-      t.boolean('animated');
-      t.uuid('checksum');
       t.integer('game_id')
         .unsigned()
         .references('id')
         .inTable('games')
         .notNull()
         .onDelete('cascade');
+      t.boolean('alpha_channel');
+      t.boolean('animated');
       t.integer('height');
       t.text('image_id');
       t.text('url');
       t.integer('width');
+      t.uuid('checksum');
     });
     await knex.schema.createTable('game_covers', (t) => {
       t.integer('id').unsigned().primary();
-      t.boolean('alpha_channel');
-      t.boolean('animated');
-      t.uuid('checksum');
       t.integer('game_id')
         .unsigned()
         .references('id')
         .inTable('games')
         .notNull()
         .onDelete('cascade');
+      t.boolean('alpha_channel');
+      t.boolean('animated');
       t.integer('height');
       t.text('image_id');
       t.text('url');
       t.integer('width');
+      t.uuid('checksum');
     });
     await knex.schema.createTable('game_screenshots', (t) => {
       t.integer('id').unsigned().primary();
-      t.boolean('alpha_channel');
-      t.boolean('animated');
-      t.uuid('checksum');
       t.integer('game_id')
         .unsigned()
         .references('id')
         .inTable('games')
         .notNull()
         .onDelete('cascade');
+      t.boolean('alpha_channel');
+      t.boolean('animated');
       t.integer('height');
       t.text('image_id');
       t.text('url');
       t.integer('width');
+      t.uuid('checksum');
     });
     await knex.schema.createTable('game_videos', (t) => {
       t.integer('id').unsigned().primary();
-      t.uuid('checksum');
       t.integer('game_id')
         .unsigned()
         .references('id')
@@ -88,9 +87,16 @@ exports.up = async (knex) => {
         .onDelete('cascade');
       t.text('name');
       t.text('video_id');
+      t.uuid('checksum');
     });
     await knex.schema.createTable('game_websites', (t) => {
       t.integer('id').unsigned().primary();
+      t.integer('game_id')
+        .unsigned()
+        .references('id')
+        .inTable('games')
+        .notNull()
+        .onDelete('cascade');
       // t.enu('category', ['official', 'wikia', 'wikipedia', 'facebook', 'twitter', 'twitch', 'instagram', 'youtube', 'iphone', 'ipad', 'android', 'steam', 'reddit', 'itch', 'epicgames', 'gog'], {
       //     useNative: true,
       //     enumName: 'website_categories'
@@ -121,15 +127,57 @@ exports.up = async (knex) => {
           enumName: 'website_categories',
         },
       );
+      t.boolean('trusted');
+      t.text('url');
       t.uuid('checksum');
+    });
+    await knex.schema.createTable('platforms', (t) => {
+      t.integer('id').unsigned().primary();
+      t.text('abbreviation');
+      t.text('alternative_name');
+      t.enu('category', ['1', '2', '3', '4', '5', '6'], {
+        useNative: true,
+        enumName: 'platform_categories',
+      });
+      t.integer('created_at');
+      t.text('generation');
+      t.text('name');
+      t.text('slug');
+      t.text('summary');
+      t.integer('updated_at');
+      t.text('url');
+      t.uuid('checksum');
+    });
+    await knex.schema.createTable('platform_logos', (t) => {
+      t.integer('id').unsigned().primary();
+      t.integer('platform_id')
+        .unsigned()
+        .references('id')
+        .inTable('platforms')
+        .notNull()
+        .onDelete('cascade');
+      t.boolean('alpha_channel');
+      t.boolean('animated');
+      t.integer('height');
+      t.text('image_id');
+      t.text('url');
+      t.integer('width');
+      t.uuid('checksum');
+    });
+    await knex.schema.createTable('game_platforms', (t) => {
       t.integer('game_id')
         .unsigned()
         .references('id')
         .inTable('games')
         .notNull()
         .onDelete('cascade');
-      t.boolean('trusted');
-      t.text('url');
+      t.integer('platform_id')
+        .unsigned()
+        .references('id')
+        .inTable('platforms')
+        .notNull()
+        .onDelete('cascade');
+      t.primary(['game_id', 'platform_id']);
     });
     await knex.schema.createTable('albums', (t) => {
       t.integer('id').unsigned().primary();
@@ -139,6 +187,7 @@ exports.up = async (knex) => {
         .inTable('games')
         .notNull()
         .onDelete('cascade');
+      t.text('catalog');
       t.text('category');
       t.text('classification');
       t.text('name');
@@ -239,6 +288,9 @@ exports.down = async (knex) => {
     await knex.schema.dropTable('album_artists');
     await knex.schema.dropTable('artists');
     await knex.schema.dropTable('albums');
+    await knex.schema.dropTable('game_platforms');
+    await knex.schema.dropTable('platform_logos');
+    await knex.schema.dropTable('platforms');
     await knex.schema.dropTable('game_websites');
     await knex.schema.dropTable('game_videos');
     await knex.schema.dropTable('game_screenshots');
@@ -247,6 +299,7 @@ exports.down = async (knex) => {
     await knex.schema.dropTable('game_alternative_names');
     await knex.schema.dropTable('games');
     await knex.schema.raw('DROP TYPE website_categories');
+    await knex.schema.raw('DROP TYPE platform_categories');
     await knex.schema.raw('DROP TYPE game_categories');
   } catch (err) {
     console.error(err.name);

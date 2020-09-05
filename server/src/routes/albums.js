@@ -33,8 +33,6 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.get('/', (req, res, next) => {
-
-});
+router.get('/', (req, res, next) => {});
 
 export default router;

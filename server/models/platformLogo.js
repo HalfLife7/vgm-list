@@ -4,24 +4,24 @@ const knex = require("../db/knex");
 
 Model.knex(knex);
 
-class AlbumDisc extends Model {
+class PlatformLogo extends Model {
   static get tableName() {
-    return "album_discs";
+    return "platform_logos";
   }
 
   static get relationMappings() {
-    const Album = require("./album");
+    const Platform = require("./platform");
     return {
-      albums: {
+      platform: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Album,
+        modelClass: Platform,
         join: {
-          from: "album_discs.album_id",
-          to: "albums.id",
+          from: "platform_logos.platform_id",
+          to: "platforms.id",
         },
       },
     };
   }
 }
 
-module.exports = AlbumDisc;
+module.exports = PlatformLogo;

@@ -1,28 +1,31 @@
-import express from "express";
-import Bottleneck from "bottleneck";
-import util from "util";
-import config from "./config";
+import express from 'express';
+import util from 'util';
+import config from './config';
 
 const router = express.Router();
-const axios = require("axios").default;
-const { CronJob } = require("cron");
+const axios = require('axios').default;
+const { CronJob } = require('cron');
 
-const Game = require("../models/game");
-const GameAlternativeName = require("../models/gameAlternativeName");
-const GameArtwork = require("../models/gameArtwork");
-const GameCover = require("../models/gameCover");
-const GameScreenshot = require("../models/gameScreenshot");
-const GameVideo = require("../models/gameVideo");
-const GameWebsite = require("../models/gameWebsite");
+const { raw } = require('objection');
+const Game = require('../models/game');
+const GameAlternativeName = require('../models/gameAlternativeName');
+const GameArtwork = require('../models/gameArtwork');
+const GameCover = require('../models/gameCover');
+const GameScreenshot = require('../models/gameScreenshot');
+const GameVideo = require('../models/gameVideo');
+const GameWebsite = require('../models/gameWebsite');
+const GamePlatform = require('../models/gamePlatform');
+const Platform = require('../models/platform');
+const PlatformLogo = require('../models/platformLogo');
 
-const updateGameDb = new CronJob("*/30 * * * * *", async () => {
-  console.log("starting");
+const updateGameDb = new CronJob('*/30 * * * * *', async () => {
+  console.log('starting');
   // get highest id from db
   const getMaxGameId = async () => {
     try {
       const response = await axios({
-        method: "get",
-        url: "http://localhost:3000/games/max",
+        method: 'get',
+        url: 'http://localhost:3000/games/max',
       });
       return response.data[0].max;
     } catch (err) {
@@ -35,17 +38,21 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
   }
   // console.log(util.inspect(maxGameId, false, null, true));
 
+  // remove for now, cannot get header to send api key
+  // import igdb from 'igdb-api-node';
+  // const client = igdb(config.IGDB_KEY);
+
   const getGames = async () => {
     try {
       // query api for games not yet in db
       const response = await axios({
-        url: "https://api-v3.igdb.com/games",
-        method: "POST",
+        url: 'https://api-v3.igdb.com/games',
+        method: 'POST',
         headers: {
-          Accept: "application/json",
-          "user-key": config.IGDB_KEY,
+          Accept: 'application/json',
+          'user-key': config.IGDB_KEY,
         },
-        data: `fields aggregated_rating_count, aggregated_rating, alternative_names.*, category, first_release_date, name, slug, summary, artworks.*, cover.*, videos.*, screenshots.*, websites.*;  where version_parent = null & id > ${maxGameId}; limit 500; sort id asc;`,
+        data: `fields aggregated_rating_count, aggregated_rating, alternative_names.*, category, first_release_date, name, platforms.*, slug, summary, artworks.*, cover.*, videos.*, screenshots.*, websites.*;  where version_parent = null & id > ${maxGameId}; limit 500; sort id asc;`,
       });
       return response;
     } catch (err) {
@@ -58,7 +65,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
   try {
     await Promise.all(
       games.data.map(async (game) => {
-        // console.log(game);
+        // console.log(util.inspect(game, false, null, true));
         await Game.query().insert({
           id: game?.id,
           aggregated_rating: game?.aggregated_rating,
@@ -80,7 +87,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
                 name: alternative_name?.name,
                 checksum: alternative_name?.checksum,
               });
-            })
+            }),
           );
         }
 
@@ -96,7 +103,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
                 width: artwork?.width,
                 checksum: artwork?.checksum,
               });
-            })
+            }),
           );
         }
 
@@ -128,7 +135,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
                 width: screenshot?.width,
                 checksum: screenshot?.checksum,
               });
-            })
+            }),
           );
         }
 
@@ -142,7 +149,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
                 video_id: video?.video_id,
                 checksum: video?.checksum,
               });
-            })
+            }),
           );
         }
 
@@ -157,39 +164,112 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
                 url: website?.url,
                 checksum: website?.checksum,
               });
-            })
+            }),
           );
         }
-      })
+
+        if (game.platforms !== undefined) {
+          await Promise.all(
+            game.platforms.map(async (platform) => {
+              await GamePlatform.query().insert({
+                game_id: game.id,
+                platform_id: platform.id,
+              });
+            }),
+          );
+        }
+      }),
     );
   } catch (err) {
     console.error(err);
   }
-
-  // .then(response => {
-  //     console.log(response.data);
-  //     response.data.map(game => {
-  //         let url = game.cover.url;
-  //         game.cover.url = url.replace("t_thumb", "t_cover_big");
-
-  //         const truncate = input =>
-  //             input.length > 250 ? `${input.substring(0, 250)}...` : input;
-
-  //         game.summary = truncate(game.summary);
-  //     });
-  //     res.send(response.data);
-  // })
-  // .catch(err => {
-  //     console.error(err);
-  // });
 });
 
-updateGameDb.start();
+const updatePlatforms = new CronJob('*/30 * * * * *', async () => {
+  // get highest id from db
+  const getMaxGameId = async () => {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:3000/platforms/max',
+      });
+      return response.data[0].max;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  let maxPlatformId = await getMaxGameId();
+  if (maxPlatformId === null) {
+    maxPlatformId = 0;
+  }
+  // console.log(util.inspect(maxPlatformId, false, null, true));
 
-// var test = new CronJob('*/3 * * * * *', function () {
-//     console.log('You will see this message every 3 second');
-// }, null, true, 'America/Los_Angeles');
+  const getPlatforms = async () => {
+    try {
+      // query api for games not yet in db
+      const response = await axios({
+        url: 'https://api-v3.igdb.com/platforms',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'user-key': config.IGDB_KEY,
+        },
+        data: `fields *, platform_logo.*; where id > ${maxPlatformId}; limit 500; sort id asc;`,
+      });
+      return response;
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-// test.start();
+  const platforms = await getPlatforms();
+  // console.log(util.inspect(game.data, false, null, true));
+
+  await Promise.all(
+    platforms.data.map(async (platform) => {
+      try {
+        await Platform.query().insert({
+          id: platform?.id,
+          abbreviation: platform?.abbreviation,
+          alternative_name: platform?.alternative_name,
+          category: platform?.category,
+          created_at: platform?.created_at,
+          generation: platform?.generation,
+          name: platform?.name,
+          slug: platform?.slug,
+          summary: platform?.summary,
+          updated_at: platform?.updated_at,
+          url: platform?.url,
+          checksum: platform?.checksum,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+      if (platform.platform_logo !== undefined) {
+        try {
+          await PlatformLogo.query().insert({
+            id: platform.platform_logo?.id,
+            platform_id: platform.id,
+            alpha_channel: platform.platform_logo?.alpha_channel,
+            animated: platform.platform_logo?.animated,
+            height: platform.platform_logo?.height,
+            image_id: platform.platform_logo?.image_id,
+            url: platform.platform_logo?.url,
+            width: platform.platform_logo?.width,
+            checksum: platform.platform_logo?.checksum,
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }),
+  );
+});
+
+// run this cron once to populate platform tables
+// updatePlatforms.start();
+
+// run this cron job for about 2 hours to pull all 129000~ game entries from igdb
+// updateGameDb.start();
 
 module.exports = router;

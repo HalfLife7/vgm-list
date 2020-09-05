@@ -18,6 +18,10 @@ var _games = _interopRequireDefault(require("./routes/games"));
 
 var _albums = _interopRequireDefault(require("./routes/albums"));
 
+var _platforms = _interopRequireDefault(require("./routes/platforms"));
+
+var _platformLogos = _interopRequireDefault(require("./routes/platformLogos"));
+
 var _cron = _interopRequireDefault(require("./cron"));
 
 // initial setup - https://www.freecodecamp.org/news/how-to-enable-es6-and-beyond-syntax-with-node-and-express-68d3e11fe1ab/
@@ -39,6 +43,7 @@ app.use((0, _cors["default"])({
 app.use('/', _index["default"]);
 app.use('/games', _games["default"]);
 app.use('/albums', _albums["default"]);
-app.use('/albums', _albums["default"]);
+app.use('/platforms', _platforms["default"]);
+app.use('/platform-logos', _platformLogos["default"]);
 app.use(_albums["default"]);
 module.exports = app;

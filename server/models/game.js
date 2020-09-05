@@ -1,79 +1,86 @@
-const {
-  Model,
-} = require('objection');
+const { Model } = require("objection");
 
-const knex = require('../db/knex');
+const knex = require("../db/knex");
 
 Model.knex(knex);
 
 class Game extends Model {
   static get tableName() {
-    return 'games';
+    return "games";
   }
 
   static get relationMappings() {
-    const Artwork = require('./gameArtwork');
-    const AlternativeName = require('./gameAlternativeName');
-    const Cover = require('./gameCover');
-    const Video = require('./gameVideo');
-    const Screenshot = require('./gameScreenshot');
-    const Website = require('./gameWebsite');
-    const Album = require('./album');
+    const GameArtwork = require("./gameArtwork");
+    const GameAlternativeName = require("./gameAlternativeName");
+    const GameCover = require("./gameCover");
+    const GameVideo = require("./gameVideo");
+    const GameScreenshot = require("./gameScreenshot");
+    const GameWebsite = require("./gameWebsite");
+    const Album = require("./album");
+    const GamePlatform = require("./gamePlatform");
     return {
       artworks: {
         relation: Model.HasManyRelation,
-        modelClass: Artwork,
+        modelClass: GameArtwork,
         join: {
-          from: 'games.id',
-          to: 'game_artworks.game_id',
+          from: "games.id",
+          to: "game_artworks.game_id",
         },
       },
       alternativeNames: {
         relation: Model.HasManyRelation,
-        modelClass: AlternativeName,
+        modelClass: GameAlternativeName,
         join: {
-          from: 'games.id',
-          to: 'game_alternative_names.game_id',
+          from: "games.id",
+          to: "game_alternative_names.game_id",
         },
       },
       covers: {
         relation: Model.HasManyRelation,
-        modelClass: Cover,
+        modelClass: GameCover,
         join: {
-          from: 'games.id',
-          to: 'game_covers.game_id',
+          from: "games.id",
+          to: "game_covers.game_id",
         },
       },
       screenshots: {
         relation: Model.HasManyRelation,
-        modelClass: Screenshot,
+        modelClass: GameScreenshot,
         join: {
-          from: 'games.id',
-          to: 'game_screenshots.game_id',
+          from: "games.id",
+          to: "game_screenshots.game_id",
         },
       },
       videos: {
         relation: Model.HasManyRelation,
-        modelClass: Video,
+        modelClass: GameVideo,
         join: {
-          from: 'games.id',
-          to: 'game_videos.game_id',
+          from: "games.id",
+          to: "game_videos.game_id",
         },
       },
       websites: {
         relation: Model.HasManyRelation,
-        modelClass: Website,
+        modelClass: GameWebsite,
         join: {
-          from: 'games.id',
-          to: 'game_websites.game_id',
+          from: "games.id",
+          to: "game_websites.game_id",
         },
       },
       albums: {
         relation: Model.HasManyRelation,
         modelClass: Album,
         join: {
-          from: 'games.id',
-          to: 'albums.game_id',
+          from: "games.id",
+          to: "albums.game_id",
+        },
+      },
+      platforms: {
+        relation: Model.HasManyRelation,
+        modelClass: GamePlatform,
+        join: {
+          from: "games.id",
+          to: "game_platforms.game_id",
         },
       },
     };

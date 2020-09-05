@@ -1,29 +1,27 @@
-const {
-  Model,
-} = require('objection');
+const { Model } = require("objection");
 
-const knex = require('../db/knex');
+const knex = require("../db/knex");
 
 Model.knex(knex);
 
-class AlbumCovers extends Model {
+class AlbumCover extends Model {
   static get tableName() {
-    return 'album_covers';
+    return "album_covers";
   }
 
   static get relationMappings() {
-    const Album = require('./album');
+    const Album = require("./album");
     return {
       albums: {
         relation: Model.BelongsToOneRelation,
         modelClass: Album,
         join: {
-          from: 'album_covers.album_id',
-          to: 'albums.id',
+          from: "album_covers.album_id",
+          to: "albums.id",
         },
       },
     };
   }
 }
 
-module.exports = AlbumCovers;
+module.exports = AlbumCover;
