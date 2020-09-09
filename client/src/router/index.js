@@ -1,45 +1,36 @@
-import {
-  createRouter,
-  createWebHistory
-} from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from "vue";
+import Router from "vue-router";
 
-const routes = [{
-    path: "/",
-    name: "Home",
-    component: Home
-  },
-  {
-    path: "/about",
-    name: "About",
-    component: () =>
-      import("../views/About.vue")
-  },
-  {
-    path: "/games",
-    name: "Games",
-    component: () => import("../views/Games.vue"),
-    beforeEnter: (next) => {
-      // ...
-      console.log("before entering");
-      next;
+Vue.use(Router);
+
+export default new Router({
+  mode: "history",
+  routes: [
+    {
+      path: "/",
+      name: "Home",
+      component: () => import("../views/Home.vue"),
     },
-    children: [{
-      path: 'search',
+    {
+      path: "/about",
+      name: "About",
+      component: () => import("../views/About.vue"),
+    },
+    {
+      path: "/games",
+      name: "Games",
       component: () => import("../views/Games.vue"),
-    }, ]
-  },
-  {
-    path: '/games/:id',
-    name: 'Game',
-    component: () => import("../views/Game.vue")
-
-  }
-];
-
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
+      children: [
+        {
+          path: "search",
+          component: () => import("../views/Games.vue"),
+        },
+      ],
+    },
+    {
+      path: "/games/:id",
+      name: "Game",
+      component: () => import("../views/Game.vue"),
+    },
+  ],
 });
-
-export default router;

@@ -11,8 +11,6 @@ export default {
             text: "",
         };
     },
-    mounted() {
-        this.text = this.$store.getters.getCurrentGame;
-    },
+    mounted() {},
 };
 </script>
