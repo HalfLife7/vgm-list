@@ -1,15 +1,15 @@
-import express from 'express';
+import express from "express";
 
 const router = express.Router();
 
-const Album = require('../../models/album');
+const Album = require("../../models/album");
 
-router.get('/all', (req, res, next) => {
+router.get("/all", (req, res, next) => {
   Album.query()
-    .withGraphFetched('albumArtists.[artists(selectName)]')
+    .withGraphFetched("albumArtists.[artists(selectName)]")
     .modifiers({
       selectName: (builder) => {
-        builder.select('name');
+        builder.select("name");
       },
     })
     .then((albums) => {
@@ -17,22 +17,26 @@ router.get('/all', (req, res, next) => {
     });
 });
 
-router.get('/:id', (req, res, next) => {
+router.get("/:id", (req, res, next) => {
   const albumId = req.params.id;
 
   Album.query()
     .findById(albumId)
-    .withGraphFetched('albumArtists.[artists(selectName)]')
+    .withGraphFetched("artists.[artists(selectName)]")
     .modifiers({
       selectName: (builder) => {
-        builder.select('name');
+        builder.select("name");
       },
     })
+    .withGraphFetched("covers")
+    .withGraphFetched("discs")
+    .withGraphFetched("stores")
+    .withGraphFetched("tracks")
     .then((albums) => {
       res.send(albums);
     });
 });
 
-router.get('/', (req, res, next) => {});
+router.get("/", (req, res, next) => {});
 
 export default router;
