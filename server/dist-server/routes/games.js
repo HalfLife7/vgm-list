@@ -128,6 +128,13 @@ router.get("/:id", function (req, res, next) {
       game.covers[0].url = url.replace("t_thumb", "t_720p");
     }
 
+    if (game.screenshots !== undefined) {
+      game.screenshots.map(function (screenshot) {
+        var url = screenshot.url;
+        screenshot.url = url.replace("t_thumb", "t_720p");
+      });
+    }
+
     function timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
       var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

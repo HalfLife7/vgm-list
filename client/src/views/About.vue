@@ -1,16 +1,16 @@
 <template>
-<div class="about">
+  <div class="about">
     <h1>This is an about page. {{ text }}</h1>
-</div>
+  </div>
 </template>
 
 <script>
 export default {
-    data: () => {
-        return {
-            text: "",
-        };
-    },
-    mounted() {},
+  data: () => {
+    return {
+      text: ""
+    };
+  },
+  mounted() {}
 };
 </script>

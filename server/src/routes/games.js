@@ -181,6 +181,13 @@ router.get("/:id", (req, res, next) => {
         game.covers[0].url = url.replace("t_thumb", "t_720p");
       }
 
+      if (game.screenshots !== undefined) {
+        game.screenshots.map((screenshot) => {
+          const url = screenshot.url;
+          screenshot.url = url.replace("t_thumb", "t_720p");
+        });
+      }
+
       function timeConverter(UNIX_timestamp) {
         var a = new Date(UNIX_timestamp * 1000);
         var months = [

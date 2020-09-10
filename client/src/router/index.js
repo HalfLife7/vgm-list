@@ -9,12 +9,12 @@ export default new Router({
     {
       path: "/",
       name: "Home",
-      component: () => import("../views/Home.vue"),
+      component: () => import("../views/Home.vue")
     },
     {
       path: "/about",
       name: "About",
-      component: () => import("../views/About.vue"),
+      component: () => import("../views/About.vue")
     },
     {
       path: "/games",
@@ -23,14 +23,14 @@ export default new Router({
       children: [
         {
           path: "search",
-          component: () => import("../views/Games.vue"),
-        },
-      ],
+          component: () => import("../views/Games.vue")
+        }
+      ]
     },
     {
       path: "/games/:id",
       name: "Game",
-      component: () => import("../views/Game.vue"),
-    },
-  ],
+      component: () => import("../views/Game.vue")
+    }
+  ]
 });
