@@ -170,7 +170,7 @@ router.get("/:id", function (req, res, next) {
 
         if (website.category === "1") {
           website.type = "Official";
-          website.logo = "https://icongr.am/material/web-box.svg?size=128&color=0080ff";
+          website.logo = "https://icongr.am/octicons/verified.svg?size=148&color=0080ff";
         } else if (website.category === "2") {
           delete website.category;
         } else if (website.category === "3") {

@@ -1,27 +1,43 @@
 <template>
 <div>
     <div class="flex container m-auto pt-20">
-        <div class="w-1/5 bg-gray-400">
+        <div class="w-1/5 mr-4">
             <img class="w-full" :src="game.covers[0].url" v-if="gameDataIsLoaded" alt="Game Cover" />
         </div>
-        <div class="w-3/5 bg-gray-500 ml-8" v-if="gameDataIsLoaded">
+        <div class="w-4/5" v-if="gameDataIsLoaded">
             <div class="text-6xl">{{ game.name }}</div>
             <div class="text-xl">Release Date: {{ game.first_release_date }}</div>
-            <div class="text-base">{{ game.summary }}</div>
-            <div v-for="(website, index) in game.websites" :website="website" :key="index"></div>
+            <div class="text-base whitespace-pre-wrap">{{ game.summary }}</div>
+            <div class="flex">
+                <div v-for="(website, index) in game.websites" :website="website" :key="index">
+                    <div class="m-5">
+                        <a :href="website.url" target="_blank" rel="noopener" class="flex">
+                            <img class="h-8 w-8 mr-2 flex" :src="website.logo" />
+                            <p class="flex items-center hover:text-blue-700">
+                                {{ website.type }}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="w-1/5 bg-gray-400"></div>
     </div>
     <div class="flex container m-auto pt-20">
         <ul class="flex border-b">
-            <li class="-mb-px mr-1" :class="[image === 'screenshot' ? 'is-active bg-gray-200' : '']">
-                <a class=" inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" @click="image = 'screenshot'">Screenshots</a>
+            <li class="-mb-px mr-1" :class="[
+            image === 'screenshot' ? 'is-active bg-gray-200 text-blue-700' : '',
+          ]">
+                <a class="inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold hover:text-blue-700" @click="image = 'screenshot'">Screenshots</a>
             </li>
-            <li class="-mb-px mr-1" :class="[image === 'artwork' ? 'is-active bg-gray-200' : '']">
-                <a class=" inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" @click="image = 'artwork'">Artwork</a>
+            <li class="-mb-px mr-1" :class="[
+            image === 'artwork' ? 'is-active bg-gray-200 text-blue-700' : '',
+          ]">
+                <a class="inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold hover:text-blue-700" @click="image = 'artwork'">Artwork</a>
             </li>
-            <li class="-mb-px mr-1" :class="[image === 'video' ? 'is-active bg-gray-200' : '']">
-                <a class=" inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" @click="image = 'video'">Videos</a>
+            <li class="-mb-px mr-1" :class="[
+            image === 'video' ? 'is-active bg-gray-200 text-blue-700' : '',
+          ]">
+                <a class="inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold hover:text-blue-700" @click="image = 'video'">Videos</a>
             </li>
         </ul>
     </div>
