@@ -128,12 +128,25 @@ router.get("/:id", function (req, res, next) {
       game.covers[0].url = url.replace("t_thumb", "t_720p");
     }
 
+    if (game.artworks !== undefined) {
+      game.artworks.map(function (artwork) {
+        var url = artwork.url;
+        artwork.url = url.replace("t_thumb", "t_720p");
+      });
+    }
+
     if (game.screenshots !== undefined) {
       game.screenshots.map(function (screenshot) {
         var url = screenshot.url;
         screenshot.url = url.replace("t_thumb", "t_720p");
       });
-    }
+    } // if (game.videos !== undefined) {
+    //   game.videos.map((video) => {
+    //     const url = video.video_id;
+    //     video.video_id = "https://www.youtube.com/watch?v=" + url;
+    //   });
+    // }
+
 
     function timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
@@ -150,6 +163,65 @@ router.get("/:id", function (req, res, next) {
 
     var dateTime = timeConverter(game.first_release_date);
     game.first_release_date = dateTime;
+
+    if (game.websites !== undefined) {
+      game.websites.map(function (website) {
+        console.log(website.category);
+
+        if (website.category === "1") {
+          website.type = "Official";
+          website.logo = "https://icongr.am/material/web-box.svg?size=128&color=0080ff";
+        } else if (website.category === "2") {
+          delete website.category;
+        } else if (website.category === "3") {
+          website.type = "Wikipedia";
+          website.logo = "https://www.vectorlogo.zone/logos/wikipedia/wikipedia-tile.svg";
+        } else if (website.category === "4") {
+          website.type = "Facebook";
+          website.logo = "https://www.vectorlogo.zone/logos/facebook/facebook-tile.svg";
+        } else if (website.category === "5") {
+          website.type = "Twitter";
+          website.logo = "https://www.vectorlogo.zone/logos/twitter/twitter-tile.svg";
+        } else if (website.category === "6") {
+          website.type = "Twitch";
+          website.logo = "https://www.vectorlogo.zone/logos/twitch/twitch-tile.svg";
+        } else if (website.category === "8") {
+          website.type = "Instagram";
+          website.logo = "https://www.vectorlogo.zone/logos/instagram/instagram-tile.svg";
+        } else if (website.category === "9") {
+          website.type = "Youtube";
+          website.logo = "https://www.vectorlogo.zone/logos/youtube/youtube-tile.svg";
+        } else if (website.category === "10") {
+          delete website.category;
+        } else if (website.category === "11") {
+          delete website.category;
+        } else if (website.category === "12") {
+          website.type = "Android";
+          website.logo = "https://www.vectorlogo.zone/logos/twitch/twitch-tile.svg";
+        } else if (website.category === "13") {
+          website.type = "Steam";
+          website.logo = "https://www.vectorlogo.zone/logos/steampowered/steampowered-tile.svg";
+        } else if (website.category === "14") {
+          website.type = "Reddit";
+          website.logo = "https://www.vectorlogo.zone/logos/reddit/reddit-tile.svg";
+        } else if (website.category === "15") {
+          website.type = "Itch";
+          website.logo = "https://www.vectorlogo.zone/logos/discordapp/discordapp-tile.svg";
+        } else if (website.category === "16") {
+          website.type = "Epic Games";
+          website.logo = "https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg";
+        } else if (website.category === "17") {
+          website.type = "GOG";
+          website.logo = "https://www.vectorlogo.zone/logos/gog/gog-icon.svg";
+        } else if (website.category === "18") {
+          website.type = "Discord";
+          website.logo = "https://www.vectorlogo.zone/logos/discordapp/discordapp-tile.svg";
+        } else {
+          delete website.category;
+        }
+      });
+    }
+
     console.log(game);
     res.send(game);
   });
