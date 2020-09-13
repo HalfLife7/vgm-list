@@ -13,13 +13,13 @@
             >
             <div class="ml-5 relative mx-auto text-gray-600">
               <input
+                id="search"
+                v-model="search"
                 class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
                 type="search"
-                id="search"
                 placeholder="search"
                 name="search"
-                v-model="search"
-                v-on:keyup.enter="searchQuery"
+                @keyup.enter="searchQuery"
               />
               <button
                 type="submit"
@@ -27,11 +27,11 @@
                 @click="searchQuery"
               >
                 <svg
+                  id="Capa_1"
                   class="text-gray-600 h-4 w-4 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
                   version="1.1"
-                  id="Capa_1"
                   x="0px"
                   y="0px"
                   viewBox="0 0 56.966 56.966"
@@ -74,7 +74,7 @@
 
 <script>
 export default {
-  name: "app-nav-bar",
+  name: "AppNavBar",
   data: () => {
     return {
       search: ""

@@ -10,7 +10,7 @@
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 export default {
-  name: "app",
+  name: "App",
   components: {
     "nav-bar": NavBar,
     "app-footer": Footer

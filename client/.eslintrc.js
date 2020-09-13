@@ -2,17 +2,25 @@ module.exports = {
   root: true,
 
   env: {
-    node: true
+    es6: true,
+    node: true,
   },
 
-  extends: ["plugin:vue/vue3-essential", "eslint:recommended", "@vue/prettier"],
+  extends: [
+    "plugin:vue/recommended",
+    "eslint:recommended",
+    "prettier",
+    "prettier/vue",
+  ],
+  plugins: ["vue"],
 
   parserOptions: {
-    parser: "babel-eslint"
+    parser: "babel-eslint",
   },
 
   rules: {
     "no-console": "off",
-    "no-debugger": "off"
-  }
+    "no-debugger": "off",
+    "no-deprecated-slot-attribute": "off"
+  },
 };
