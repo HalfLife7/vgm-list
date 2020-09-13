@@ -1,4 +1,5 @@
 import express from "express";
+import moment from "moment";
 // import config from '../config'
 // import axios from 'axios';
 const router = express.Router();
@@ -202,34 +203,9 @@ router.get("/:id", (req, res, next) => {
       //   });
       // }
 
-      function timeConverter(UNIX_timestamp) {
-        var a = new Date(UNIX_timestamp * 1000);
-        var months = [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ];
-        var year = a.getFullYear();
-        var month = months[a.getMonth()];
-        var date = a.getDate();
-        var hour = a.getHours();
-        var min = a.getMinutes();
-        var sec = a.getSeconds();
-        var time = date + " " + month + " " + year;
-        return time;
-      }
-
-      let dateTime = timeConverter(game.first_release_date);
-      game.first_release_date = dateTime;
+      game.first_release_date = moment
+        .unix(game.first_release_date)
+        .format("YYYY-MM-DD");
 
       if (game.websites !== undefined) {
         game.websites.map((website) => {

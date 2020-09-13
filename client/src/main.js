@@ -6,12 +6,12 @@ import VuePlyr from "vue-plyr";
 
 new Vue({
   router,
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount("#app");
 
 Vue.use(VuePlyr, {
   plyr: {
-    fullscreen: { enabled: true },
+    fullscreen: { enabled: true }
   },
-  emit: ["ended"],
+  emit: ["ended"]
 });

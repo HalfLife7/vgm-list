@@ -9,6 +9,8 @@ exports["default"] = void 0;
 
 var _express = _interopRequireDefault(require("express"));
 
+var _moment = _interopRequireDefault(require("moment"));
+
 // import config from '../config'
 // import axios from 'axios';
 var router = _express["default"].Router();
@@ -148,21 +150,7 @@ router.get("/:id", function (req, res, next) {
     // }
 
 
-    function timeConverter(UNIX_timestamp) {
-      var a = new Date(UNIX_timestamp * 1000);
-      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      var year = a.getFullYear();
-      var month = months[a.getMonth()];
-      var date = a.getDate();
-      var hour = a.getHours();
-      var min = a.getMinutes();
-      var sec = a.getSeconds();
-      var time = date + " " + month + " " + year;
-      return time;
-    }
-
-    var dateTime = timeConverter(game.first_release_date);
-    game.first_release_date = dateTime;
+    game.first_release_date = _moment["default"].unix(game.first_release_date).format("YYYY-MM-DD");
 
     if (game.websites !== undefined) {
       game.websites.map(function (website) {
