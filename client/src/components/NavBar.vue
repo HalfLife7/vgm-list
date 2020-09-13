@@ -6,10 +6,10 @@
           class="flex flex-col max-w-screen-xl px-4 mx-auto md:items-center md:justify-between md:flex-row md:px-6 lg:px-8"
         >
           <div class="flex flex-row items-center justify-between p-4">
-            <a
-              href="#"
+            <router-link
+              to="/games"
               class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg focus:outline-none focus:shadow-outline"
-              >VGM-List</a
+              >VGM-List</router-link
             >
             <div class="ml-5 relative mx-auto text-gray-600">
               <input
@@ -77,7 +77,7 @@ export default {
   name: "AppNavBar",
   data: () => {
     return {
-      search: ""
+      search: "",
     };
   },
   methods: {
@@ -88,11 +88,11 @@ export default {
         this.$router.push({
           path: "/games/search",
           query: {
-            name: this.search
-          }
+            name: this.search,
+          },
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>

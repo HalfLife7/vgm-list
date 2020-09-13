@@ -160,7 +160,8 @@ router.get("/:id", function (req, res, next) {
           website.type = "Official";
           website.logo = "https://icongr.am/octicons/verified.svg?size=148&color=0080ff";
         } else if (website.category === "2") {
-          delete website.category;
+          website.type = "Wikia";
+          website.logo = "https://upload.wikimedia.org/wikipedia/commons/1/17/Wikia_Logo.svg";
         } else if (website.category === "3") {
           website.type = "Wikipedia";
           website.logo = "https://www.vectorlogo.zone/logos/wikipedia/wikipedia-tile.svg";
@@ -185,7 +186,7 @@ router.get("/:id", function (req, res, next) {
           delete website.category;
         } else if (website.category === "12") {
           website.type = "Android";
-          website.logo = "https://www.vectorlogo.zone/logos/twitch/twitch-tile.svg";
+          website.logo = "https://www.vectorlogo.zone/logos/google_play/google_play-tile.svg";
         } else if (website.category === "13") {
           website.type = "Steam";
           website.logo = "https://www.vectorlogo.zone/logos/steampowered/steampowered-tile.svg";

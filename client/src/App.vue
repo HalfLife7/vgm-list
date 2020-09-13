@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav-bar></nav-bar>
-    <router-view></router-view>
+    <router-view class="min-h-router-view"></router-view>
     <app-footer></app-footer>
   </div>
 </template>
@@ -13,7 +13,7 @@ export default {
   name: "App",
   components: {
     "nav-bar": NavBar,
-    "app-footer": Footer
-  }
+    "app-footer": Footer,
+  },
 };
 </script>

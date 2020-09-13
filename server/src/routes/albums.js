@@ -68,6 +68,16 @@ router.get("/:id", (req, res, next) => {
           .format("YYYY-MM-DD");
       }
 
+      if (album.covers !== undefined) {
+        console.log(album.covers);
+        if (album.covers.length === 0) {
+          album.covers.push({
+            full:
+              "https://via.placeholder.com/600x600.png/000000/FFFFFF?text=Missing%20Cover",
+          });
+        }
+      }
+
       if (album.tracks !== undefined) {
         album.tracks.map((track) => {
           track.disc_id += 1;
