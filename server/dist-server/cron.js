@@ -14,41 +14,45 @@ var _config = _interopRequireDefault(require("./config"));
 
 var router = _express["default"].Router();
 
-var axios = require('axios')["default"];
+var axios = require("axios")["default"];
 
-var _require = require('cron'),
+var _require = require("cron"),
     CronJob = _require.CronJob;
 
-var _require2 = require('objection'),
+var _require2 = require("objection"),
     raw = _require2.raw;
 
-var Game = require('../models/game');
+var Game = require("../models/game");
 
-var GameAlternativeName = require('../models/gameAlternativeName');
+var GameAlternativeName = require("../models/gameAlternativeName");
 
-var GameArtwork = require('../models/gameArtwork');
+var GameArtwork = require("../models/gameArtwork");
 
-var GameCover = require('../models/gameCover');
+var GameCover = require("../models/gameCover");
 
-var GameScreenshot = require('../models/gameScreenshot');
+var GameScreenshot = require("../models/gameScreenshot");
 
-var GameVideo = require('../models/gameVideo');
+var GameVideo = require("../models/gameVideo");
 
-var GameWebsite = require('../models/gameWebsite');
+var GameWebsite = require("../models/gameWebsite");
 
-var GamePlatform = require('../models/gamePlatform');
+var GamePlatform = require("../models/gamePlatform");
 
-var Platform = require('../models/platform');
+var GameCollection = require("../models/gameCollection");
 
-var PlatformLogo = require('../models/platformLogo');
+var Platform = require("../models/platform");
 
-var updateGameDb = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10() {
+var PlatformLogo = require("../models/platformLogo");
+
+var Collection = require("../models/collection");
+
+var updateGameDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10() {
   var getMaxGameId, maxGameId, getGames, games;
   return _regenerator["default"].wrap(function _callee10$(_context10) {
     while (1) {
       switch (_context10.prev = _context10.next) {
         case 0:
-          console.log('starting'); // get highest id from db
+          console.log("starting"); // get highest id from db
 
           getMaxGameId = /*#__PURE__*/function () {
             var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
@@ -60,8 +64,8 @@ var updateGameDb = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGenera
                       _context.prev = 0;
                       _context.next = 3;
                       return axios({
-                        method: 'get',
-                        url: 'http://localhost:3000/games/max'
+                        method: "get",
+                        url: "http://localhost:3000/games/max"
                       });
 
                     case 3:
@@ -94,11 +98,11 @@ var updateGameDb = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGenera
 
           if (maxGameId === null) {
             maxGameId = 1;
-          } // console.log(util.inspect(maxGameId, false, null, true));
-          // remove for now, cannot get header to send api key
+          }
+
+          console.log(_util["default"].inspect(maxGameId, false, null, true)); // remove for now, cannot get header to send api key
           // import igdb from 'igdb-api-node';
           // const client = igdb(config.IGDB_KEY);
-
 
           getGames = /*#__PURE__*/function () {
             var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
@@ -110,13 +114,13 @@ var updateGameDb = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGenera
                       _context2.prev = 0;
                       _context2.next = 3;
                       return axios({
-                        url: 'https://api-v3.igdb.com/games',
-                        method: 'POST',
+                        url: "https://api-v3.igdb.com/games",
+                        method: "POST",
                         headers: {
-                          Accept: 'application/json',
-                          'user-key': _config["default"].IGDB_KEY
+                          Accept: "application/json",
+                          "user-key": _config["default"].IGDB_KEY
                         },
-                        data: "fields aggregated_rating_count, aggregated_rating, alternative_names.*, category, first_release_date, name, platforms.*, slug, summary, artworks.*, cover.*, videos.*, screenshots.*, websites.*;  where version_parent = null & id > ".concat(maxGameId, "; limit 500; sort id asc;")
+                        data: "fields aggregated_rating_count, aggregated_rating, alternative_names.*, category, collection.*, first_release_date, name, platforms.*, slug, summary, artworks.*, cover.*, videos.*, screenshots.*, websites.*;  where version_parent = null & id > ".concat(maxGameId, "; limit 500; sort id asc;")
                       });
 
                     case 3:
@@ -141,13 +145,13 @@ var updateGameDb = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGenera
             };
           }();
 
-          _context10.next = 9;
+          _context10.next = 10;
           return getGames();
 
-        case 9:
+        case 10:
           games = _context10.sent;
-          _context10.prev = 10;
-          _context10.next = 13;
+          _context10.prev = 11;
+          _context10.next = 14;
           return Promise.all(games.data.map( /*#__PURE__*/function () {
             var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(game) {
               var _game$cover, _game$cover2, _game$cover3, _game$cover4, _game$cover5, _game$cover6, _game$cover7, _game$cover8;
@@ -402,6 +406,18 @@ var updateGameDb = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGenera
                       }()));
 
                     case 23:
+                      if (!(game.collection !== undefined)) {
+                        _context9.next = 26;
+                        break;
+                      }
+
+                      _context9.next = 26;
+                      return GameCollection.query().insert({
+                        game_id: game.id,
+                        collection_id: game.collection.id
+                      });
+
+                    case 26:
                     case "end":
                       return _context9.stop();
                   }
@@ -414,30 +430,30 @@ var updateGameDb = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGenera
             };
           }()));
 
-        case 13:
-          _context10.next = 18;
+        case 14:
+          _context10.next = 19;
           break;
 
-        case 15:
-          _context10.prev = 15;
-          _context10.t0 = _context10["catch"](10);
+        case 16:
+          _context10.prev = 16;
+          _context10.t0 = _context10["catch"](11);
           console.error(_context10.t0);
 
-        case 18:
+        case 19:
         case "end":
           return _context10.stop();
       }
     }
-  }, _callee10, null, [[10, 15]]);
+  }, _callee10, null, [[11, 16]]);
 })));
-var updatePlatforms = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee14() {
-  var getMaxGameId, maxPlatformId, getPlatforms, platforms;
+var updatePlatforms = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee14() {
+  var getMaxPlatformId, maxPlatformId, getPlatforms, platforms;
   return _regenerator["default"].wrap(function _callee14$(_context14) {
     while (1) {
       switch (_context14.prev = _context14.next) {
         case 0:
           // get highest id from db
-          getMaxGameId = /*#__PURE__*/function () {
+          getMaxPlatformId = /*#__PURE__*/function () {
             var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11() {
               var response;
               return _regenerator["default"].wrap(function _callee11$(_context11) {
@@ -447,8 +463,8 @@ var updatePlatforms = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGen
                       _context11.prev = 0;
                       _context11.next = 3;
                       return axios({
-                        method: 'get',
-                        url: 'http://localhost:3000/platforms/max'
+                        method: "get",
+                        url: "http://localhost:3000/platforms/max"
                       });
 
                     case 3:
@@ -468,13 +484,13 @@ var updatePlatforms = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGen
               }, _callee11, null, [[0, 7]]);
             }));
 
-            return function getMaxGameId() {
+            return function getMaxPlatformId() {
               return _ref12.apply(this, arguments);
             };
           }();
 
           _context14.next = 3;
-          return getMaxGameId();
+          return getMaxPlatformId();
 
         case 3:
           maxPlatformId = _context14.sent;
@@ -494,11 +510,11 @@ var updatePlatforms = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGen
                       _context12.prev = 0;
                       _context12.next = 3;
                       return axios({
-                        url: 'https://api-v3.igdb.com/platforms',
-                        method: 'POST',
+                        url: "https://api-v3.igdb.com/platforms",
+                        method: "POST",
                         headers: {
-                          Accept: 'application/json',
-                          'user-key': _config["default"].IGDB_KEY
+                          Accept: "application/json",
+                          "user-key": _config["default"].IGDB_KEY
                         },
                         data: "fields *, platform_logo.*; where id > ".concat(maxPlatformId, "; limit 500; sort id asc;")
                       });
@@ -613,8 +629,159 @@ var updatePlatforms = new CronJob('*/30 * * * * *', /*#__PURE__*/(0, _asyncToGen
       }
     }
   }, _callee14);
+})));
+var updateCollections = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee18() {
+  var getMaxCollectionId, maxCollectionId, getCollections, collections;
+  return _regenerator["default"].wrap(function _callee18$(_context18) {
+    while (1) {
+      switch (_context18.prev = _context18.next) {
+        case 0:
+          // get highest id from db
+          getMaxCollectionId = /*#__PURE__*/function () {
+            var _ref16 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15() {
+              var response;
+              return _regenerator["default"].wrap(function _callee15$(_context15) {
+                while (1) {
+                  switch (_context15.prev = _context15.next) {
+                    case 0:
+                      _context15.prev = 0;
+                      _context15.next = 3;
+                      return axios({
+                        method: "get",
+                        url: "http://localhost:3000/collections/max"
+                      });
+
+                    case 3:
+                      response = _context15.sent;
+                      return _context15.abrupt("return", response.data[0].max);
+
+                    case 7:
+                      _context15.prev = 7;
+                      _context15.t0 = _context15["catch"](0);
+                      console.error(_context15.t0);
+
+                    case 10:
+                    case "end":
+                      return _context15.stop();
+                  }
+                }
+              }, _callee15, null, [[0, 7]]);
+            }));
+
+            return function getMaxCollectionId() {
+              return _ref16.apply(this, arguments);
+            };
+          }();
+
+          _context18.next = 3;
+          return getMaxCollectionId();
+
+        case 3:
+          maxCollectionId = _context18.sent;
+
+          if (maxCollectionId === null) {
+            maxCollectionId = 0;
+          }
+
+          console.log(_util["default"].inspect(maxCollectionId, false, null, true));
+
+          getCollections = /*#__PURE__*/function () {
+            var _ref17 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee16() {
+              var response;
+              return _regenerator["default"].wrap(function _callee16$(_context16) {
+                while (1) {
+                  switch (_context16.prev = _context16.next) {
+                    case 0:
+                      _context16.prev = 0;
+                      _context16.next = 3;
+                      return axios({
+                        url: "https://api-v3.igdb.com/collections",
+                        method: "POST",
+                        headers: {
+                          Accept: "application/json",
+                          "user-key": _config["default"].IGDB_KEY
+                        },
+                        data: "fields *; where id > ".concat(maxCollectionId, "; limit 500; sort id asc;")
+                      });
+
+                    case 3:
+                      response = _context16.sent;
+                      return _context16.abrupt("return", response);
+
+                    case 7:
+                      _context16.prev = 7;
+                      _context16.t0 = _context16["catch"](0);
+                      console.error(_context16.t0);
+
+                    case 10:
+                    case "end":
+                      return _context16.stop();
+                  }
+                }
+              }, _callee16, null, [[0, 7]]);
+            }));
+
+            return function getCollections() {
+              return _ref17.apply(this, arguments);
+            };
+          }();
+
+          _context18.next = 9;
+          return getCollections();
+
+        case 9:
+          collections = _context18.sent;
+          _context18.next = 12;
+          return Promise.all(collections.data.map( /*#__PURE__*/function () {
+            var _ref18 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee17(collection) {
+              return _regenerator["default"].wrap(function _callee17$(_context17) {
+                while (1) {
+                  switch (_context17.prev = _context17.next) {
+                    case 0:
+                      _context17.prev = 0;
+                      _context17.next = 3;
+                      return Collection.query().insert({
+                        id: collection === null || collection === void 0 ? void 0 : collection.id,
+                        created_at: collection === null || collection === void 0 ? void 0 : collection.created_at,
+                        name: collection === null || collection === void 0 ? void 0 : collection.name,
+                        slug: collection === null || collection === void 0 ? void 0 : collection.slug,
+                        updated_at: collection === null || collection === void 0 ? void 0 : collection.updated_at,
+                        url: collection === null || collection === void 0 ? void 0 : collection.url,
+                        checksum: collection === null || collection === void 0 ? void 0 : collection.checksum
+                      });
+
+                    case 3:
+                      _context17.next = 8;
+                      break;
+
+                    case 5:
+                      _context17.prev = 5;
+                      _context17.t0 = _context17["catch"](0);
+                      console.error(_context17.t0);
+
+                    case 8:
+                    case "end":
+                      return _context17.stop();
+                  }
+                }
+              }, _callee17, null, [[0, 5]]);
+            }));
+
+            return function (_x9) {
+              return _ref18.apply(this, arguments);
+            };
+          }()));
+
+        case 12:
+        case "end":
+          return _context18.stop();
+      }
+    }
+  }, _callee18);
 }))); // run this cron once to populate platform tables
 // updatePlatforms.start();
+// run this cron 13x to populate collections tables
+//updateCollections.start();
 // run this cron job for about 2 hours to pull all 129000~ game entries from igdb
 // updateGameDb.start();
 

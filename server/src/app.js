@@ -3,44 +3,46 @@
 // install cors > fix vue axios request error (Reason: CORS header ‘Access-Control-Allow-Origin’ missing)
 // add quotations around 'NODE_ENV=development' to fix undefined error - https://stackoverflow.com/questions/11104028/process-env-node-env-is-undefined
 
-import express from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import logger from 'morgan';
-import cors from 'cors';
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import cors from "cors";
 
-import indexRouter from './routes/index';
-import gamesRouter from './routes/games';
-import albumsRouter from './routes/albums';
-import platformsRouter from './routes/platforms';
-import platformLogosRouter from './routes/platformLogos';
-import cron from './cron';
+import indexRouter from "./routes/index";
+import gamesRouter from "./routes/games";
+import albumsRouter from "./routes/albums";
+import platformsRouter from "./routes/platforms";
+import platformLogosRouter from "./routes/platformLogos";
+import collectionsRouter from "./routes/collections";
+import cron from "./cron";
 
 // import history from 'connect-history-api-fallback';
 
 const app = express();
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(
   express.urlencoded({
     extended: false,
-  }),
+  })
 );
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.use(
   cors({
-    origin: 'http://localhost:8080',
-  }),
+    origin: "http://localhost:8080",
+  })
 );
 
-app.use('/', indexRouter);
-app.use('/games', gamesRouter);
-app.use('/albums', albumsRouter);
-app.use('/platforms', platformsRouter);
-app.use('/platform-logos', platformLogosRouter);
+app.use("/", indexRouter);
+app.use("/games", gamesRouter);
+app.use("/albums", albumsRouter);
+app.use("/platforms", platformsRouter);
+app.use("/platform-logos", platformLogosRouter);
+app.use("/collections", collectionsRouter);
 app.use(albumsRouter);
 
 module.exports = app;

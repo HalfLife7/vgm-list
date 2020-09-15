@@ -22,6 +22,8 @@ var _platforms = _interopRequireDefault(require("./routes/platforms"));
 
 var _platformLogos = _interopRequireDefault(require("./routes/platformLogos"));
 
+var _collections = _interopRequireDefault(require("./routes/collections"));
+
 var _cron = _interopRequireDefault(require("./cron"));
 
 // initial setup - https://www.freecodecamp.org/news/how-to-enable-es6-and-beyond-syntax-with-node-and-express-68d3e11fe1ab/
@@ -30,20 +32,21 @@ var _cron = _interopRequireDefault(require("./cron"));
 // add quotations around 'NODE_ENV=development' to fix undefined error - https://stackoverflow.com/questions/11104028/process-env-node-env-is-undefined
 // import history from 'connect-history-api-fallback';
 var app = (0, _express["default"])();
-app.use((0, _morgan["default"])('dev'));
+app.use((0, _morgan["default"])("dev"));
 app.use(_express["default"].json());
 app.use(_express["default"].urlencoded({
   extended: false
 }));
 app.use((0, _cookieParser["default"])());
-app.use(_express["default"]["static"](_path["default"].join(__dirname, '../public')));
+app.use(_express["default"]["static"](_path["default"].join(__dirname, "../public")));
 app.use((0, _cors["default"])({
-  origin: 'http://localhost:8080'
+  origin: "http://localhost:8080"
 }));
-app.use('/', _index["default"]);
-app.use('/games', _games["default"]);
-app.use('/albums', _albums["default"]);
-app.use('/platforms', _platforms["default"]);
-app.use('/platform-logos', _platformLogos["default"]);
+app.use("/", _index["default"]);
+app.use("/games", _games["default"]);
+app.use("/albums", _albums["default"]);
+app.use("/platforms", _platforms["default"]);
+app.use("/platform-logos", _platformLogos["default"]);
+app.use("/collections", _collections["default"]);
 app.use(_albums["default"]);
 module.exports = app;
