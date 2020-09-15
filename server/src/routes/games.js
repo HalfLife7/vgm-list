@@ -1,3 +1,4 @@
+import util from "util";
 import express from "express";
 import moment from "moment";
 // import config from '../config'
@@ -20,51 +21,58 @@ router.get("/max", (req, res, next) => {
 
 router.get("/all", (req, res, next) => {
   Game.query()
-    .joinRelated("platforms")
-    .whereIn("platforms.platform_id", [
-      4,
-      5,
-      7,
-      8,
-      9,
-      11,
-      12,
-      18,
-      19,
-      21,
-      23,
-      29,
-      30,
-      32,
-      41,
-      48,
-      49,
-      130,
-      6,
-      92,
-      20,
-      22,
-      24,
-      33,
-      37,
-      38,
-      46,
-      137,
-      159,
-    ])
+    // .innerJoin("game_platforms", "games.id", "game_platforms.game_id")
+    // .select([
+    //   "games.*",
+    //   raw("ARRAY_AGG(game_platforms.platform_id) as platforms"),
+    // ])
+    .withGraphFetched("platforms.[platforms.logos]")
+    // .modifiers({
+    //   filterPlatform(builder) {
+    //     builder.whereIn("platform_id", [
+    //       4,
+    //       5,
+    //       7,
+    //       8,
+    //       9,
+    //       11,
+    //       12,
+    //       18,
+    //       19,
+    //       21,
+    //       23,
+    //       29,
+    //       30,
+    //       32,
+    //       41,
+    //       48,
+    //       49,
+    //       130,
+    //       6,
+    //       92,
+    //       20,
+    //       22,
+    //       24,
+    //       33,
+    //       37,
+    //       38,
+    //       46,
+    //       137,
+    //       159,
+    //     ]);
+    //   },
+    // })
     .where("category", "=", "0")
     .whereExists(Game.relatedQuery("covers"))
     .withGraphFetched("covers")
     .limit(20)
     .orderBy(raw("random()"))
+    .groupBy("games.id")
     .then((games) => {
       games.map((game) => {
         // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
-        console.log(game.covers);
         if (game.covers !== undefined) {
           const url = game?.covers[0].url;
-          console.log(game.covers);
-          console.log(url);
           game.covers[0].url = url.replace("t_thumb", "t_720p");
         }
 
@@ -75,6 +83,7 @@ router.get("/all", (req, res, next) => {
           game.summary = truncate(game.summary);
         }
       });
+      console.log(util.inspect(games, false, null, true));
       res.send(games);
     });
 });

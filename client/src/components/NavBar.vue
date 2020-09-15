@@ -1,5 +1,5 @@
 <template>
-  <div id="nav" class="h-12">
+  <div id="nav" class="h-12 mb-20">
     <div class="antialiased bg-gray-100">
       <div class="w-full text-gray-700 bg-white">
         <div

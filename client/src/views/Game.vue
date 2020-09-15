@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-wrap container m-auto pt-20">
+    <div class="flex flex-wrap container m-auto">
       <div class="w-full md:w-2/6">
         <img
           v-if="gameDataIsLoaded"
