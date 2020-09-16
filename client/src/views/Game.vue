@@ -312,6 +312,13 @@ export default {
           this.totalScreenshots = this.game.screenshots.length;
           this.totalArtworks = this.game.artworks.length;
           this.totalVideos = this.game.videos.length;
+          if (this.totalScreenshots > 0) {
+            this.image = "screenshot";
+          } else if (this.totalArtworks > 0) {
+            this.image = "artwork";
+          } else if (this.totalVideos > 0) {
+            this.image = "video";
+          }
         })
         .catch((err) => {
           console.error(err);

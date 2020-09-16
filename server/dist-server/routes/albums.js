@@ -15,6 +15,13 @@ var router = _express["default"].Router();
 
 var Album = require("../../models/album");
 
+router.get("/not-updated", function (req, res, next) {
+  Album.query().min("id").where("updated_at", "IS", null).then(function (albumId) {
+    res.send(albumId);
+  })["catch"](function (err) {
+    console.error(err);
+  });
+});
 router.get("/all", function (req, res, next) {
   Album.query().withGraphFetched("albumArtists.[artists(selectName)]").modifiers({
     selectName: function selectName(builder) {
@@ -82,6 +89,5 @@ router.get("/:id", function (req, res, next) {
     res.send(album);
   });
 });
-router.get("/", function (req, res, next) {});
 var _default = router;
 exports["default"] = _default;

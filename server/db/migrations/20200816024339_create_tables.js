@@ -205,11 +205,7 @@ exports.up = async (knex) => {
     });
     await knex.schema.createTable("albums", (t) => {
       t.integer("id").unsigned().primary();
-      t.integer("game_id")
-        .unsigned()
-        .references("id")
-        .inTable("games")
-        .notNull();
+      t.integer("game_id").unsigned().references("id").inTable("games");
       t.text("catalog");
       t.text("category");
       t.text("classification");
@@ -219,6 +215,7 @@ exports.up = async (knex) => {
       t.text("publisher");
       t.text("game_name"); // products field in album json
       t.date("release_date");
+      t.integer("updated_at");
     });
     await knex.schema.createTable("artists", (t) => {
       t.integer("id").unsigned().primary();

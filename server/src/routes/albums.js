@@ -5,6 +5,18 @@ const router = express.Router();
 
 const Album = require("../../models/album");
 
+router.get("/not-updated", (req, res, next) => {
+  Album.query()
+    .min("id")
+    .where("updated_at", "IS", null)
+    .then((albumId) => {
+      res.send(albumId);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
 router.get("/all", (req, res, next) => {
   Album.query()
     .withGraphFetched("albumArtists.[artists(selectName)]")
@@ -94,7 +106,5 @@ router.get("/:id", (req, res, next) => {
       res.send(album);
     });
 });
-
-router.get("/", (req, res, next) => {});
 
 export default router;

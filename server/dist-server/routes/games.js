@@ -90,6 +90,16 @@ router.get("/all", function (req, res, next) {
     res.send(games);
   });
 });
+router.get("/search-by-exact-name/:name", function (req, res, next) {
+  var gameName = req.params.name;
+  console.log(gameName);
+  Game.query().where("name", "=", gameName).then(function (game) {
+    console.log(game);
+    res.send(game);
+  })["catch"](function (err) {
+    console.error(err);
+  });
+});
 router.get("/search", function (req, res, next) {
   var searchParams = req.query.name;
   console.log(searchParams);

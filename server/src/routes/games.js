@@ -88,6 +88,21 @@ router.get("/all", (req, res, next) => {
     });
 });
 
+router.get("/search-by-exact-name/:name", (req, res, next) => {
+  const gameName = req.params.name;
+  console.log(gameName);
+
+  Game.query()
+    .where("name", "=", gameName)
+    .then((game) => {
+      console.log(game);
+      res.send(game);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
 router.get("/search", (req, res, next) => {
   const searchParams = req.query.name;
   console.log(searchParams);

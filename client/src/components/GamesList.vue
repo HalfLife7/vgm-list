@@ -6,7 +6,6 @@
         :key="index"
         :game="game"
       ></app-game-card>
-      <router-view> </router-view>
     </div>
   </div>
 </template>
@@ -17,17 +16,17 @@ import GameDataService from "../services/GameDataService";
 export default {
   name: "GamesList",
   components: {
-    "app-game-card": GameCard
+    "app-game-card": GameCard,
   },
   data: () => {
     return {
-      games: []
+      games: [],
     };
   },
   computed: {
     query() {
       return this.$route.query.name;
-    }
+    },
   },
   watch: {
     query() {
@@ -39,15 +38,15 @@ export default {
         return;
       }
       GameDataService.search(this.query)
-        .then(response => {
+        .then((response) => {
           this.games = response.data;
           console.log("watcher");
           console.log(response.data);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
         });
-    }
+    },
   },
   mounted() {
     console.log("This component is mounted!");
@@ -66,26 +65,26 @@ export default {
   methods: {
     retrieveGames() {
       GameDataService.getAll()
-        .then(response => {
+        .then((response) => {
           this.games = response.data;
           console.log(response.data);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
         });
     },
     // TODO: fix duplicate card bug
     searchSingle() {
       GameDataService.search(this.query)
-        .then(response => {
+        .then((response) => {
           this.games = response.data;
           console.log("searchSingle");
           console.log(response.data);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>

@@ -1,6 +1,8 @@
 import express from "express";
 import util from "util";
 import config from "./config";
+import fs from "fs";
+import moment from "moment";
 
 const router = express.Router();
 const axios = require("axios").default;
@@ -19,6 +21,11 @@ const GameCollection = require("../models/gameCollection");
 const Platform = require("../models/platform");
 const PlatformLogo = require("../models/platformLogo");
 const Collection = require("../models/collection");
+const Album = require("../models/album");
+const AlbumCover = require("../models/albumCover");
+const AlbumDisc = require("../models/albumDisc");
+const AlbumStore = require("../models/albumStore");
+const AlbumTrack = require("../models/albumTrack");
 
 const updateGameDb = new CronJob("*/30 * * * * *", async () => {
   console.log("starting");
@@ -334,6 +341,162 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
   );
 });
 
+const addAlbums = new CronJob("0 0 * * *", async () => {
+  console.log("starting addAlbums");
+  let rawData = fs.readFileSync("./data.json");
+  let albumList = JSON.parse(rawData);
+  await Promise.all(
+    albumList.albums.map(async (album) => {
+      // console.log("id: " + album.id);
+      // console.log("title: " + album.title);
+      try {
+        await Album.query().insert({
+          id: album.id,
+          name: album.title,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    })
+  );
+});
+
+const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
+  console.log("starting updateAlbumDb");
+
+  // get highest id from db
+  const getNotUpdatedAlbumId = async () => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: "http://localhost:3000/albums/not-updated",
+      });
+      return response.data[0].min;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  let updateAlbumId = await getNotUpdatedAlbumId();
+  console.log(util.inspect(updateAlbumId, false, null, true));
+
+  const getAlbum = async () => {
+    try {
+      // query api for games not yet in db
+      const response = await axios({
+        url: `http://vgmdb.info/album/${updateAlbumId}`,
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      }).then((response) => {
+        return response.data;
+      });
+      return response;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const album = await getAlbum();
+  // console.log(util.inspect(album, false, null, true));
+
+  let gameId = null;
+  let gameName = album?.products?.[0]?.names?.en;
+  console.log(gameName);
+  if (gameName !== undefined) {
+    // get highest id from db
+    const getGameId = async () => {
+      try {
+        const response = await axios({
+          method: "get",
+          url: `http://localhost:3000/games/search-by-exact-name/${gameName}`,
+        });
+        return response.data[0].id;
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    gameId = await getGameId();
+    // console.log(util.inspect(gameId, false, null, true));
+  }
+
+  await Album.query().findById(updateAlbumId).patch({
+    game_id: gameId,
+    catalog: album?.catalog,
+    category: album?.category,
+    classification: album?.classification,
+    media_format: album?.media_format,
+    notes: album?.notes,
+    publisher: album?.publisher?.names?.en,
+    game_name: album?.products?.[0]?.names?.en,
+    release_date: album?.release_date,
+    updated_at: moment().unix(),
+  });
+
+  if (album.covers.length !== 0) {
+    const updateAlbumCovers = await Promise.all(
+      album.covers.map(async (cover) => {
+        await AlbumCover.query().insert({
+          id: cover?.full.split("/").pop().split("-").pop().split(".")[0],
+          album_id: updateAlbumId,
+          full: cover?.full,
+          medium: cover?.medium,
+          name: cover?.name,
+          thumb: cover?.thumb,
+        });
+      })
+    );
+  } else {
+    const updateAlbumCovers = await AlbumCover.query().insert({
+      id: album?.picture_full.split("/").pop().split("-").pop().split(".")[0],
+      album_id: updateAlbumId,
+      full: album?.picture_full,
+      medium: album?.picture_small,
+      name: "Front",
+      thumb: album?.picture_thumb,
+    });
+  }
+
+  if (album.discs.length !== 0) {
+    const updateAlbumDiscAndTracks = await Promise.all(
+      album.discs.map(async (disc, discIndex) => {
+        await AlbumDisc.query().insert({
+          id: discIndex,
+          album_id: updateAlbumId,
+          length: disc?.disc_length,
+          name: disc?.name,
+        });
+
+        disc.tracks.map(async (track, trackIndex) => {
+          await AlbumTrack.query().insert({
+            id: trackIndex,
+            album_id: updateAlbumId,
+            disc_id: discIndex,
+            length: track?.track_length,
+            name: track?.names?.English,
+          });
+        });
+      })
+    );
+  }
+
+  if (album.stores.length !== 0) {
+    const updateAlbumStores = await Promise.all(
+      album.stores.map(async (store) => {
+        if (store.link.includes("db/collection.php")) {
+          // do nothing
+        } else {
+          await AlbumStore.query().insert({
+            album_id: updateAlbumId,
+            link: store?.link,
+            name: store?.name,
+          });
+        }
+      })
+    );
+  }
+});
+
 // run this cron once to populate platform tables
 // updatePlatforms.start();
 
@@ -343,4 +506,8 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
 // run this cron job for about 2 hours to pull all 129000~ game entries from igdb
 // updateGameDb.start();
 
+// run this cron job to add all initial album names/ids to database
+// addAlbums.start();
+
+updateAlbumDb.start();
 module.exports = router;
