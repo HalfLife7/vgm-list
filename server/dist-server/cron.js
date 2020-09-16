@@ -1190,10 +1190,10 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
 }))); // run this cron once to populate platform tables
 // updatePlatforms.start();
 // run this cron 13x to populate collections tables
-//updateCollections.start();
+// updateCollections.start();
 // run this cron job for about 2 hours to pull all 129000~ game entries from igdb
-// updateGameDb.start();
-// run this cron job to add all initial album names/ids to database
+
+updateGameDb.start(); // run this cron job to add all initial album names/ids to database
 // addAlbums.start();
 // run 9000 cycles to get all albums
 // updateAlbumDb.start();

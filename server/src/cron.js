@@ -501,10 +501,10 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 // updatePlatforms.start();
 
 // run this cron 13x to populate collections tables
-//updateCollections.start();
+// updateCollections.start();
 
 // run this cron job for about 2 hours to pull all 129000~ game entries from igdb
-// updateGameDb.start();
+updateGameDb.start();
 
 // run this cron job to add all initial album names/ids to database
 // addAlbums.start();
