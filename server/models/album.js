@@ -10,19 +10,46 @@ class Album extends Model {
   }
 
   static get relationMappings() {
-    const AlbumArtist = require("./albumArtist");
+    const AlbumArranger = require("./albumArranger");
+    const AlbumComposer = require("./albumComposer");
+    const AlbumLyricist = require("./albumLyricist");
+    const AlbumPerformer = require("./albumPerformer");
     const AlbumCover = require("./albumCover");
     const AlbumDisc = require("./albumDisc");
     const AlbumStore = require("./albumStore");
     const AlbumTrack = require("./albumTrack");
     const Game = require("./game");
     return {
-      artists: {
+      albumArrangers: {
         relation: Model.HasManyRelation,
-        modelClass: AlbumArtist,
+        modelClass: AlbumArranger,
         join: {
           from: "albums.id",
-          to: "album_artists.album_id",
+          to: "album_arrangers.album_id",
+        },
+      },
+      albumComposers: {
+        relation: Model.HasManyRelation,
+        modelClass: AlbumComposer,
+        join: {
+          from: "albums.id",
+          to: "album_composers.album_id",
+        },
+      },
+      albumLyricists: {
+        relation: Model.HasManyRelation,
+        modelClass: AlbumLyricist,
+        join: {
+          from: "albums.id",
+          to: "album_lyricists.album_id",
+        },
+      },
+      albumPerformers: {
+        relation: Model.HasManyRelation,
+        modelClass: AlbumPerformer,
+        join: {
+          from: "albums.id",
+          to: "album_performers.album_id",
         },
       },
       covers: {

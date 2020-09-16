@@ -4,9 +4,9 @@ const knex = require("../db/knex");
 
 Model.knex(knex);
 
-class AlbumArtist extends Model {
+class AlbumLyricist extends Model {
   static get tableName() {
-    return "album_artists";
+    return "album_lyricists";
   }
 
   static get idColumn() {
@@ -21,7 +21,7 @@ class AlbumArtist extends Model {
         relation: Model.BelongsToOneRelation,
         modelClass: Album,
         join: {
-          from: "album_artists.album_id",
+          from: "album_lyricists.album_id",
           to: "albums.id",
         },
       },
@@ -29,7 +29,7 @@ class AlbumArtist extends Model {
         relation: Model.BelongsToOneRelation,
         modelClass: Artist,
         join: {
-          from: "album_artists.artist_id",
+          from: "album_lyricists.artist_id",
           to: "artists.id",
         },
       },
@@ -37,4 +37,4 @@ class AlbumArtist extends Model {
   }
 }
 
-module.exports = AlbumArtist;
+module.exports = AlbumLyricist;

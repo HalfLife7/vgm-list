@@ -221,7 +221,7 @@ exports.up = async (knex) => {
       t.integer("id").unsigned().primary();
       t.text("name");
     });
-    await knex.schema.createTable("album_artists", (t) => {
+    await knex.schema.createTable("album_arrangers", (t) => {
       t.integer("artist_id")
         .unsigned()
         .references("id")
@@ -234,10 +234,51 @@ exports.up = async (knex) => {
         .inTable("albums")
         .notNull()
         .onDelete("cascade");
-      t.boolean("arranger");
-      t.boolean("composer");
-      t.boolean("lyricist");
-      t.boolean("performer");
+      t.primary(["artist_id", "album_id"]);
+    });
+    await knex.schema.createTable("album_composers", (t) => {
+      t.integer("artist_id")
+        .unsigned()
+        .references("id")
+        .inTable("artists")
+        .notNull()
+        .onDelete("cascade");
+      t.integer("album_id")
+        .unsigned()
+        .references("id")
+        .inTable("albums")
+        .notNull()
+        .onDelete("cascade");
+      t.primary(["artist_id", "album_id"]);
+    });
+    await knex.schema.createTable("album_lyricists", (t) => {
+      t.integer("artist_id")
+        .unsigned()
+        .references("id")
+        .inTable("artists")
+        .notNull()
+        .onDelete("cascade");
+      t.integer("album_id")
+        .unsigned()
+        .references("id")
+        .inTable("albums")
+        .notNull()
+        .onDelete("cascade");
+      t.primary(["artist_id", "album_id"]);
+    });
+    await knex.schema.createTable("album_performers", (t) => {
+      t.integer("artist_id")
+        .unsigned()
+        .references("id")
+        .inTable("artists")
+        .notNull()
+        .onDelete("cascade");
+      t.integer("album_id")
+        .unsigned()
+        .references("id")
+        .inTable("albums")
+        .notNull()
+        .onDelete("cascade");
       t.primary(["artist_id", "album_id"]);
     });
     await knex.schema.createTable("album_covers", (t) => {
@@ -307,7 +348,10 @@ exports.down = async (knex) => {
     await knex.schema.dropTable("album_tracks");
     await knex.schema.dropTable("album_discs");
     await knex.schema.dropTable("album_covers");
-    await knex.schema.dropTable("album_artists");
+    await knex.schema.dropTable("album_performers");
+    await knex.schema.dropTable("album_lyricists");
+    await knex.schema.dropTable("album_composers");
+    await knex.schema.dropTable("album_arrangers");
     await knex.schema.dropTable("artists");
     await knex.schema.dropTable("albums");
     await knex.schema.dropTable("game_collections");
