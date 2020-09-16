@@ -39,7 +39,7 @@
     <div class="flex container m-auto pt-20">
       <ul class="flex border-b">
         <li
-          v-if="this.totalScreenshots > 0"
+          v-if="totalScreenshots > 0"
           class="-mb-px mr-1"
           :class="[
             image === 'screenshot' ? 'is-active bg-gray-200 text-blue-700' : '',
@@ -52,7 +52,7 @@
           >
         </li>
         <li
-          v-if="this.totalArtworks > 0"
+          v-if="totalArtworks > 0"
           class="-mb-px mr-1"
           :class="[
             image === 'artwork' ? 'is-active bg-gray-200 text-blue-700' : '',
@@ -65,7 +65,7 @@
           >
         </li>
         <li
-          v-if="this.totalVideos > 0"
+          v-if="totalVideos > 0"
           class="-mb-px mr-1"
           :class="[
             image === 'video' ? 'is-active bg-gray-200 text-blue-700' : '',
@@ -156,8 +156,8 @@
       </div>
     </div>
     <div
-      v-for="(album, index) in albums"
-      :key="index"
+      v-for="(album, albumIndex) in albums"
+      :key="albumIndex"
       :album="album"
       class="pt-20"
     >
@@ -175,11 +175,79 @@
         >
           <div class="text-4xl">{{ album.data.name }}</div>
           <div class="text-xl">Release Date: {{ album.data.release_date }}</div>
+          <div
+            class="text-base flex flex-wrap"
+            v-if="album.data.arrangers.length"
+          >
+            Arrangers:
+            <div
+              v-for="(arranger, arrangerIndex) in album.data.arrangers"
+              :key="arrangerIndex"
+              :arranger="arranger"
+              class="text-base flex pl-2"
+            >
+              {{ arranger.artists.name
+              }}<span v-if="arrangerIndex != album.data.arrangers.length - 1"
+                >,</span
+              >
+            </div>
+          </div>
+          <div
+            class="text-base flex flex-wrap"
+            v-if="album.data.composers.length"
+          >
+            Composers:
+            <div
+              v-for="(composer, composerIndex) in album.data.composers"
+              :key="composerIndex"
+              :composer="composer"
+              class="text-base flex ml-2"
+            >
+              {{ composer.artists.name
+              }}<span v-if="composerIndex != album.data.composers.length - 1"
+                >,</span
+              >
+            </div>
+          </div>
+          <div
+            class="text-base flex flex-wrap"
+            v-if="album.data.lyricists.length"
+          >
+            Lyricists:
+            <div
+              v-for="(lyricist, lyricistIndex) in album.data.lyricists"
+              :key="lyricistIndex"
+              :lyricist="lyricist"
+              class="text-base flex ml-2"
+            >
+              {{ lyricist.artists.name
+              }}<span v-if="lyricistIndex != album.data.lyricists.length - 1"
+                >,</span
+              >
+            </div>
+          </div>
+          <div
+            class="text-base flex flex-wrap"
+            v-if="album.data.performers.length"
+          >
+            Performers:
+            <div
+              v-for="(performer, performerIndex) in album.data.performers"
+              :key="performerIndex"
+              :performer="performer"
+              class="text-base flex ml-2"
+            >
+              {{ performer.artists.name
+              }}<span v-if="performerIndex != album.data.performers.length - 1"
+                >,</span
+              >
+            </div>
+          </div>
 
           <div class="flex flex-wrap">
             <div
-              v-for="(store, index2) in album.data.stores"
-              :key="index2"
+              v-for="(store, storeIndex) in album.data.stores"
+              :key="storeIndex"
               :store="store"
             >
               <div class="mr-5 mt-5">

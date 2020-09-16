@@ -1195,6 +1195,7 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
 // updateGameDb.start();
 // run this cron job to add all initial album names/ids to database
 // addAlbums.start();
+// run 9000 cycles to get all albums
+// updateAlbumDb.start();
 
-updateAlbumDb.start();
 module.exports = router;

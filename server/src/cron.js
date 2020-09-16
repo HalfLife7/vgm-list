@@ -509,5 +509,6 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 // run this cron job to add all initial album names/ids to database
 // addAlbums.start();
 
-updateAlbumDb.start();
+// run 9000 cycles to get all albums
+// updateAlbumDb.start();
 module.exports = router;

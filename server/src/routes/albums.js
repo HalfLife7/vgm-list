@@ -17,30 +17,33 @@ router.get("/not-updated", (req, res, next) => {
     });
 });
 
-router.get("/all", (req, res, next) => {
-  Album.query()
-    .withGraphFetched("albumArtists.[artists(selectName)]")
-    .modifiers({
-      selectName: (builder) => {
-        builder.select("name");
-      },
-    })
-    .then((albums) => {
-      res.send(albums);
-    });
-});
+// router.get("/all", (req, res, next) => {
+//   Album.query()
+//     .withGraphFetched("albumArtists.[artists(selectName)]")
+//     .modifiers({
+//       selectName: (builder) => {
+//         builder.select("name");
+//       },
+//     })
+//     .then((albums) => {
+//       res.send(albums);
+//     });
+// });
 
 router.get("/:id", (req, res, next) => {
   const albumId = req.params.id;
 
   Album.query()
     .findById(albumId)
-    .withGraphFetched("artists.[artists(selectName)]")
+    .withGraphFetched("arrangers.[artists(selectName)]")
     .modifiers({
       selectName: (builder) => {
         builder.select("name");
       },
     })
+    .withGraphFetched("composers.[artists(selectName)]")
+    .withGraphFetched("lyricists.[artists(selectName)]")
+    .withGraphFetched("performers.[artists(selectName)]")
     .withGraphFetched("covers")
     .withGraphFetched("discs")
     .withGraphFetched("stores")

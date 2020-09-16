@@ -21,23 +21,26 @@ router.get("/not-updated", function (req, res, next) {
   })["catch"](function (err) {
     console.error(err);
   });
-});
-router.get("/all", function (req, res, next) {
-  Album.query().withGraphFetched("albumArtists.[artists(selectName)]").modifiers({
-    selectName: function selectName(builder) {
-      builder.select("name");
-    }
-  }).then(function (albums) {
-    res.send(albums);
-  });
-});
+}); // router.get("/all", (req, res, next) => {
+//   Album.query()
+//     .withGraphFetched("albumArtists.[artists(selectName)]")
+//     .modifiers({
+//       selectName: (builder) => {
+//         builder.select("name");
+//       },
+//     })
+//     .then((albums) => {
+//       res.send(albums);
+//     });
+// });
+
 router.get("/:id", function (req, res, next) {
   var albumId = req.params.id;
-  Album.query().findById(albumId).withGraphFetched("artists.[artists(selectName)]").modifiers({
+  Album.query().findById(albumId).withGraphFetched("arrangers.[artists(selectName)]").modifiers({
     selectName: function selectName(builder) {
       builder.select("name");
     }
-  }).withGraphFetched("covers").withGraphFetched("discs").withGraphFetched("stores").withGraphFetched("tracks").then(function (album) {
+  }).withGraphFetched("composers.[artists(selectName)]").withGraphFetched("lyricists.[artists(selectName)]").withGraphFetched("performers.[artists(selectName)]").withGraphFetched("covers").withGraphFetched("discs").withGraphFetched("stores").withGraphFetched("tracks").then(function (album) {
     if (album.stores !== undefined) {
       album.stores.map(function (store) {
         if (store.name === "iTunes") {

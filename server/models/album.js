@@ -20,7 +20,7 @@ class Album extends Model {
     const AlbumTrack = require("./albumTrack");
     const Game = require("./game");
     return {
-      albumArrangers: {
+      arrangers: {
         relation: Model.HasManyRelation,
         modelClass: AlbumArranger,
         join: {
@@ -28,7 +28,7 @@ class Album extends Model {
           to: "album_arrangers.album_id",
         },
       },
-      albumComposers: {
+      composers: {
         relation: Model.HasManyRelation,
         modelClass: AlbumComposer,
         join: {
@@ -36,7 +36,7 @@ class Album extends Model {
           to: "album_composers.album_id",
         },
       },
-      albumLyricists: {
+      lyricists: {
         relation: Model.HasManyRelation,
         modelClass: AlbumLyricist,
         join: {
@@ -44,7 +44,7 @@ class Album extends Model {
           to: "album_lyricists.album_id",
         },
       },
-      albumPerformers: {
+      performers: {
         relation: Model.HasManyRelation,
         modelClass: AlbumPerformer,
         join: {
