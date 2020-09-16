@@ -17,7 +17,7 @@ class AlbumComposer extends Model {
     const Album = require("./album");
     const Artist = require("./artist");
     return {
-      albums: {
+      album: {
         relation: Model.BelongsToOneRelation,
         modelClass: Album,
         join: {
@@ -25,7 +25,7 @@ class AlbumComposer extends Model {
           to: "albums.id",
         },
       },
-      artists: {
+      artist: {
         relation: Model.BelongsToOneRelation,
         modelClass: Artist,
         join: {

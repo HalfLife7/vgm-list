@@ -21,7 +21,7 @@ class Platform extends Model {
           to: "game_platforms.platform_id",
         },
       },
-      logos: {
+      logo: {
         relation: Model.BelongsToOneRelation,
         modelClass: PlatformLogo,
         join: {

@@ -19,7 +19,7 @@ class GameCollection extends Model {
     const Game = require("./game");
     const Collection = require("./collection");
     return {
-      games: {
+      game: {
         relation: Model.BelongsToOneRelation,
         modelClass: Game,
         join: {
@@ -27,7 +27,7 @@ class GameCollection extends Model {
           to: "games.id",
         },
       },
-      collections: {
+      collection: {
         relation: Model.BelongsToOneRelation,
         modelClass: Collection,
         join: {

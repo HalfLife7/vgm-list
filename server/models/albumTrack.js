@@ -13,7 +13,7 @@ class AlbumTrack extends Model {
     const Album = require("./album");
     const AlbumDisc = require("./albumDisc");
     return {
-      albums: {
+      album: {
         relation: Model.BelongsToOneRelation,
         modelClass: Album,
         join: {
@@ -21,7 +21,7 @@ class AlbumTrack extends Model {
           to: "albums.id",
         },
       },
-      artists: {
+      artist: {
         relation: {
           relation: Model.BelongsToOneRelation,
           modelClass: AlbumDisc,

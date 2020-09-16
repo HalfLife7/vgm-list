@@ -19,7 +19,7 @@ class GamePlatform extends Model {
     const Game = require("./game");
     const Platform = require("./platform");
     return {
-      games: {
+      game: {
         relation: Model.BelongsToOneRelation,
         modelClass: Game,
         join: {
@@ -27,7 +27,7 @@ class GamePlatform extends Model {
           to: "games.id",
         },
       },
-      platforms: {
+      platform: {
         relation: Model.BelongsToOneRelation,
         modelClass: Platform,
         join: {

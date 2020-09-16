@@ -16,7 +16,7 @@ class Game extends Model {
     const GameVideo = require("./gameVideo");
     const GameScreenshot = require("./gameScreenshot");
     const GameWebsite = require("./gameWebsite");
-    const Album = require("./album");
+    const AlbumGame = require("./albumGame");
     const GamePlatform = require("./gamePlatform");
     const GameCollection = require("./gameCollection");
     return {
@@ -70,10 +70,10 @@ class Game extends Model {
       },
       albums: {
         relation: Model.HasManyRelation,
-        modelClass: Album,
+        modelClass: AlbumGame,
         join: {
           from: "games.id",
-          to: "albums.game_id",
+          to: "album_games.game_id",
         },
       },
       platforms: {

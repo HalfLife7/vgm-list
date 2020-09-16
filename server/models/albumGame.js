@@ -4,37 +4,37 @@ const knex = require("../db/knex");
 
 Model.knex(knex);
 
-class AlbumLyricist extends Model {
+class AlbumGame extends Model {
   static get tableName() {
-    return "album_lyricists";
+    return "album_games";
   }
 
   static get idColumn() {
-    return ["artist_id", "album_id"];
+    return ["album_id", "game_id"];
   }
 
   static get relationMappings() {
     const Album = require("./album");
-    const Artist = require("./artist");
+    const Game = require("./game");
     return {
       album: {
         relation: Model.BelongsToOneRelation,
         modelClass: Album,
         join: {
-          from: "album_lyricists.album_id",
+          from: "album_games.album_id",
           to: "albums.id",
         },
       },
-      artist: {
+      game: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Artist,
+        modelClass: Game,
         join: {
-          from: "album_lyricists.artist_id",
-          to: "artists.id",
+          from: "album_games.game_id",
+          to: "games.id",
         },
       },
     };
   }
 }
 
-module.exports = AlbumLyricist;
+module.exports = AlbumGame;

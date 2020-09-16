@@ -18,8 +18,16 @@ class Album extends Model {
     const AlbumDisc = require("./albumDisc");
     const AlbumStore = require("./albumStore");
     const AlbumTrack = require("./albumTrack");
-    const Game = require("./game");
+    const AlbumGame = require("./albumGame");
     return {
+      albums: {
+        relation: Model.HasManyRelation,
+        modelClass: AlbumGame,
+        join: {
+          from: "albums.id",
+          to: "album_games.album_id",
+        },
+      },
       arrangers: {
         relation: Model.HasManyRelation,
         modelClass: AlbumArranger,
@@ -82,14 +90,6 @@ class Album extends Model {
         join: {
           from: "albums.id",
           to: "album_tracks.album_id",
-        },
-      },
-      game: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Game,
-        join: {
-          from: "albums.game_id",
-          to: "games.id",
         },
       },
     };

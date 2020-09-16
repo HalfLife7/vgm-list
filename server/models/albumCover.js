@@ -12,7 +12,7 @@ class AlbumCover extends Model {
   static get relationMappings() {
     const Album = require("./album");
     return {
-      albums: {
+      album: {
         relation: Model.BelongsToOneRelation,
         modelClass: Album,
         join: {
