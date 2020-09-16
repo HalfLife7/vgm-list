@@ -16,6 +16,8 @@ var _fs = _interopRequireDefault(require("fs"));
 
 var _moment = _interopRequireDefault(require("moment"));
 
+var _artist = _interopRequireDefault(require("../models/artist"));
+
 var router = _express["default"].Router();
 
 var axios = require("axios")["default"];
@@ -59,6 +61,16 @@ var AlbumDisc = require("../models/albumDisc");
 var AlbumStore = require("../models/albumStore");
 
 var AlbumTrack = require("../models/albumTrack");
+
+var AlbumGame = require("../models/albumGame");
+
+var AlbumArranger = require("../models/albumArranger");
+
+var AlbumComposer = require("../models/albumComposer");
+
+var AlbumLyricist = require("../models/albumLyricist");
+
+var AlbumPerformer = require("../models/albumPerformer");
 
 var updateGameDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10() {
   var getMaxGameId, maxGameId, getGames, games;
@@ -793,7 +805,7 @@ var updateCollections = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToG
     }
   }, _callee18);
 })));
-var addAlbums = new CronJob("0 0 * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee20() {
+var addAlbums = new CronJob("25 15 * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee20() {
   var rawData, albumList;
   return _regenerator["default"].wrap(function _callee20$(_context20) {
     while (1) {
@@ -845,14 +857,13 @@ var addAlbums = new CronJob("0 0 * * *", /*#__PURE__*/(0, _asyncToGenerator2["de
     }
   }, _callee20);
 })));
-var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee28() {
-  var _album$products, _album$products$, _album$products$$name, _album$publisher, _album$publisher$name, _album$products2, _album$products2$, _album$products2$$nam;
+var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee25() {
+  var _album$publisher, _album$publisher$name;
 
-  var getNotUpdatedAlbumId, updateAlbumId, getAlbum, album, gameId, gameName, getGameId, updateAlbumCovers, _updateAlbumCovers, updateAlbumDiscAndTracks, updateAlbumStores;
-
-  return _regenerator["default"].wrap(function _callee28$(_context28) {
+  var getNotUpdatedAlbumId, updateAlbumId, getAlbum, album, updateAlbumGames;
+  return _regenerator["default"].wrap(function _callee25$(_context25) {
     while (1) {
-      switch (_context28.prev = _context28.next) {
+      switch (_context25.prev = _context25.next) {
         case 0:
           console.log("starting updateAlbumDb"); // get highest id from db
 
@@ -892,11 +903,11 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
             };
           }();
 
-          _context28.next = 4;
+          _context25.next = 4;
           return getNotUpdatedAlbumId();
 
         case 4:
-          updateAlbumId = _context28.sent;
+          updateAlbumId = _context25.sent;
           console.log(_util["default"].inspect(updateAlbumId, false, null, true));
 
           getAlbum = /*#__PURE__*/function () {
@@ -940,103 +951,93 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
             };
           }();
 
-          _context28.next = 9;
+          _context25.next = 9;
           return getAlbum();
 
         case 9:
-          album = _context28.sent;
-          // console.log(util.inspect(album, false, null, true));
-          gameId = null;
-          gameName = album === null || album === void 0 ? void 0 : (_album$products = album.products) === null || _album$products === void 0 ? void 0 : (_album$products$ = _album$products[0]) === null || _album$products$ === void 0 ? void 0 : (_album$products$$name = _album$products$.names) === null || _album$products$$name === void 0 ? void 0 : _album$products$$name.en;
-          console.log(gameName);
+          album = _context25.sent;
 
-          if (!(gameName !== undefined)) {
-            _context28.next = 18;
+          if (!(album.products.length !== 0)) {
+            _context25.next = 14;
             break;
           }
 
-          // get highest id from db
-          getGameId = /*#__PURE__*/function () {
-            var _ref24 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee23() {
-              var response;
-              return _regenerator["default"].wrap(function _callee23$(_context23) {
-                while (1) {
-                  switch (_context23.prev = _context23.next) {
-                    case 0:
-                      _context23.prev = 0;
-                      _context23.next = 3;
-                      return axios({
-                        method: "get",
-                        url: "http://localhost:3000/games/search-by-exact-name/".concat(gameName)
-                      });
+          _context25.next = 13;
+          return Promise.all(album.products.map( /*#__PURE__*/function () {
+            var _ref24 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee24(product) {
+              var _product$names;
 
-                    case 3:
-                      response = _context23.sent;
-                      return _context23.abrupt("return", response.data[0].id);
-
-                    case 7:
-                      _context23.prev = 7;
-                      _context23.t0 = _context23["catch"](0);
-                      console.error(_context23.t0);
-
-                    case 10:
-                    case "end":
-                      return _context23.stop();
-                  }
-                }
-              }, _callee23, null, [[0, 7]]);
-            }));
-
-            return function getGameId() {
-              return _ref24.apply(this, arguments);
-            };
-          }();
-
-          _context28.next = 17;
-          return getGameId();
-
-        case 17:
-          gameId = _context28.sent;
-
-        case 18:
-          _context28.next = 20;
-          return Album.query().findById(updateAlbumId).patch({
-            game_id: gameId,
-            catalog: album === null || album === void 0 ? void 0 : album.catalog,
-            category: album === null || album === void 0 ? void 0 : album.category,
-            classification: album === null || album === void 0 ? void 0 : album.classification,
-            media_format: album === null || album === void 0 ? void 0 : album.media_format,
-            notes: album === null || album === void 0 ? void 0 : album.notes,
-            publisher: album === null || album === void 0 ? void 0 : (_album$publisher = album.publisher) === null || _album$publisher === void 0 ? void 0 : (_album$publisher$name = _album$publisher.names) === null || _album$publisher$name === void 0 ? void 0 : _album$publisher$name.en,
-            game_name: album === null || album === void 0 ? void 0 : (_album$products2 = album.products) === null || _album$products2 === void 0 ? void 0 : (_album$products2$ = _album$products2[0]) === null || _album$products2$ === void 0 ? void 0 : (_album$products2$$nam = _album$products2$.names) === null || _album$products2$$nam === void 0 ? void 0 : _album$products2$$nam.en,
-            release_date: album === null || album === void 0 ? void 0 : album.release_date,
-            updated_at: (0, _moment["default"])().unix()
-          });
-
-        case 20:
-          if (!(album.covers.length !== 0)) {
-            _context28.next = 26;
-            break;
-          }
-
-          _context28.next = 23;
-          return Promise.all(album.covers.map( /*#__PURE__*/function () {
-            var _ref25 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee24(cover) {
+              var gameName, getGameId, gameId;
               return _regenerator["default"].wrap(function _callee24$(_context24) {
                 while (1) {
                   switch (_context24.prev = _context24.next) {
                     case 0:
-                      _context24.next = 2;
-                      return AlbumCover.query().insert({
-                        id: cover === null || cover === void 0 ? void 0 : cover.full.split("/").pop().split("-").pop().split(".")[0],
+                      gameName = product === null || product === void 0 ? void 0 : (_product$names = product.names) === null || _product$names === void 0 ? void 0 : _product$names.en;
+                      console.log(gameName);
+
+                      if (!(gameName !== undefined)) {
+                        _context24.next = 11;
+                        break;
+                      }
+
+                      // get highest id from db
+                      getGameId = /*#__PURE__*/function () {
+                        var _ref25 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee23() {
+                          var response;
+                          return _regenerator["default"].wrap(function _callee23$(_context23) {
+                            while (1) {
+                              switch (_context23.prev = _context23.next) {
+                                case 0:
+                                  _context23.prev = 0;
+                                  _context23.next = 3;
+                                  return axios({
+                                    method: "get",
+                                    url: "http://localhost:3000/games/search-by-exact-name/".concat(gameName)
+                                  }).then(function (response) {
+                                    return response.data.id;
+                                  });
+
+                                case 3:
+                                  response = _context23.sent;
+                                  return _context23.abrupt("return", response);
+
+                                case 7:
+                                  _context23.prev = 7;
+                                  _context23.t0 = _context23["catch"](0);
+                                  console.error(_context23.t0);
+
+                                case 10:
+                                case "end":
+                                  return _context23.stop();
+                              }
+                            }
+                          }, _callee23, null, [[0, 7]]);
+                        }));
+
+                        return function getGameId() {
+                          return _ref25.apply(this, arguments);
+                        };
+                      }();
+
+                      _context24.next = 6;
+                      return getGameId();
+
+                    case 6:
+                      gameId = _context24.sent;
+                      console.log(_util["default"].inspect(gameId, false, null, true)); // if a corresponding gameId is found, insert it
+
+                      if (!(gameId !== undefined)) {
+                        _context24.next = 11;
+                        break;
+                      }
+
+                      _context24.next = 11;
+                      return AlbumGame.query().insert({
                         album_id: updateAlbumId,
-                        full: cover === null || cover === void 0 ? void 0 : cover.full,
-                        medium: cover === null || cover === void 0 ? void 0 : cover.medium,
-                        name: cover === null || cover === void 0 ? void 0 : cover.name,
-                        thumb: cover === null || cover === void 0 ? void 0 : cover.thumb
+                        game_id: gameId
                       });
 
-                    case 2:
+                    case 11:
                     case "end":
                       return _context24.stop();
                   }
@@ -1045,157 +1046,41 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
             }));
 
             return function (_x11) {
-              return _ref25.apply(this, arguments);
+              return _ref24.apply(this, arguments);
             };
           }()));
 
-        case 23:
-          updateAlbumCovers = _context28.sent;
-          _context28.next = 29;
-          break;
+        case 13:
+          updateAlbumGames = _context25.sent;
 
-        case 26:
-          _context28.next = 28;
-          return AlbumCover.query().insert({
-            id: album === null || album === void 0 ? void 0 : album.picture_full.split("/").pop().split("-").pop().split(".")[0],
-            album_id: updateAlbumId,
-            full: album === null || album === void 0 ? void 0 : album.picture_full,
-            medium: album === null || album === void 0 ? void 0 : album.picture_small,
-            name: "Front",
-            thumb: album === null || album === void 0 ? void 0 : album.picture_thumb
+        case 14:
+          _context25.next = 16;
+          return Album.query().findById(updateAlbumId).patch({
+            catalog: album === null || album === void 0 ? void 0 : album.catalog,
+            category: album === null || album === void 0 ? void 0 : album.category,
+            classification: album === null || album === void 0 ? void 0 : album.classification,
+            media_format: album === null || album === void 0 ? void 0 : album.media_format,
+            notes: album === null || album === void 0 ? void 0 : album.notes,
+            publisher: album === null || album === void 0 ? void 0 : (_album$publisher = album.publisher) === null || _album$publisher === void 0 ? void 0 : (_album$publisher$name = _album$publisher.names) === null || _album$publisher$name === void 0 ? void 0 : _album$publisher$name.en,
+            release_date: album === null || album === void 0 ? void 0 : album.release_date,
+            updated_at: (0, _moment["default"])().unix()
           });
 
-        case 28:
-          _updateAlbumCovers = _context28.sent;
-
-        case 29:
-          if (!(album.discs.length !== 0)) {
-            _context28.next = 33;
-            break;
-          }
-
-          _context28.next = 32;
-          return Promise.all(album.discs.map( /*#__PURE__*/function () {
-            var _ref26 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee26(disc, discIndex) {
-              return _regenerator["default"].wrap(function _callee26$(_context26) {
-                while (1) {
-                  switch (_context26.prev = _context26.next) {
-                    case 0:
-                      _context26.next = 2;
-                      return AlbumDisc.query().insert({
-                        id: discIndex,
-                        album_id: updateAlbumId,
-                        length: disc === null || disc === void 0 ? void 0 : disc.disc_length,
-                        name: disc === null || disc === void 0 ? void 0 : disc.name
-                      });
-
-                    case 2:
-                      disc.tracks.map( /*#__PURE__*/function () {
-                        var _ref27 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee25(track, trackIndex) {
-                          var _track$names;
-
-                          return _regenerator["default"].wrap(function _callee25$(_context25) {
-                            while (1) {
-                              switch (_context25.prev = _context25.next) {
-                                case 0:
-                                  _context25.next = 2;
-                                  return AlbumTrack.query().insert({
-                                    id: trackIndex,
-                                    album_id: updateAlbumId,
-                                    disc_id: discIndex,
-                                    length: track === null || track === void 0 ? void 0 : track.track_length,
-                                    name: track === null || track === void 0 ? void 0 : (_track$names = track.names) === null || _track$names === void 0 ? void 0 : _track$names.English
-                                  });
-
-                                case 2:
-                                case "end":
-                                  return _context25.stop();
-                              }
-                            }
-                          }, _callee25);
-                        }));
-
-                        return function (_x14, _x15) {
-                          return _ref27.apply(this, arguments);
-                        };
-                      }());
-
-                    case 3:
-                    case "end":
-                      return _context26.stop();
-                  }
-                }
-              }, _callee26);
-            }));
-
-            return function (_x12, _x13) {
-              return _ref26.apply(this, arguments);
-            };
-          }()));
-
-        case 32:
-          updateAlbumDiscAndTracks = _context28.sent;
-
-        case 33:
-          if (!(album.stores.length !== 0)) {
-            _context28.next = 37;
-            break;
-          }
-
-          _context28.next = 36;
-          return Promise.all(album.stores.map( /*#__PURE__*/function () {
-            var _ref28 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee27(store) {
-              return _regenerator["default"].wrap(function _callee27$(_context27) {
-                while (1) {
-                  switch (_context27.prev = _context27.next) {
-                    case 0:
-                      if (!store.link.includes("db/collection.php")) {
-                        _context27.next = 3;
-                        break;
-                      }
-
-                      _context27.next = 5;
-                      break;
-
-                    case 3:
-                      _context27.next = 5;
-                      return AlbumStore.query().insert({
-                        album_id: updateAlbumId,
-                        link: store === null || store === void 0 ? void 0 : store.link,
-                        name: store === null || store === void 0 ? void 0 : store.name
-                      });
-
-                    case 5:
-                    case "end":
-                      return _context27.stop();
-                  }
-                }
-              }, _callee27);
-            }));
-
-            return function (_x16) {
-              return _ref28.apply(this, arguments);
-            };
-          }()));
-
-        case 36:
-          updateAlbumStores = _context28.sent;
-
-        case 37:
+        case 16:
         case "end":
-          return _context28.stop();
+          return _context25.stop();
       }
     }
-  }, _callee28);
+  }, _callee25);
 }))); // run this cron once to populate platform tables
 // updatePlatforms.start();
 // run this cron 13x to populate collections tables
 // updateCollections.start();
-// run this cron job for about 2 hours to pull all 129000~ game entries from igdb
-
-updateGameDb.start(); // run this cron job to add all initial album names/ids to database
+// run this cron job for about 2 hours to pull all 139000~ game entries from igdb
+// updateGameDb.start();
+// run this cron job to add all initial album names/ids to database
 // addAlbums.start();
-// run 9000 cycles to get all albums
-// updateAlbumDb.start();
+// run 15500~ cycles to get all albums for game OST
 
+updateAlbumDb.start();
 module.exports = router;

@@ -73,7 +73,6 @@ export default {
           console.error(err);
         });
     },
-    // TODO: fix duplicate card bug
     searchSingle() {
       GameDataService.search(this.query)
         .then((response) => {

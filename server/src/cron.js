@@ -3,6 +3,7 @@ import util from "util";
 import config from "./config";
 import fs from "fs";
 import moment from "moment";
+import Artist from "../models/artist";
 
 const router = express.Router();
 const axios = require("axios").default;
@@ -26,6 +27,11 @@ const AlbumCover = require("../models/albumCover");
 const AlbumDisc = require("../models/albumDisc");
 const AlbumStore = require("../models/albumStore");
 const AlbumTrack = require("../models/albumTrack");
+const AlbumGame = require("../models/albumGame");
+const AlbumArranger = require("../models/albumArranger");
+const AlbumComposer = require("../models/albumComposer");
+const AlbumLyricist = require("../models/albumLyricist");
+const AlbumPerformer = require("../models/albumPerformer");
 
 const updateGameDb = new CronJob("*/30 * * * * *", async () => {
   console.log("starting");
@@ -341,7 +347,7 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
   );
 });
 
-const addAlbums = new CronJob("0 0 * * *", async () => {
+const addAlbums = new CronJob("25 15 * * *", async () => {
   console.log("starting addAlbums");
   let rawData = fs.readFileSync("./data.json");
   let albumList = JSON.parse(rawData);
@@ -400,35 +406,48 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
   const album = await getAlbum();
   // console.log(util.inspect(album, false, null, true));
 
-  let gameId = null;
-  let gameName = album?.products?.[0]?.names?.en;
-  console.log(gameName);
-  if (gameName !== undefined) {
-    // get highest id from db
-    const getGameId = async () => {
-      try {
-        const response = await axios({
-          method: "get",
-          url: `http://localhost:3000/games/search-by-exact-name/${gameName}`,
-        });
-        return response.data[0].id;
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    gameId = await getGameId();
-    // console.log(util.inspect(gameId, false, null, true));
+  if (album.products.length !== 0) {
+    const updateAlbumGames = await Promise.all(
+      album.products.map(async (product) => {
+        let gameName = product?.names?.en;
+        console.log(gameName);
+        if (gameName !== undefined) {
+          // get highest id from db
+          const getGameId = async () => {
+            try {
+              const response = await axios({
+                method: "get",
+                url: `http://localhost:3000/games/search-by-exact-name/${gameName}`,
+              }).then((response) => {
+                return response.data.id;
+              });
+              return response;
+            } catch (err) {
+              console.error(err);
+            }
+          };
+          let gameId = await getGameId();
+          console.log(util.inspect(gameId, false, null, true));
+
+          // if a corresponding gameId is found, insert it
+          if (gameId !== undefined) {
+            await AlbumGame.query().insert({
+              album_id: updateAlbumId,
+              game_id: gameId,
+            });
+          }
+        }
+      })
+    );
   }
 
   await Album.query().findById(updateAlbumId).patch({
-    game_id: gameId,
     catalog: album?.catalog,
     category: album?.category,
     classification: album?.classification,
     media_format: album?.media_format,
     notes: album?.notes,
     publisher: album?.publisher?.names?.en,
-    game_name: album?.products?.[0]?.names?.en,
     release_date: album?.release_date,
     updated_at: moment().unix(),
   });
@@ -495,6 +514,122 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
       })
     );
   }
+
+  if (album.arrangers.length !== 0) {
+    const updateAlbumArrangers = await Promise.all(
+      album.arrangers.map(async (arranger) => {
+        if (arranger?.link !== undefined) {
+          let artistId = arranger.link.split("/")[1];
+          const checkArtist = await Artist.query().findById(artistId);
+
+          if (checkArtist === undefined) {
+            // insert a new artist and arranger if the artist is not yet in db
+            await Artist.query().insert({
+              id: artistId,
+              name: arranger?.names?.en,
+            });
+            await AlbumArranger.query().insert({
+              artist_id: artistId,
+              album_id: updateAlbumId,
+            });
+          } else {
+            // if artist already exists, only insert a new arranger
+            await AlbumArranger.query().insert({
+              artist_id: artistId,
+              album_id: updateAlbumId,
+            });
+          }
+        }
+      })
+    );
+  }
+
+  if (album.composers.length !== 0) {
+    const updateAlbumComposers = await Promise.all(
+      album.composers.map(async (composer) => {
+        if (composer?.link !== undefined) {
+          let artistId = composer.link.split("/")[1];
+          const checkArtist = await Artist.query().findById(artistId);
+
+          if (checkArtist === undefined) {
+            // insert a new artist and composer if the artist is not yet in db
+            await Artist.query().insert({
+              id: artistId,
+              name: composer?.names?.en,
+            });
+            await AlbumComposer.query().insert({
+              artist_id: artistId,
+              album_id: updateAlbumId,
+            });
+          } else {
+            // if artist already exists, only insert a new composer
+            await AlbumComposer.query().insert({
+              artist_id: artistId,
+              album_id: updateAlbumId,
+            });
+          }
+        }
+      })
+    );
+  }
+
+  if (album.lyricists.length !== 0) {
+    const updateAlbumLyricists = await Promise.all(
+      album.lyricists.map(async (lyricist) => {
+        if (lyricist?.link !== undefined) {
+          let artistId = lyricist.link.split("/")[1];
+          const checkArtist = await Artist.query().findById(artistId);
+
+          if (checkArtist === undefined) {
+            // insert a new artist and lyricist if the artist is not yet in db
+            await Artist.query().insert({
+              id: artistId,
+              name: lyricist?.names?.en,
+            });
+            await AlbumLyricist.query().insert({
+              artist_id: artistId,
+              album_id: updateAlbumId,
+            });
+          } else {
+            // if artist already exists, only insert a new lyricist
+            await AlbumLyricist.query().insert({
+              artist_id: artistId,
+              album_id: updateAlbumId,
+            });
+          }
+        }
+      })
+    );
+  }
+
+  if (album.performers.length !== 0) {
+    const updateAlbumPerformers = await Promise.all(
+      album.performers.map(async (performer) => {
+        if (performer?.link !== undefined) {
+          let artistId = performer.link.split("/")[1];
+          const checkArtist = await Artist.query().findById(artistId);
+
+          if (checkArtist === undefined) {
+            // insert a new artist and performer if the artist is not yet in db
+            await Artist.query().insert({
+              id: artistId,
+              name: performer?.names?.en,
+            });
+            await AlbumPerformer.query().insert({
+              artist_id: artistId,
+              album_id: updateAlbumId,
+            });
+          } else {
+            // if artist already exists, only insert a new performer
+            await AlbumPerformer.query().insert({
+              artist_id: artistId,
+              album_id: updateAlbumId,
+            });
+          }
+        }
+      })
+    );
+  }
 });
 
 // run this cron once to populate platform tables
@@ -503,12 +638,13 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 // run this cron 13x to populate collections tables
 // updateCollections.start();
 
-// run this cron job for about 2 hours to pull all 129000~ game entries from igdb
-updateGameDb.start();
+// run this cron job for about 2 hours to pull all 139000~ game entries from igdb
+// updateGameDb.start();
 
 // run this cron job to add all initial album names/ids to database
 // addAlbums.start();
 
-// run 9000 cycles to get all albums
+// run 15500~ cycles to get all albums for game OST
 // updateAlbumDb.start();
+
 module.exports = router;

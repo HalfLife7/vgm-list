@@ -92,10 +92,11 @@ router.get("/all", function (req, res, next) {
 });
 router.get("/search-by-exact-name/:name", function (req, res, next) {
   var gameName = req.params.name;
-  console.log(gameName);
-  Game.query().where("name", "=", gameName).then(function (game) {
+  Game.query().leftJoin("game_alternative_names", "games.id", "=", "game_alternative_names.game_id").select("games.*", "game_alternative_names.name AS alternative_name", "game_alternative_names.comment").where(function (builder) {
+    return builder.where("games.name", "=", gameName).orWhere("game_alternative_names.name", "=", gameName);
+  }).then(function (game) {
     console.log(game);
-    res.send(game);
+    res.send(game[0]);
   })["catch"](function (err) {
     console.error(err);
   });
