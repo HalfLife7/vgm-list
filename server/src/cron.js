@@ -461,7 +461,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     updated_at: moment().unix(),
   });
 
-  if (album.covers.length !== 0) {
+  if (album?.covers?.length !== 0 && album.covers) {
     const updateAlbumCovers = await Promise.all(
       album.covers.map(async (cover) => {
         await AlbumCover.query().insert({
@@ -483,7 +483,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     });
   }
 
-  if (album.discs.length !== 0) {
+  if (album?.discs?.length !== 0 && album.discs) {
     const updateAlbumDiscAndTracks = await Promise.all(
       album.discs.map(async (disc, discIndex) => {
         await AlbumDisc.query().insert({
@@ -520,7 +520,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     );
   }
 
-  if (album.stores.length !== 0) {
+  if (album?.stores?.length !== 0 && album.stores) {
     const updateAlbumStores = await Promise.all(
       album.stores.map(async (store) => {
         if (store.link.includes("db/collection.php")) {
@@ -536,7 +536,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     );
   }
 
-  if (album.arrangers.length !== 0) {
+  if (album?.arrangers?.length !== 0 && album.arrangers) {
     const updateAlbumArrangers = await Promise.all(
       album.arrangers.map(async (arranger) => {
         if (arranger?.link !== undefined) {
@@ -565,7 +565,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     );
   }
 
-  if (album.composers.length !== 0) {
+  if (album?.composers?.length !== 0 && album.composers) {
     const updateAlbumComposers = await Promise.all(
       album.composers.map(async (composer) => {
         if (composer?.link !== undefined) {
@@ -594,7 +594,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     );
   }
 
-  if (album.lyricists.length !== 0) {
+  if (album?.lyricists?.length !== 0 && album.lyricists) {
     const updateAlbumLyricists = await Promise.all(
       album.lyricists.map(async (lyricist) => {
         if (lyricist?.link !== undefined) {
@@ -623,7 +623,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     );
   }
 
-  if (album.performers.length !== 0) {
+  if (album?.performers?.length !== 0 && album.performers) {
     const updateAlbumPerformers = await Promise.all(
       album.performers.map(async (performer) => {
         if (performer?.link !== undefined) {

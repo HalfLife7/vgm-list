@@ -1073,7 +1073,7 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
           });
 
         case 15:
-          if (!((album === null || album === void 0 ? void 0 : (_album$covers = album.covers) === null || _album$covers === void 0 ? void 0 : _album$covers.length) !== 0)) {
+          if (!((album === null || album === void 0 ? void 0 : (_album$covers = album.covers) === null || _album$covers === void 0 ? void 0 : _album$covers.length) !== 0 && album.covers)) {
             _context33.next = 21;
             break;
           }
@@ -1126,7 +1126,7 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
           _updateAlbumCovers = _context33.sent;
 
         case 24:
-          if (!((album === null || album === void 0 ? void 0 : (_album$discs = album.discs) === null || _album$discs === void 0 ? void 0 : _album$discs.length) !== 0)) {
+          if (!((album === null || album === void 0 ? void 0 : (_album$discs = album.discs) === null || _album$discs === void 0 ? void 0 : _album$discs.length) !== 0 && album.discs)) {
             _context33.next = 28;
             break;
           }
@@ -1210,13 +1210,13 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
           updateAlbumDiscAndTracks = _context33.sent;
 
         case 28:
-          if (!((album === null || album === void 0 ? void 0 : (_album$stores = album.stores) === null || _album$stores === void 0 ? void 0 : _album$stores.length) !== 0)) {
+          if (!((album === null || album === void 0 ? void 0 : (_album$stores = album.stores) === null || _album$stores === void 0 ? void 0 : _album$stores.length) !== 0 && album.stores)) {
             _context33.next = 32;
             break;
           }
 
           _context33.next = 31;
-          return Promise.all(album === null || album === void 0 ? void 0 : album.stores.map( /*#__PURE__*/function () {
+          return Promise.all(album.stores.map( /*#__PURE__*/function () {
             var _ref29 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee28(store) {
               return _regenerator["default"].wrap(function _callee28$(_context28) {
                 while (1) {
@@ -1255,7 +1255,7 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
           updateAlbumStores = _context33.sent;
 
         case 32:
-          if (!((album === null || album === void 0 ? void 0 : (_album$arrangers = album.arrangers) === null || _album$arrangers === void 0 ? void 0 : _album$arrangers.length) !== 0)) {
+          if (!((album === null || album === void 0 ? void 0 : (_album$arrangers = album.arrangers) === null || _album$arrangers === void 0 ? void 0 : _album$arrangers.length) !== 0 && album.arrangers)) {
             _context33.next = 36;
             break;
           }
@@ -1327,7 +1327,7 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
           updateAlbumArrangers = _context33.sent;
 
         case 36:
-          if (!((album === null || album === void 0 ? void 0 : (_album$composers = album.composers) === null || _album$composers === void 0 ? void 0 : _album$composers.length) !== 0)) {
+          if (!((album === null || album === void 0 ? void 0 : (_album$composers = album.composers) === null || _album$composers === void 0 ? void 0 : _album$composers.length) !== 0 && album.composers)) {
             _context33.next = 40;
             break;
           }
@@ -1399,7 +1399,7 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
           updateAlbumComposers = _context33.sent;
 
         case 40:
-          if (!((album === null || album === void 0 ? void 0 : (_album$lyricists = album.lyricists) === null || _album$lyricists === void 0 ? void 0 : _album$lyricists.length) !== 0)) {
+          if (!((album === null || album === void 0 ? void 0 : (_album$lyricists = album.lyricists) === null || _album$lyricists === void 0 ? void 0 : _album$lyricists.length) !== 0 && album.lyricists)) {
             _context33.next = 44;
             break;
           }
@@ -1471,7 +1471,7 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
           updateAlbumLyricists = _context33.sent;
 
         case 44:
-          if (!((album === null || album === void 0 ? void 0 : (_album$performers = album.performers) === null || _album$performers === void 0 ? void 0 : _album$performers.length) !== 0)) {
+          if (!((album === null || album === void 0 ? void 0 : (_album$performers = album.performers) === null || _album$performers === void 0 ? void 0 : _album$performers.length) !== 0 && album.performers)) {
             _context33.next = 48;
             break;
           }
