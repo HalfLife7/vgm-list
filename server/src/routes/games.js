@@ -109,7 +109,7 @@ router.get("/search-by-exact-name/:name", (req, res, next) => {
         .orWhere("game_alternative_names.name", "=", gameName)
     )
     .then((game) => {
-      console.log(game);
+      // console.log(game[0]);
       res.send(game[0]);
     })
     .catch((err) => {

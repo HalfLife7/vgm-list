@@ -282,7 +282,7 @@ exports.up = async (knex) => {
       t.primary(["artist_id", "album_id"]);
     });
     await knex.schema.createTable("album_covers", (t) => {
-      t.integer("id").unsigned().primary();
+      t.increments("id");
       t.integer("album_id")
         .unsigned()
         .references("id")

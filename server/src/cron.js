@@ -383,7 +383,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     }
   };
   let updateAlbumId = await getNotUpdatedAlbumId();
-  console.log(util.inspect(updateAlbumId, false, null, true));
+  // console.log(util.inspect(updateAlbumId, false, null, true));
 
   const getAlbum = async () => {
     try {
@@ -410,14 +410,20 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     const updateAlbumGames = await Promise.all(
       album.products.map(async (product) => {
         let gameName = product?.names?.en;
-        console.log(gameName);
+        // console.log(gameName);
         if (gameName !== undefined) {
           // get highest id from db
           const getGameId = async () => {
+            // https://stackoverflow.com/questions/11305797/remove-zero-width-space-characters-from-a-javascript-string
+            // some names from the database have characters that are invalid in urls such as the zero width space
+            let cleanGameName = gameName.replace(/[\u200B-\u200D\uFEFF]/g, "");
+
+            let URI = `http://localhost:3000/games/search-by-exact-name/${cleanGameName}`;
+            let encodedURI = encodeURI(URI);
             try {
               const response = await axios({
                 method: "get",
-                url: `http://localhost:3000/games/search-by-exact-name/${gameName}`,
+                url: encodedURI,
               }).then((response) => {
                 return response.data.id;
               });
@@ -427,7 +433,10 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
             }
           };
           let gameId = await getGameId();
-          console.log(util.inspect(gameId, false, null, true));
+          console.log("Game Name: " + gameName + "\t\t| ID: " + gameId);
+          console.log(
+            "Album Name: " + album?.name + "\t\t| ID: " + updateAlbumId
+          );
 
           // if a corresponding gameId is found, insert it
           if (gameId !== undefined) {
@@ -456,7 +465,6 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     const updateAlbumCovers = await Promise.all(
       album.covers.map(async (cover) => {
         await AlbumCover.query().insert({
-          id: cover?.full.split("/").pop().split("-").pop().split(".")[0],
           album_id: updateAlbumId,
           full: cover?.full,
           medium: cover?.medium,
@@ -467,7 +475,6 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
     );
   } else {
     const updateAlbumCovers = await AlbumCover.query().insert({
-      id: album?.picture_full.split("/").pop().split("-").pop().split(".")[0],
       album_id: updateAlbumId,
       full: album?.picture_full,
       medium: album?.picture_small,
@@ -487,12 +494,26 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
         });
 
         disc.tracks.map(async (track, trackIndex) => {
+          let trackName;
+          if (track?.names?.English !== undefined) {
+            trackName = track?.names?.English;
+          } else if (track?.names?.["English (Alternate)"] !== undefined) {
+            trackName = track?.names?.["English (Alternate)"];
+          } else if (track?.names?.["English (Localized)"] !== undefined) {
+            trackName = track?.names?.["English (Localized)"];
+          } else if (track?.names?.["English (Booklet)"] !== undefined) {
+            trackName = track?.names?.["English (Booklet)"];
+          } else if (track?.names?.["English (Literal)"] !== undefined) {
+            trackName = track?.names?.["English (Literal)"];
+          } else {
+            trackName = track?.names?.[0];
+          }
           await AlbumTrack.query().insert({
             id: trackIndex,
             album_id: updateAlbumId,
             disc_id: discIndex,
             length: track?.track_length,
-            name: track?.names?.English,
+            name: trackName,
           });
         });
       })
@@ -645,6 +666,6 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 // addAlbums.start();
 
 // run 15500~ cycles to get all albums for game OST
-// updateAlbumDb.start();
+updateAlbumDb.start();
 
 module.exports = router;

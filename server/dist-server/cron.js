@@ -857,13 +857,14 @@ var addAlbums = new CronJob("25 15 * * *", /*#__PURE__*/(0, _asyncToGenerator2["
     }
   }, _callee20);
 })));
-var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee25() {
-  var _album$publisher, _album$publisher$name;
+var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee33() {
+  var _album$publisher, _album$publisher$name, _album$covers, _album$discs, _album$stores, _album$arrangers, _album$composers, _album$lyricists, _album$performers;
 
-  var getNotUpdatedAlbumId, updateAlbumId, getAlbum, album, updateAlbumGames;
-  return _regenerator["default"].wrap(function _callee25$(_context25) {
+  var getNotUpdatedAlbumId, updateAlbumId, getAlbum, album, updateAlbumGames, updateAlbumCovers, _updateAlbumCovers, updateAlbumDiscAndTracks, updateAlbumStores, updateAlbumArrangers, updateAlbumComposers, updateAlbumLyricists, updateAlbumPerformers;
+
+  return _regenerator["default"].wrap(function _callee33$(_context33) {
     while (1) {
-      switch (_context25.prev = _context25.next) {
+      switch (_context33.prev = _context33.next) {
         case 0:
           console.log("starting updateAlbumDb"); // get highest id from db
 
@@ -903,13 +904,13 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
             };
           }();
 
-          _context25.next = 4;
+          _context33.next = 4;
           return getNotUpdatedAlbumId();
 
         case 4:
-          updateAlbumId = _context25.sent;
-          console.log(_util["default"].inspect(updateAlbumId, false, null, true));
+          updateAlbumId = _context33.sent;
 
+          // console.log(util.inspect(updateAlbumId, false, null, true));
           getAlbum = /*#__PURE__*/function () {
             var _ref23 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee22() {
               var response;
@@ -951,18 +952,18 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
             };
           }();
 
-          _context25.next = 9;
+          _context33.next = 8;
           return getAlbum();
 
-        case 9:
-          album = _context25.sent;
+        case 8:
+          album = _context33.sent;
 
           if (!(album.products.length !== 0)) {
-            _context25.next = 14;
+            _context33.next = 13;
             break;
           }
 
-          _context25.next = 13;
+          _context33.next = 12;
           return Promise.all(album.products.map( /*#__PURE__*/function () {
             var _ref24 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee24(product) {
               var _product$names;
@@ -972,8 +973,7 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
                 while (1) {
                   switch (_context24.prev = _context24.next) {
                     case 0:
-                      gameName = product === null || product === void 0 ? void 0 : (_product$names = product.names) === null || _product$names === void 0 ? void 0 : _product$names.en;
-                      console.log(gameName);
+                      gameName = product === null || product === void 0 ? void 0 : (_product$names = product.names) === null || _product$names === void 0 ? void 0 : _product$names.en; // console.log(gameName);
 
                       if (!(gameName !== undefined)) {
                         _context24.next = 11;
@@ -983,35 +983,40 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
                       // get highest id from db
                       getGameId = /*#__PURE__*/function () {
                         var _ref25 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee23() {
-                          var response;
+                          var cleanGameName, URI, encodedURI, response;
                           return _regenerator["default"].wrap(function _callee23$(_context23) {
                             while (1) {
                               switch (_context23.prev = _context23.next) {
                                 case 0:
-                                  _context23.prev = 0;
-                                  _context23.next = 3;
+                                  // https://stackoverflow.com/questions/11305797/remove-zero-width-space-characters-from-a-javascript-string
+                                  // some names from the database have characters that are invalid in urls such as the zero width space
+                                  cleanGameName = gameName.replace(/[\u200B-\u200D\uFEFF]/g, "");
+                                  URI = "http://localhost:3000/games/search-by-exact-name/".concat(cleanGameName);
+                                  encodedURI = encodeURI(URI);
+                                  _context23.prev = 3;
+                                  _context23.next = 6;
                                   return axios({
                                     method: "get",
-                                    url: "http://localhost:3000/games/search-by-exact-name/".concat(gameName)
+                                    url: encodedURI
                                   }).then(function (response) {
                                     return response.data.id;
                                   });
 
-                                case 3:
+                                case 6:
                                   response = _context23.sent;
                                   return _context23.abrupt("return", response);
 
-                                case 7:
-                                  _context23.prev = 7;
-                                  _context23.t0 = _context23["catch"](0);
+                                case 10:
+                                  _context23.prev = 10;
+                                  _context23.t0 = _context23["catch"](3);
                                   console.error(_context23.t0);
 
-                                case 10:
+                                case 13:
                                 case "end":
                                   return _context23.stop();
                               }
                             }
-                          }, _callee23, null, [[0, 7]]);
+                          }, _callee23, null, [[3, 10]]);
                         }));
 
                         return function getGameId() {
@@ -1019,12 +1024,13 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
                         };
                       }();
 
-                      _context24.next = 6;
+                      _context24.next = 5;
                       return getGameId();
 
-                    case 6:
+                    case 5:
                       gameId = _context24.sent;
-                      console.log(_util["default"].inspect(gameId, false, null, true)); // if a corresponding gameId is found, insert it
+                      console.log("Game Name: " + gameName + "\t\t| ID: " + gameId);
+                      console.log("Album Name: " + (album === null || album === void 0 ? void 0 : album.name) + "\t\t| ID: " + updateAlbumId); // if a corresponding gameId is found, insert it
 
                       if (!(gameId !== undefined)) {
                         _context24.next = 11;
@@ -1050,11 +1056,11 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
             };
           }()));
 
-        case 13:
-          updateAlbumGames = _context25.sent;
+        case 12:
+          updateAlbumGames = _context33.sent;
 
-        case 14:
-          _context25.next = 16;
+        case 13:
+          _context33.next = 15;
           return Album.query().findById(updateAlbumId).patch({
             catalog: album === null || album === void 0 ? void 0 : album.catalog,
             category: album === null || album === void 0 ? void 0 : album.category,
@@ -1066,12 +1072,482 @@ var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerato
             updated_at: (0, _moment["default"])().unix()
           });
 
-        case 16:
+        case 15:
+          if (!((album === null || album === void 0 ? void 0 : (_album$covers = album.covers) === null || _album$covers === void 0 ? void 0 : _album$covers.length) !== 0)) {
+            _context33.next = 21;
+            break;
+          }
+
+          _context33.next = 18;
+          return Promise.all(album.covers.map( /*#__PURE__*/function () {
+            var _ref26 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee25(cover) {
+              return _regenerator["default"].wrap(function _callee25$(_context25) {
+                while (1) {
+                  switch (_context25.prev = _context25.next) {
+                    case 0:
+                      _context25.next = 2;
+                      return AlbumCover.query().insert({
+                        album_id: updateAlbumId,
+                        full: cover === null || cover === void 0 ? void 0 : cover.full,
+                        medium: cover === null || cover === void 0 ? void 0 : cover.medium,
+                        name: cover === null || cover === void 0 ? void 0 : cover.name,
+                        thumb: cover === null || cover === void 0 ? void 0 : cover.thumb
+                      });
+
+                    case 2:
+                    case "end":
+                      return _context25.stop();
+                  }
+                }
+              }, _callee25);
+            }));
+
+            return function (_x12) {
+              return _ref26.apply(this, arguments);
+            };
+          }()));
+
+        case 18:
+          updateAlbumCovers = _context33.sent;
+          _context33.next = 24;
+          break;
+
+        case 21:
+          _context33.next = 23;
+          return AlbumCover.query().insert({
+            album_id: updateAlbumId,
+            full: album === null || album === void 0 ? void 0 : album.picture_full,
+            medium: album === null || album === void 0 ? void 0 : album.picture_small,
+            name: "Front",
+            thumb: album === null || album === void 0 ? void 0 : album.picture_thumb
+          });
+
+        case 23:
+          _updateAlbumCovers = _context33.sent;
+
+        case 24:
+          if (!((album === null || album === void 0 ? void 0 : (_album$discs = album.discs) === null || _album$discs === void 0 ? void 0 : _album$discs.length) !== 0)) {
+            _context33.next = 28;
+            break;
+          }
+
+          _context33.next = 27;
+          return Promise.all(album.discs.map( /*#__PURE__*/function () {
+            var _ref27 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee27(disc, discIndex) {
+              return _regenerator["default"].wrap(function _callee27$(_context27) {
+                while (1) {
+                  switch (_context27.prev = _context27.next) {
+                    case 0:
+                      _context27.next = 2;
+                      return AlbumDisc.query().insert({
+                        id: discIndex,
+                        album_id: updateAlbumId,
+                        length: disc === null || disc === void 0 ? void 0 : disc.disc_length,
+                        name: disc === null || disc === void 0 ? void 0 : disc.name
+                      });
+
+                    case 2:
+                      disc.tracks.map( /*#__PURE__*/function () {
+                        var _ref28 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee26(track, trackIndex) {
+                          var _track$names, _track$names3, _track$names5, _track$names7, _track$names9;
+
+                          var trackName, _track$names2, _track$names4, _track$names6, _track$names8, _track$names10, _track$names11;
+
+                          return _regenerator["default"].wrap(function _callee26$(_context26) {
+                            while (1) {
+                              switch (_context26.prev = _context26.next) {
+                                case 0:
+                                  if ((track === null || track === void 0 ? void 0 : (_track$names = track.names) === null || _track$names === void 0 ? void 0 : _track$names.English) !== undefined) {
+                                    trackName = track === null || track === void 0 ? void 0 : (_track$names2 = track.names) === null || _track$names2 === void 0 ? void 0 : _track$names2.English;
+                                  } else if ((track === null || track === void 0 ? void 0 : (_track$names3 = track.names) === null || _track$names3 === void 0 ? void 0 : _track$names3["English (Alternate)"]) !== undefined) {
+                                    trackName = track === null || track === void 0 ? void 0 : (_track$names4 = track.names) === null || _track$names4 === void 0 ? void 0 : _track$names4["English (Alternate)"];
+                                  } else if ((track === null || track === void 0 ? void 0 : (_track$names5 = track.names) === null || _track$names5 === void 0 ? void 0 : _track$names5["English (Localized)"]) !== undefined) {
+                                    trackName = track === null || track === void 0 ? void 0 : (_track$names6 = track.names) === null || _track$names6 === void 0 ? void 0 : _track$names6["English (Localized)"];
+                                  } else if ((track === null || track === void 0 ? void 0 : (_track$names7 = track.names) === null || _track$names7 === void 0 ? void 0 : _track$names7["English (Booklet)"]) !== undefined) {
+                                    trackName = track === null || track === void 0 ? void 0 : (_track$names8 = track.names) === null || _track$names8 === void 0 ? void 0 : _track$names8["English (Booklet)"];
+                                  } else if ((track === null || track === void 0 ? void 0 : (_track$names9 = track.names) === null || _track$names9 === void 0 ? void 0 : _track$names9["English (Literal)"]) !== undefined) {
+                                    trackName = track === null || track === void 0 ? void 0 : (_track$names10 = track.names) === null || _track$names10 === void 0 ? void 0 : _track$names10["English (Literal)"];
+                                  } else {
+                                    trackName = track === null || track === void 0 ? void 0 : (_track$names11 = track.names) === null || _track$names11 === void 0 ? void 0 : _track$names11[0];
+                                  }
+
+                                  _context26.next = 3;
+                                  return AlbumTrack.query().insert({
+                                    id: trackIndex,
+                                    album_id: updateAlbumId,
+                                    disc_id: discIndex,
+                                    length: track === null || track === void 0 ? void 0 : track.track_length,
+                                    name: trackName
+                                  });
+
+                                case 3:
+                                case "end":
+                                  return _context26.stop();
+                              }
+                            }
+                          }, _callee26);
+                        }));
+
+                        return function (_x15, _x16) {
+                          return _ref28.apply(this, arguments);
+                        };
+                      }());
+
+                    case 3:
+                    case "end":
+                      return _context27.stop();
+                  }
+                }
+              }, _callee27);
+            }));
+
+            return function (_x13, _x14) {
+              return _ref27.apply(this, arguments);
+            };
+          }()));
+
+        case 27:
+          updateAlbumDiscAndTracks = _context33.sent;
+
+        case 28:
+          if (!((album === null || album === void 0 ? void 0 : (_album$stores = album.stores) === null || _album$stores === void 0 ? void 0 : _album$stores.length) !== 0)) {
+            _context33.next = 32;
+            break;
+          }
+
+          _context33.next = 31;
+          return Promise.all(album === null || album === void 0 ? void 0 : album.stores.map( /*#__PURE__*/function () {
+            var _ref29 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee28(store) {
+              return _regenerator["default"].wrap(function _callee28$(_context28) {
+                while (1) {
+                  switch (_context28.prev = _context28.next) {
+                    case 0:
+                      if (!store.link.includes("db/collection.php")) {
+                        _context28.next = 3;
+                        break;
+                      }
+
+                      _context28.next = 5;
+                      break;
+
+                    case 3:
+                      _context28.next = 5;
+                      return AlbumStore.query().insert({
+                        album_id: updateAlbumId,
+                        link: store === null || store === void 0 ? void 0 : store.link,
+                        name: store === null || store === void 0 ? void 0 : store.name
+                      });
+
+                    case 5:
+                    case "end":
+                      return _context28.stop();
+                  }
+                }
+              }, _callee28);
+            }));
+
+            return function (_x17) {
+              return _ref29.apply(this, arguments);
+            };
+          }()));
+
+        case 31:
+          updateAlbumStores = _context33.sent;
+
+        case 32:
+          if (!((album === null || album === void 0 ? void 0 : (_album$arrangers = album.arrangers) === null || _album$arrangers === void 0 ? void 0 : _album$arrangers.length) !== 0)) {
+            _context33.next = 36;
+            break;
+          }
+
+          _context33.next = 35;
+          return Promise.all(album.arrangers.map( /*#__PURE__*/function () {
+            var _ref30 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee29(arranger) {
+              var artistId, checkArtist, _arranger$names;
+
+              return _regenerator["default"].wrap(function _callee29$(_context29) {
+                while (1) {
+                  switch (_context29.prev = _context29.next) {
+                    case 0:
+                      if (!((arranger === null || arranger === void 0 ? void 0 : arranger.link) !== undefined)) {
+                        _context29.next = 14;
+                        break;
+                      }
+
+                      artistId = arranger.link.split("/")[1];
+                      _context29.next = 4;
+                      return _artist["default"].query().findById(artistId);
+
+                    case 4:
+                      checkArtist = _context29.sent;
+
+                      if (!(checkArtist === undefined)) {
+                        _context29.next = 12;
+                        break;
+                      }
+
+                      _context29.next = 8;
+                      return _artist["default"].query().insert({
+                        id: artistId,
+                        name: arranger === null || arranger === void 0 ? void 0 : (_arranger$names = arranger.names) === null || _arranger$names === void 0 ? void 0 : _arranger$names.en
+                      });
+
+                    case 8:
+                      _context29.next = 10;
+                      return AlbumArranger.query().insert({
+                        artist_id: artistId,
+                        album_id: updateAlbumId
+                      });
+
+                    case 10:
+                      _context29.next = 14;
+                      break;
+
+                    case 12:
+                      _context29.next = 14;
+                      return AlbumArranger.query().insert({
+                        artist_id: artistId,
+                        album_id: updateAlbumId
+                      });
+
+                    case 14:
+                    case "end":
+                      return _context29.stop();
+                  }
+                }
+              }, _callee29);
+            }));
+
+            return function (_x18) {
+              return _ref30.apply(this, arguments);
+            };
+          }()));
+
+        case 35:
+          updateAlbumArrangers = _context33.sent;
+
+        case 36:
+          if (!((album === null || album === void 0 ? void 0 : (_album$composers = album.composers) === null || _album$composers === void 0 ? void 0 : _album$composers.length) !== 0)) {
+            _context33.next = 40;
+            break;
+          }
+
+          _context33.next = 39;
+          return Promise.all(album.composers.map( /*#__PURE__*/function () {
+            var _ref31 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee30(composer) {
+              var artistId, checkArtist, _composer$names;
+
+              return _regenerator["default"].wrap(function _callee30$(_context30) {
+                while (1) {
+                  switch (_context30.prev = _context30.next) {
+                    case 0:
+                      if (!((composer === null || composer === void 0 ? void 0 : composer.link) !== undefined)) {
+                        _context30.next = 14;
+                        break;
+                      }
+
+                      artistId = composer.link.split("/")[1];
+                      _context30.next = 4;
+                      return _artist["default"].query().findById(artistId);
+
+                    case 4:
+                      checkArtist = _context30.sent;
+
+                      if (!(checkArtist === undefined)) {
+                        _context30.next = 12;
+                        break;
+                      }
+
+                      _context30.next = 8;
+                      return _artist["default"].query().insert({
+                        id: artistId,
+                        name: composer === null || composer === void 0 ? void 0 : (_composer$names = composer.names) === null || _composer$names === void 0 ? void 0 : _composer$names.en
+                      });
+
+                    case 8:
+                      _context30.next = 10;
+                      return AlbumComposer.query().insert({
+                        artist_id: artistId,
+                        album_id: updateAlbumId
+                      });
+
+                    case 10:
+                      _context30.next = 14;
+                      break;
+
+                    case 12:
+                      _context30.next = 14;
+                      return AlbumComposer.query().insert({
+                        artist_id: artistId,
+                        album_id: updateAlbumId
+                      });
+
+                    case 14:
+                    case "end":
+                      return _context30.stop();
+                  }
+                }
+              }, _callee30);
+            }));
+
+            return function (_x19) {
+              return _ref31.apply(this, arguments);
+            };
+          }()));
+
+        case 39:
+          updateAlbumComposers = _context33.sent;
+
+        case 40:
+          if (!((album === null || album === void 0 ? void 0 : (_album$lyricists = album.lyricists) === null || _album$lyricists === void 0 ? void 0 : _album$lyricists.length) !== 0)) {
+            _context33.next = 44;
+            break;
+          }
+
+          _context33.next = 43;
+          return Promise.all(album.lyricists.map( /*#__PURE__*/function () {
+            var _ref32 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee31(lyricist) {
+              var artistId, checkArtist, _lyricist$names;
+
+              return _regenerator["default"].wrap(function _callee31$(_context31) {
+                while (1) {
+                  switch (_context31.prev = _context31.next) {
+                    case 0:
+                      if (!((lyricist === null || lyricist === void 0 ? void 0 : lyricist.link) !== undefined)) {
+                        _context31.next = 14;
+                        break;
+                      }
+
+                      artistId = lyricist.link.split("/")[1];
+                      _context31.next = 4;
+                      return _artist["default"].query().findById(artistId);
+
+                    case 4:
+                      checkArtist = _context31.sent;
+
+                      if (!(checkArtist === undefined)) {
+                        _context31.next = 12;
+                        break;
+                      }
+
+                      _context31.next = 8;
+                      return _artist["default"].query().insert({
+                        id: artistId,
+                        name: lyricist === null || lyricist === void 0 ? void 0 : (_lyricist$names = lyricist.names) === null || _lyricist$names === void 0 ? void 0 : _lyricist$names.en
+                      });
+
+                    case 8:
+                      _context31.next = 10;
+                      return AlbumLyricist.query().insert({
+                        artist_id: artistId,
+                        album_id: updateAlbumId
+                      });
+
+                    case 10:
+                      _context31.next = 14;
+                      break;
+
+                    case 12:
+                      _context31.next = 14;
+                      return AlbumLyricist.query().insert({
+                        artist_id: artistId,
+                        album_id: updateAlbumId
+                      });
+
+                    case 14:
+                    case "end":
+                      return _context31.stop();
+                  }
+                }
+              }, _callee31);
+            }));
+
+            return function (_x20) {
+              return _ref32.apply(this, arguments);
+            };
+          }()));
+
+        case 43:
+          updateAlbumLyricists = _context33.sent;
+
+        case 44:
+          if (!((album === null || album === void 0 ? void 0 : (_album$performers = album.performers) === null || _album$performers === void 0 ? void 0 : _album$performers.length) !== 0)) {
+            _context33.next = 48;
+            break;
+          }
+
+          _context33.next = 47;
+          return Promise.all(album.performers.map( /*#__PURE__*/function () {
+            var _ref33 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee32(performer) {
+              var artistId, checkArtist, _performer$names;
+
+              return _regenerator["default"].wrap(function _callee32$(_context32) {
+                while (1) {
+                  switch (_context32.prev = _context32.next) {
+                    case 0:
+                      if (!((performer === null || performer === void 0 ? void 0 : performer.link) !== undefined)) {
+                        _context32.next = 14;
+                        break;
+                      }
+
+                      artistId = performer.link.split("/")[1];
+                      _context32.next = 4;
+                      return _artist["default"].query().findById(artistId);
+
+                    case 4:
+                      checkArtist = _context32.sent;
+
+                      if (!(checkArtist === undefined)) {
+                        _context32.next = 12;
+                        break;
+                      }
+
+                      _context32.next = 8;
+                      return _artist["default"].query().insert({
+                        id: artistId,
+                        name: performer === null || performer === void 0 ? void 0 : (_performer$names = performer.names) === null || _performer$names === void 0 ? void 0 : _performer$names.en
+                      });
+
+                    case 8:
+                      _context32.next = 10;
+                      return AlbumPerformer.query().insert({
+                        artist_id: artistId,
+                        album_id: updateAlbumId
+                      });
+
+                    case 10:
+                      _context32.next = 14;
+                      break;
+
+                    case 12:
+                      _context32.next = 14;
+                      return AlbumPerformer.query().insert({
+                        artist_id: artistId,
+                        album_id: updateAlbumId
+                      });
+
+                    case 14:
+                    case "end":
+                      return _context32.stop();
+                  }
+                }
+              }, _callee32);
+            }));
+
+            return function (_x21) {
+              return _ref33.apply(this, arguments);
+            };
+          }()));
+
+        case 47:
+          updateAlbumPerformers = _context33.sent;
+
+        case 48:
         case "end":
-          return _context25.stop();
+          return _context33.stop();
       }
     }
-  }, _callee25);
+  }, _callee33);
 }))); // run this cron once to populate platform tables
 // updatePlatforms.start();
 // run this cron 13x to populate collections tables

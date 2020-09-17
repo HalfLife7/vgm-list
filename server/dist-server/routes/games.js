@@ -95,7 +95,7 @@ router.get("/search-by-exact-name/:name", function (req, res, next) {
   Game.query().leftJoin("game_alternative_names", "games.id", "=", "game_alternative_names.game_id").select("games.*", "game_alternative_names.name AS alternative_name", "game_alternative_names.comment").where(function (builder) {
     return builder.where("games.name", "=", gameName).orWhere("game_alternative_names.name", "=", gameName);
   }).then(function (game) {
-    console.log(game);
+    // console.log(game[0]);
     res.send(game[0]);
   })["catch"](function (err) {
     console.error(err);
