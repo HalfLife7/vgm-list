@@ -89,7 +89,7 @@ router.get("/all", (req, res, next) => {
 });
 
 router.get("/search-by-exact-name/:name", (req, res, next) => {
-  const gameName = req.params.name;
+  const gameName = req.params.name.toLowerCase();
 
   Game.query()
     .leftJoin(
@@ -105,8 +105,8 @@ router.get("/search-by-exact-name/:name", (req, res, next) => {
     )
     .where((builder) =>
       builder
-        .where("games.name", "=", gameName)
-        .orWhere("game_alternative_names.name", "=", gameName)
+        .where("games.name", "ilike", gameName)
+        .orWhere("game_alternative_names.name", "ilike", gameName)
     )
     .then((game) => {
       // console.log(game[0]);

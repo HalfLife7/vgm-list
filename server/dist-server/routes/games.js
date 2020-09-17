@@ -91,9 +91,9 @@ router.get("/all", function (req, res, next) {
   });
 });
 router.get("/search-by-exact-name/:name", function (req, res, next) {
-  var gameName = req.params.name;
+  var gameName = req.params.name.toLowerCase();
   Game.query().leftJoin("game_alternative_names", "games.id", "=", "game_alternative_names.game_id").select("games.*", "game_alternative_names.name AS alternative_name", "game_alternative_names.comment").where(function (builder) {
-    return builder.where("games.name", "=", gameName).orWhere("game_alternative_names.name", "=", gameName);
+    return builder.where("games.name", "ilike", gameName).orWhere("game_alternative_names.name", "ilike", gameName);
   }).then(function (game) {
     // console.log(game[0]);
     res.send(game[0]);
