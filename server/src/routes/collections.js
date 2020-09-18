@@ -11,7 +11,7 @@ router.get("/max", (req, res, next) => {
       res.send(collectionId);
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err.message);
     });
 });
 

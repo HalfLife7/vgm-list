@@ -22,7 +22,7 @@ exports.up = async (knex) => {
       t.primary(["album_id", "game_id"]);
     });
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
   }
 };
 
@@ -34,6 +34,6 @@ exports.down = async (knex) => {
       t.text("game_name");
     });
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
   }
 };

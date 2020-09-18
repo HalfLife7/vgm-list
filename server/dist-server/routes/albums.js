@@ -19,7 +19,7 @@ router.get("/not-updated", function (req, res, next) {
   Album.query().min("id").where("updated_at", "IS", null).then(function (albumId) {
     res.send(albumId);
   })["catch"](function (err) {
-    console.error(err);
+    console.error(err.message);
   });
 }); // router.get("/all", (req, res, next) => {
 //   Album.query()
@@ -35,12 +35,18 @@ router.get("/not-updated", function (req, res, next) {
 // });
 
 router.get("/:id", function (req, res, next) {
-  var albumId = req.params.id;
-  Album.query().findById(albumId).withGraphFetched("arrangers.[artists(selectName)]").modifiers({
+  var albumId = req.params.id; //console.log(albumId);
+
+  Album.query().findById(albumId).withGraphFetched("arrangers.[artist(selectName)]").modifiers({
     selectName: function selectName(builder) {
       builder.select("name");
     }
-  }).withGraphFetched("composers.[artists(selectName)]").withGraphFetched("lyricists.[artists(selectName)]").withGraphFetched("performers.[artists(selectName)]").withGraphFetched("covers").withGraphFetched("discs").withGraphFetched("stores").withGraphFetched("tracks").then(function (album) {
+  }).withGraphFetched("composers.[artist(selectName)]").withGraphFetched("lyricists.[artist(selectName)]").withGraphFetched("performers.[artist(selectName)]").withGraphFetched("covers").withGraphFetched("discs").withGraphFetched("stores").withGraphFetched("tracks(orderByDiscAndId)").modifiers({
+    orderByDiscAndId: function orderByDiscAndId(builder) {
+      builder.orderBy("disc_id");
+      builder.orderBy("id");
+    }
+  }).then(function (album) {
     if (album.stores !== undefined) {
       album.stores.map(function (store) {
         if (store.name === "iTunes") {
@@ -67,8 +73,7 @@ router.get("/:id", function (req, res, next) {
     }
 
     if (album.covers !== undefined) {
-      console.log(album.covers);
-
+      // console.log(album.covers);
       if (album.covers.length === 0) {
         album.covers.push({
           full: "https://via.placeholder.com/600x600.png/000000/FFFFFF?text=Missing%20Cover"
@@ -87,7 +92,8 @@ router.get("/:id", function (req, res, next) {
       album.discs.map(function (disc) {
         disc.id += 1;
       });
-    }
+    } // console.log(album.tracks);
+
 
     res.send(album);
   });

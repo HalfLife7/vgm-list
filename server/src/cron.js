@@ -44,7 +44,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
       });
       return response.data[0].max;
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   };
   let maxGameId = await getMaxGameId();
@@ -71,7 +71,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
       });
       return response;
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   };
   const games = await getGames();
@@ -203,7 +203,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
       })
     );
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
   }
 });
 
@@ -217,7 +217,7 @@ const updatePlatforms = new CronJob("*/30 * * * * *", async () => {
       });
       return response.data[0].max;
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   };
   let maxPlatformId = await getMaxPlatformId();
@@ -240,7 +240,7 @@ const updatePlatforms = new CronJob("*/30 * * * * *", async () => {
       });
       return response;
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   };
 
@@ -265,7 +265,7 @@ const updatePlatforms = new CronJob("*/30 * * * * *", async () => {
           checksum: platform?.checksum,
         });
       } catch (err) {
-        console.error(err);
+        console.error(err.message);
       }
       if (platform.platform_logo !== undefined) {
         try {
@@ -281,7 +281,7 @@ const updatePlatforms = new CronJob("*/30 * * * * *", async () => {
             checksum: platform.platform_logo?.checksum,
           });
         } catch (err) {
-          console.error(err);
+          console.error(err.message);
         }
       }
     })
@@ -298,7 +298,7 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
       });
       return response.data[0].max;
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   };
   let maxCollectionId = await getMaxCollectionId();
@@ -321,7 +321,7 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
       });
       return response;
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   };
 
@@ -341,7 +341,7 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
           checksum: collection?.checksum,
         });
       } catch (err) {
-        console.error(err);
+        console.error(err.message);
       }
     })
   );
@@ -361,7 +361,7 @@ const addAlbums = new CronJob("25 15 * * *", async () => {
           name: album.title,
         });
       } catch (err) {
-        console.error(err);
+        console.error(err.message);
       }
     })
   );
@@ -379,7 +379,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
       });
       return response.data[0].min;
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   };
   let updateAlbumId = await getNotUpdatedAlbumId();
@@ -399,14 +399,14 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
       });
       return response;
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   };
 
   const album = await getAlbum();
   // console.log(util.inspect(album, false, null, true));
 
-  if (album.products.length !== 0) {
+  if (album?.products?.length !== 0 && album.products) {
     const updateAlbumGames = await Promise.all(
       album.products.map(async (product) => {
         let gameName = product?.names?.en;
@@ -429,7 +429,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
               });
               return response;
             } catch (err) {
-              console.error(err);
+              console.error(err.message);
             }
           };
           let gameId = await getGameId();
@@ -440,10 +440,14 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 
           // if a corresponding gameId is found, insert it
           if (gameId !== undefined) {
-            await AlbumGame.query().insert({
-              album_id: updateAlbumId,
-              game_id: gameId,
-            });
+            try {
+              await AlbumGame.query().insert({
+                album_id: updateAlbumId,
+                game_id: gameId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           }
         }
       })
@@ -545,20 +549,28 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 
           if (checkArtist === undefined) {
             // insert a new artist and arranger if the artist is not yet in db
-            await Artist.query().insert({
-              id: artistId,
-              name: arranger?.names?.en,
-            });
-            await AlbumArranger.query().insert({
-              artist_id: artistId,
-              album_id: updateAlbumId,
-            });
+            try {
+              await Artist.query().insert({
+                id: artistId,
+                name: arranger?.names?.en,
+              });
+              await AlbumArranger.query().insert({
+                artist_id: artistId,
+                album_id: updateAlbumId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           } else {
             // if artist already exists, only insert a new arranger
-            await AlbumArranger.query().insert({
-              artist_id: artistId,
-              album_id: updateAlbumId,
-            });
+            try {
+              await AlbumArranger.query().insert({
+                artist_id: artistId,
+                album_id: updateAlbumId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           }
         }
       })
@@ -574,20 +586,28 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 
           if (checkArtist === undefined) {
             // insert a new artist and composer if the artist is not yet in db
-            await Artist.query().insert({
-              id: artistId,
-              name: composer?.names?.en,
-            });
-            await AlbumComposer.query().insert({
-              artist_id: artistId,
-              album_id: updateAlbumId,
-            });
+            try {
+              await Artist.query().insert({
+                id: artistId,
+                name: composer?.names?.en,
+              });
+              await AlbumComposer.query().insert({
+                artist_id: artistId,
+                album_id: updateAlbumId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           } else {
             // if artist already exists, only insert a new composer
-            await AlbumComposer.query().insert({
-              artist_id: artistId,
-              album_id: updateAlbumId,
-            });
+            try {
+              await AlbumComposer.query().insert({
+                artist_id: artistId,
+                album_id: updateAlbumId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           }
         }
       })
@@ -603,20 +623,28 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 
           if (checkArtist === undefined) {
             // insert a new artist and lyricist if the artist is not yet in db
-            await Artist.query().insert({
-              id: artistId,
-              name: lyricist?.names?.en,
-            });
-            await AlbumLyricist.query().insert({
-              artist_id: artistId,
-              album_id: updateAlbumId,
-            });
+            try {
+              await Artist.query().insert({
+                id: artistId,
+                name: lyricist?.names?.en,
+              });
+              await AlbumLyricist.query().insert({
+                artist_id: artistId,
+                album_id: updateAlbumId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           } else {
             // if artist already exists, only insert a new lyricist
-            await AlbumLyricist.query().insert({
-              artist_id: artistId,
-              album_id: updateAlbumId,
-            });
+            try {
+              await AlbumLyricist.query().insert({
+                artist_id: artistId,
+                album_id: updateAlbumId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           }
         }
       })
@@ -632,20 +660,28 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 
           if (checkArtist === undefined) {
             // insert a new artist and performer if the artist is not yet in db
-            await Artist.query().insert({
-              id: artistId,
-              name: performer?.names?.en,
-            });
-            await AlbumPerformer.query().insert({
-              artist_id: artistId,
-              album_id: updateAlbumId,
-            });
+            try {
+              await Artist.query().insert({
+                id: artistId,
+                name: performer?.names?.en,
+              });
+              await AlbumPerformer.query().insert({
+                artist_id: artistId,
+                album_id: updateAlbumId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           } else {
             // if artist already exists, only insert a new performer
-            await AlbumPerformer.query().insert({
-              artist_id: artistId,
-              album_id: updateAlbumId,
-            });
+            try {
+              await AlbumPerformer.query().insert({
+                artist_id: artistId,
+                album_id: updateAlbumId,
+              });
+            } catch (err) {
+              console.error(err.message);
+            }
           }
         }
       })

@@ -26,7 +26,7 @@ router.get("/max", function (req, res, next) {
   Game.query().max("id").then(function (gameId) {
     res.send(gameId);
   })["catch"](function (err) {
-    console.error(err);
+    console.error(err.message);
   });
 });
 router.get("/all", function (req, res, next) {
@@ -35,7 +35,7 @@ router.get("/all", function (req, res, next) {
   //   "games.*",
   //   raw("ARRAY_AGG(game_platforms.platform_id) as platforms"),
   // ])
-  .withGraphFetched("platforms.[platforms.logos]") // .modifiers({
+  .whereExists(Game.relatedQuery("albums")) // .modifiers({
   //   filterPlatform(builder) {
   //     builder.whereIn("platform_id", [
   //       4,
@@ -85,8 +85,8 @@ router.get("/all", function (req, res, next) {
       if (game.summary !== null) {
         game.summary = truncate(game.summary);
       }
-    });
-    console.log(_util["default"].inspect(games, false, null, true));
+    }); // console.log(util.inspect(games, false, null, true));
+
     res.send(games);
   });
 });
@@ -98,17 +98,17 @@ router.get("/search-by-exact-name/:name", function (req, res, next) {
     // console.log(game[0]);
     res.send(game[0]);
   })["catch"](function (err) {
-    console.error(err);
+    console.error(err.message);
   });
 });
 router.get("/search", function (req, res, next) {
-  var searchParams = req.query.name;
-  console.log(searchParams);
+  var searchParams = req.query.name; // console.log(searchParams);
+
   Game.query() // use ilike for case insensitive search (postgres feature)
   .where("name", "ilike", "%".concat(searchParams, "%")).where(function (builder) {
     return builder.where("category", "=", "0").orWhere("category", "=", "2").orWhere("category", "=", "4");
   }).whereExists(Game.relatedQuery("covers")).withGraphFetched("covers").withGraphFetched("platforms").orderBy("first_release_date").then(function (games) {
-    console.log(games.length);
+    // console.log(games.length);
     games.map(function (game) {
       var _game$covers$;
 
@@ -116,8 +116,8 @@ router.get("/search", function (req, res, next) {
       if (game.covers !== undefined && ((_game$covers$ = game.covers[0]) === null || _game$covers$ === void 0 ? void 0 : _game$covers$.url) !== undefined) {
         var _game$covers$2;
 
-        var url = (_game$covers$2 = game.covers[0]) === null || _game$covers$2 === void 0 ? void 0 : _game$covers$2.url;
-        console.log(url);
+        var url = (_game$covers$2 = game.covers[0]) === null || _game$covers$2 === void 0 ? void 0 : _game$covers$2.url; // console.log(url);
+
         game.covers[0].url = url.replace("t_thumb", "t_720p");
       } else {
         game.covers[0] = {
@@ -135,12 +135,12 @@ router.get("/search", function (req, res, next) {
     });
     res.send(games);
   })["catch"](function (err) {
-    console.error(err);
+    console.error(err.message);
   });
 });
 router.get("/:id", function (req, res, next) {
-  var gameId = req.params.id;
-  console.log(gameId);
+  var gameId = req.params.id; // console.log(gameId);
+
   Game.query().findById(gameId).withGraphFetched("alternativeNames(selectName, onlyEnglish)").modifiers({
     selectName: function selectName(builder) {
       builder.select("name");
@@ -170,13 +170,13 @@ router.get("/:id", function (req, res, next) {
     }
   }).withGraphFetched("albums(selectId)").modifiers({
     selectId: function selectId(builder) {
-      builder.select("id");
+      builder.select("album_id");
     }
   }).then(function (game) {
     if (game.covers !== undefined) {
-      var url = game === null || game === void 0 ? void 0 : game.covers[0].url;
-      console.log(game.covers);
-      console.log(url);
+      var url = game === null || game === void 0 ? void 0 : game.covers[0].url; // console.log(game.covers);
+      // console.log(url);
+
       game.covers[0].url = url.replace("t_thumb", "t_720p");
     }
 
@@ -204,8 +204,7 @@ router.get("/:id", function (req, res, next) {
 
     if (game.websites !== undefined) {
       game.websites.map(function (website) {
-        console.log(website.category);
-
+        // console.log(website.category);
         if (website.category === "1") {
           website.type = "Official";
           website.logo = "https://icongr.am/octicons/verified.svg?size=148&color=0080ff";
@@ -231,11 +230,13 @@ router.get("/:id", function (req, res, next) {
           website.type = "Youtube";
           website.logo = "https://www.vectorlogo.zone/logos/youtube/youtube-tile.svg";
         } else if (website.category === "10") {
-          delete website.category;
+          website.type = "Apple App Store";
+          website.logo = "https://www.vectorlogo.zone/logos/apple/apple-tile.svg";
         } else if (website.category === "11") {
-          delete website.category;
+          website.type = "Apple App Store";
+          website.logo = "https://www.vectorlogo.zone/logos/apple/apple-tile.svg";
         } else if (website.category === "12") {
-          website.type = "Android";
+          website.type = "Google Play Store";
           website.logo = "https://www.vectorlogo.zone/logos/google_play/google_play-tile.svg";
         } else if (website.category === "13") {
           website.type = "Steam";
@@ -259,9 +260,9 @@ router.get("/:id", function (req, res, next) {
           delete website.category;
         }
       });
-    }
+    } // console.log(game);
 
-    console.log(game);
+
     res.send(game);
   });
 });

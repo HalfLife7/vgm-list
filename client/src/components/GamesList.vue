@@ -44,7 +44,7 @@ export default {
           console.log(response.data);
         })
         .catch((err) => {
-          console.error(err);
+          console.error(err.message);
         });
     },
   },
@@ -70,7 +70,7 @@ export default {
           console.log(response.data);
         })
         .catch((err) => {
-          console.error(err);
+          console.error(err.message);
         });
     },
     searchSingle() {
@@ -81,7 +81,7 @@ export default {
           console.log(response.data);
         })
         .catch((err) => {
-          console.error(err);
+          console.error(err.message);
         });
     },
   },

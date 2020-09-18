@@ -13,7 +13,7 @@ router.get("/not-updated", (req, res, next) => {
       res.send(albumId);
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err.message);
     });
 });
 
@@ -32,22 +32,29 @@ router.get("/not-updated", (req, res, next) => {
 
 router.get("/:id", (req, res, next) => {
   const albumId = req.params.id;
+  //console.log(albumId);
 
   Album.query()
     .findById(albumId)
-    .withGraphFetched("arrangers.[artists(selectName)]")
+    .withGraphFetched("arrangers.[artist(selectName)]")
     .modifiers({
       selectName: (builder) => {
         builder.select("name");
       },
     })
-    .withGraphFetched("composers.[artists(selectName)]")
-    .withGraphFetched("lyricists.[artists(selectName)]")
-    .withGraphFetched("performers.[artists(selectName)]")
+    .withGraphFetched("composers.[artist(selectName)]")
+    .withGraphFetched("lyricists.[artist(selectName)]")
+    .withGraphFetched("performers.[artist(selectName)]")
     .withGraphFetched("covers")
     .withGraphFetched("discs")
     .withGraphFetched("stores")
-    .withGraphFetched("tracks")
+    .withGraphFetched("tracks(orderByDiscAndId)")
+    .modifiers({
+      orderByDiscAndId(builder) {
+        builder.orderBy("disc_id");
+        builder.orderBy("id");
+      },
+    })
     .then((album) => {
       if (album.stores !== undefined) {
         album.stores.map((store) => {
@@ -84,7 +91,7 @@ router.get("/:id", (req, res, next) => {
       }
 
       if (album.covers !== undefined) {
-        console.log(album.covers);
+        // console.log(album.covers);
         if (album.covers.length === 0) {
           album.covers.push({
             full:
@@ -106,6 +113,7 @@ router.get("/:id", (req, res, next) => {
         });
       }
 
+      // console.log(album.tracks);
       res.send(album);
     });
 });

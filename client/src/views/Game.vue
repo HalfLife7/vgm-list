@@ -162,16 +162,41 @@
       class="pt-20"
     >
       <div class="flex flex-wrap container m-auto">
-        <div class="w-full md:w-2/6">
+        <div class="w-full md:w-3/6 lg:w-2/6">
+          <!--
           <img
             v-if="album.data.covers.length"
             :src="album.data.covers[0].full"
             :alt="album.data.name + ' Album Cover'"
           />
+          -->
+          <swiper
+            v-if="album.data.covers.length"
+            class="swiper w-full h-120"
+            :options="swiperOption"
+          >
+            <swiper-slide
+              v-for="(cover, index) in album.data.covers"
+              :key="index"
+              :cover="cover"
+            >
+              <img
+                class="m-auto w-full h-auto"
+                :src="album.data.covers[index].full"
+                alt="Album cover"
+              />
+            </swiper-slide>
+
+            <div slot="pagination" class="swiper-pagination"></div>
+
+            <div slot="button-prev" class="swiper-button-prev"></div>
+
+            <div slot="button-next" class="swiper-button-next"></div>
+          </swiper>
         </div>
         <div
           v-if="albumDataIsLoaded"
-          class="w-full p-4 md:w-4/6 md:p-0 md:pl-4"
+          class="w-full p-4 md:w-3/6 md:p-0 md:pl-4 lg:w-4/6"
         >
           <div class="text-4xl">{{ album.data.name }}</div>
           <div class="text-xl">Release Date: {{ album.data.release_date }}</div>
@@ -186,7 +211,7 @@
               :arranger="arranger"
               class="text-base flex pl-2"
             >
-              {{ arranger.artists.name
+              {{ arranger.artist.name
               }}<span v-if="arrangerIndex != album.data.arrangers.length - 1"
                 >,</span
               >
@@ -203,7 +228,7 @@
               :composer="composer"
               class="text-base flex ml-2"
             >
-              {{ composer.artists.name
+              {{ composer.artist.name
               }}<span v-if="composerIndex != album.data.composers.length - 1"
                 >,</span
               >
@@ -220,7 +245,7 @@
               :lyricist="lyricist"
               class="text-base flex ml-2"
             >
-              {{ lyricist.artists.name
+              {{ lyricist.artist.name
               }}<span v-if="lyricistIndex != album.data.lyricists.length - 1"
                 >,</span
               >
@@ -237,7 +262,7 @@
               :performer="performer"
               class="text-base flex ml-2"
             >
-              {{ performer.artists.name
+              {{ performer.artist.name
               }}<span v-if="performerIndex != album.data.performers.length - 1"
                 >,</span
               >
@@ -268,7 +293,9 @@
         </div>
       </div>
       <div class="flex flex-wrap container m-auto justify-center mt-4">
-        <div class="text-base whitespace-pre-wrap w-full p-4 lg:w-1/2 lg:p-0 ">
+        <div
+          class="text-base whitespace-pre-wrap w-full p-4 lg:w-1/2 lg:p-0 max-h-200 overflow-y-auto"
+        >
           {{ album.data.notes }}
         </div>
         <vue-good-table
@@ -389,19 +416,19 @@ export default {
           }
         })
         .catch((err) => {
-          console.error(err);
+          console.error(err.message);
         });
     },
     async loadAlbumData() {
       this.game.albums.map(async (album) => {
-        await AlbumDataService.get(album.id)
+        await AlbumDataService.get(album.album_id)
           .then((response) => {
             console.log(response.data);
             this.albums.push(response);
             this.albumDataIsLoaded = true;
           })
           .catch((err) => {
-            console.error(err);
+            console.error(err.message);
           });
       });
     },

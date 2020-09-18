@@ -15,7 +15,7 @@ router.get("/max", (req, res, next) => {
       res.send(gameId);
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err.message);
     });
 });
 
@@ -26,7 +26,7 @@ router.get("/all", (req, res, next) => {
     //   "games.*",
     //   raw("ARRAY_AGG(game_platforms.platform_id) as platforms"),
     // ])
-    .withGraphFetched("platforms.[platforms.logos]")
+    .whereExists(Game.relatedQuery("albums"))
     // .modifiers({
     //   filterPlatform(builder) {
     //     builder.whereIn("platform_id", [
@@ -83,7 +83,7 @@ router.get("/all", (req, res, next) => {
           game.summary = truncate(game.summary);
         }
       });
-      console.log(util.inspect(games, false, null, true));
+      // console.log(util.inspect(games, false, null, true));
       res.send(games);
     });
 });
@@ -113,13 +113,13 @@ router.get("/search-by-exact-name/:name", (req, res, next) => {
       res.send(game[0]);
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err.message);
     });
 });
 
 router.get("/search", (req, res, next) => {
   const searchParams = req.query.name;
-  console.log(searchParams);
+  // console.log(searchParams);
   Game.query()
     // use ilike for case insensitive search (postgres feature)
     .where("name", "ilike", `%${searchParams}%`)
@@ -134,12 +134,12 @@ router.get("/search", (req, res, next) => {
     .withGraphFetched("platforms")
     .orderBy("first_release_date")
     .then((games) => {
-      console.log(games.length);
+      // console.log(games.length);
       games.map((game) => {
         // game.covers[0] ? game.cover.url.replace("t_thumb", "t_cover_big") : null
         if (game.covers !== undefined && game.covers[0]?.url !== undefined) {
           const url = game.covers[0]?.url;
-          console.log(url);
+          // console.log(url);
           game.covers[0].url = url.replace("t_thumb", "t_720p");
         } else {
           game.covers[0] = {
@@ -157,13 +157,13 @@ router.get("/search", (req, res, next) => {
       res.send(games);
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err.message);
     });
 });
 
 router.get("/:id", (req, res, next) => {
   const gameId = req.params.id;
-  console.log(gameId);
+  // console.log(gameId);
 
   Game.query()
     .findById(gameId)
@@ -209,14 +209,14 @@ router.get("/:id", (req, res, next) => {
     .withGraphFetched("albums(selectId)")
     .modifiers({
       selectId: (builder) => {
-        builder.select("id");
+        builder.select("album_id");
       },
     })
     .then((game) => {
       if (game.covers !== undefined) {
         const url = game?.covers[0].url;
-        console.log(game.covers);
-        console.log(url);
+        // console.log(game.covers);
+        // console.log(url);
         game.covers[0].url = url.replace("t_thumb", "t_720p");
       }
 
@@ -247,7 +247,7 @@ router.get("/:id", (req, res, next) => {
 
       if (game.websites !== undefined) {
         game.websites.map((website) => {
-          console.log(website.category);
+          // console.log(website.category);
           if (website.category === "1") {
             website.type = "Official";
             website.logo =
@@ -281,11 +281,15 @@ router.get("/:id", (req, res, next) => {
             website.logo =
               "https://www.vectorlogo.zone/logos/youtube/youtube-tile.svg";
           } else if (website.category === "10") {
-            delete website.category;
+            website.type = "Apple App Store";
+            website.logo =
+              "https://www.vectorlogo.zone/logos/apple/apple-tile.svg";
           } else if (website.category === "11") {
-            delete website.category;
+            website.type = "Apple App Store";
+            website.logo =
+              "https://www.vectorlogo.zone/logos/apple/apple-tile.svg";
           } else if (website.category === "12") {
-            website.type = "Android";
+            website.type = "Google Play Store";
             website.logo =
               "https://www.vectorlogo.zone/logos/google_play/google_play-tile.svg";
           } else if (website.category === "13") {
@@ -317,7 +321,7 @@ router.get("/:id", (req, res, next) => {
         });
       }
 
-      console.log(game);
+      // console.log(game);
       res.send(game);
     });
 });

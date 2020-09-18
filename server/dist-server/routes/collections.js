@@ -12,7 +12,7 @@ router.get("/max", function (req, res, next) {
   Collection.query().max("id").then(function (collectionId) {
     res.send(collectionId);
   })["catch"](function (err) {
-    console.error(err);
+    console.error(err.message);
   });
 });
 module.exports = router;

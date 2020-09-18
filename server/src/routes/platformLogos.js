@@ -1,17 +1,17 @@
-import express from 'express';
+import express from "express";
 
 const router = express.Router();
 
-const PlatformLogo = require('../../models/platformLogo');
+const PlatformLogo = require("../../models/platformLogo");
 
-router.get('/max', (req, res, next) => {
+router.get("/max", (req, res, next) => {
   PlatformLogo.query()
-    .max('id')
+    .max("id")
     .then((platformLogoId) => {
       res.send(platformLogoId);
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err.message);
     });
 });
 
