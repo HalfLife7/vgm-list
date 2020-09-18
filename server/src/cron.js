@@ -368,7 +368,8 @@ const addAlbums = new CronJob("25 15 * * *", async () => {
 });
 
 const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
-  console.log("starting updateAlbumDb");
+  let d = new Date();
+  console.log(d.toString() + " - starting updateAlbumDb");
 
   // get highest id from db
   const getNotUpdatedAlbumId = async () => {
@@ -405,13 +406,14 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
 
   const album = await getAlbum();
   // console.log(util.inspect(album, false, null, true));
-
+  console.log("Album Name: " + album?.name + "\t\t| ID: " + updateAlbumId);
   if (album?.products?.length !== 0 && album.products) {
     const updateAlbumGames = await Promise.all(
       album.products.map(async (product) => {
-        let gameName = product?.names?.en;
-        // console.log(gameName);
-        if (gameName !== undefined) {
+        for (const [key, value] of Object.entries(product.names)) {
+          console.log(`${key}: ${value}`);
+          let langauge = key;
+          let gameName = value;
           // get highest id from db
           const getGameId = async () => {
             // https://stackoverflow.com/questions/11305797/remove-zero-width-space-characters-from-a-javascript-string
@@ -433,10 +435,6 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
             }
           };
           let gameId = await getGameId();
-          console.log("Game Name: " + gameName + "\t\t| ID: " + gameId);
-          console.log(
-            "Album Name: " + album?.name + "\t\t| ID: " + updateAlbumId
-          );
 
           // if a corresponding gameId is found, insert it
           if (gameId !== undefined) {
@@ -445,6 +443,7 @@ const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
                 album_id: updateAlbumId,
                 game_id: gameId,
               });
+              console.log("Game Name: " + gameName + "\t\t| ID: " + gameId);
             } catch (err) {
               console.error(err.message);
             }
