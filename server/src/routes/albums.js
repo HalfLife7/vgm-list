@@ -84,10 +84,13 @@ router.get("/:id", (req, res, next) => {
         });
       }
 
-      if (album.release_date !== undefined) {
+      // some albums are missing their release date
+      if (album.release_date !== undefined && album.release_date) {
+        console.log(album.release_date);
         album.release_date = moment
           .utc(album.release_date)
           .format("YYYY-MM-DD");
+        console.log(album.release_date);
       }
 
       if (album.covers !== undefined) {

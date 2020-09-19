@@ -199,7 +199,10 @@
           class="w-full p-4 md:w-3/6 md:p-0 md:pl-4 lg:w-4/6"
         >
           <div class="text-4xl">{{ album.data.name }}</div>
-          <div class="text-xl">Release Date: {{ album.data.release_date }}</div>
+          <!-- some albums are missing release date info-->
+          <div v-if="album.data.release_date !== null" class="text-xl">
+            Release Date: {{ album.data.release_date }}
+          </div>
           <div
             class="text-base flex flex-wrap"
             v-if="album.data.arrangers.length"

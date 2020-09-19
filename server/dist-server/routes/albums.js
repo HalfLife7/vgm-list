@@ -66,10 +66,13 @@ router.get("/:id", function (req, res, next) {
           store.logo = "https://icongr.am/fontawesome/music.svg?size=148&color=0080c0";
         }
       });
-    }
+    } // some albums are missing their release date
 
-    if (album.release_date !== undefined) {
+
+    if (album.release_date !== undefined && album.release_date) {
+      console.log(album.release_date);
       album.release_date = _moment["default"].utc(album.release_date).format("YYYY-MM-DD");
+      console.log(album.release_date);
     }
 
     if (album.covers !== undefined) {
