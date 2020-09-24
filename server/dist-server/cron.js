@@ -991,7 +991,7 @@ var updateAlbumDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGener
 
                                 getGameId = /*#__PURE__*/function () {
                                   var _ref25 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee23() {
-                                    var cleanGameName, URI, encodedURI, response;
+                                    var cleanGameName, gameNameEncoded, encodedURI, response;
                                     return _regenerator["default"].wrap(function _callee23$(_context23) {
                                       while (1) {
                                         switch (_context23.prev = _context23.next) {
@@ -999,10 +999,11 @@ var updateAlbumDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGener
                                             // https://stackoverflow.com/questions/11305797/remove-zero-width-space-characters-from-a-javascript-string
                                             // some names from the database have characters that are invalid in urls such as the zero width space
                                             cleanGameName = gameName.replace(/[\u200B-\u200D\uFEFF]/g, "");
-                                            URI = "http://localhost:3000/games/search-by-exact-name/".concat(cleanGameName);
-                                            encodedURI = encodeURI(URI);
-                                            _context23.prev = 3;
-                                            _context23.next = 6;
+                                            gameNameEncoded = encodeURIComponent(cleanGameName);
+                                            encodedURI = "http://localhost:3000/games/search-by-exact-name/".concat(gameNameEncoded);
+                                            console.log(encodedURI);
+                                            _context23.prev = 4;
+                                            _context23.next = 7;
                                             return axios({
                                               method: "get",
                                               url: encodedURI
@@ -1010,21 +1011,21 @@ var updateAlbumDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGener
                                               return response.data.id;
                                             });
 
-                                          case 6:
+                                          case 7:
                                             response = _context23.sent;
                                             return _context23.abrupt("return", response);
 
-                                          case 10:
-                                            _context23.prev = 10;
-                                            _context23.t0 = _context23["catch"](3);
+                                          case 11:
+                                            _context23.prev = 11;
+                                            _context23.t0 = _context23["catch"](4);
                                             console.error(_context23.t0.message);
 
-                                          case 13:
+                                          case 14:
                                           case "end":
                                             return _context23.stop();
                                         }
                                       }
-                                    }, _callee23, null, [[3, 10]]);
+                                    }, _callee23, null, [[4, 11]]);
                                   }));
 
                                   return function getGameId() {

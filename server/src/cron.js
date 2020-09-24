@@ -419,9 +419,9 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
             // https://stackoverflow.com/questions/11305797/remove-zero-width-space-characters-from-a-javascript-string
             // some names from the database have characters that are invalid in urls such as the zero width space
             let cleanGameName = gameName.replace(/[\u200B-\u200D\uFEFF]/g, "");
-
-            let URI = `http://localhost:3000/games/search-by-exact-name/${cleanGameName}`;
-            let encodedURI = encodeURI(URI);
+            let gameNameEncoded = encodeURIComponent(cleanGameName);
+            let encodedURI = `http://localhost:3000/games/search-by-exact-name/${gameNameEncoded}`;
+            console.log(encodedURI);
             try {
               const response = await axios({
                 method: "get",
