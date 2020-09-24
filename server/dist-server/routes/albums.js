@@ -33,6 +33,8 @@ router.get("/not-updated", function (req, res, next) {
 //       res.send(albums);
 //     });
 // });
+//TODO: sort albums by release date (oldest to newset)
+//TODO: add album tag/code
 
 router.get("/:id", function (req, res, next) {
   var albumId = req.params.id; //console.log(albumId);

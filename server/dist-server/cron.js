@@ -859,7 +859,7 @@ var addAlbums = new CronJob("25 15 * * *", /*#__PURE__*/(0, _asyncToGenerator2["
     }
   }, _callee20);
 })));
-var updateAlbumDb = new CronJob("*/1 * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee33() {
+var updateAlbumDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee33() {
   var _album$products, _album$publisher, _album$publisher$name, _album$covers, _album$discs, _album$stores, _album$arrangers, _album$composers, _album$lyricists, _album$performers;
 
   var d, getNotUpdatedAlbumId, updateAlbumId, getAlbum, album, updateAlbumGames, updateAlbumCovers, _updateAlbumCovers, updateAlbumDiscAndTracks, updateAlbumStores, updateAlbumArrangers, updateAlbumComposers, updateAlbumLyricists, updateAlbumPerformers;

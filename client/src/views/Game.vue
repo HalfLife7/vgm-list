@@ -296,6 +296,7 @@
         </div>
       </div>
       <div class="flex flex-wrap container m-auto justify-center mt-4">
+        <!-- TODO: add more elegant way to hide large bodies of text -->
         <div
           class="text-base whitespace-pre-wrap w-full p-4 lg:w-1/2 lg:p-0 max-h-200 overflow-y-auto"
         >

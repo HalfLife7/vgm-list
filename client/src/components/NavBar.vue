@@ -73,6 +73,7 @@
 </template>
 
 <script>
+// TODO: set it so clicking on 'games' reloads new games
 export default {
   name: "AppNavBar",
   data: () => {

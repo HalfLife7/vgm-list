@@ -9,7 +9,7 @@ import GamesList from "@/components/GamesList.vue";
 export default {
   name: "Games",
   components: {
-    "games-list": GamesList
-  }
+    "games-list": GamesList,
+  },
 };
 </script>

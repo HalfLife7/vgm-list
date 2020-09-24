@@ -88,6 +88,8 @@ router.get("/all", (req, res, next) => {
     });
 });
 
+// TODO: add collections route
+
 router.get("/search-by-exact-name/:name", (req, res, next) => {
   const gameName = req.params.name.toLowerCase();
 

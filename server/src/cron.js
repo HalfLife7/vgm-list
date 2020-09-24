@@ -367,7 +367,7 @@ const addAlbums = new CronJob("25 15 * * *", async () => {
   );
 });
 
-const updateAlbumDb = new CronJob("*/1 * * * *", async () => {
+const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
   let d = new Date();
   console.log(d.toString() + " - starting updateAlbumDb");
 

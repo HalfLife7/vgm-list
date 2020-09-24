@@ -89,7 +89,8 @@ router.get("/all", function (req, res, next) {
 
     res.send(games);
   });
-});
+}); // TODO: add collections route
+
 router.get("/search-by-exact-name/:name", function (req, res, next) {
   var gameName = req.params.name.toLowerCase();
   Game.query().leftJoin("game_alternative_names", "games.id", "=", "game_alternative_names.game_id").select("games.*", "game_alternative_names.name AS alternative_name", "game_alternative_names.comment").where(function (builder) {

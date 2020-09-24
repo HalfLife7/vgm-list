@@ -11,6 +11,7 @@
 </template>
 
 <script>
+// TODO: add infinite scroll
 import GameCard from "@/components/GameCard.vue";
 import GameDataService from "../services/GameDataService";
 export default {
