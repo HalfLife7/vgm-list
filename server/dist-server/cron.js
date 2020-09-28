@@ -1677,6 +1677,6 @@ var updateAlbumDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGener
 // run this cron job to add all initial album names/ids to database
 // addAlbums.start();
 // run 15500~ cycles to get all albums for game OST
+// updateAlbumDb.start();
 
-updateAlbumDb.start();
 module.exports = router;

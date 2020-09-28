@@ -40,7 +40,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "http://localhost:3000/games/max",
+        url: process.env.BASE_URL + "/games/max",
       });
       return response.data[0].max;
     } catch (err) {
@@ -213,7 +213,7 @@ const updatePlatforms = new CronJob("*/30 * * * * *", async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "http://localhost:3000/platforms/max",
+        url: process.env.BASE_URL + "/platforms/max",
       });
       return response.data[0].max;
     } catch (err) {
@@ -294,7 +294,7 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "http://localhost:3000/collections/max",
+        url: process.env.BASE_URL + "/collections/max",
       });
       return response.data[0].max;
     } catch (err) {
@@ -376,7 +376,7 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "http://localhost:3000/albums/not-updated",
+        url: process.env.BASE_URL + "/albums/not-updated",
       });
       return response.data[0].min;
     } catch (err) {
@@ -420,7 +420,7 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
             // some names from the database have characters that are invalid in urls such as the zero width space
             let cleanGameName = gameName.replace(/[\u200B-\u200D\uFEFF]/g, "");
             let gameNameEncoded = encodeURIComponent(cleanGameName);
-            let encodedURI = `http://localhost:3000/games/search-by-exact-name/${gameNameEncoded}`;
+            let encodedURI = `${process.env.BASE_URL}/games/search-by-exact-name/${gameNameEncoded}`;
             console.log(encodedURI);
             try {
               const response = await axios({
@@ -701,6 +701,6 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
 // addAlbums.start();
 
 // run 15500~ cycles to get all albums for game OST
-updateAlbumDb.start();
+// updateAlbumDb.start();
 
 module.exports = router;

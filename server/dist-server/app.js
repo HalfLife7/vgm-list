@@ -40,7 +40,7 @@ app.use(_express["default"].urlencoded({
 app.use((0, _cookieParser["default"])());
 app.use(_express["default"]["static"](_path["default"].join(__dirname, "../public")));
 app.use((0, _cors["default"])({
-  origin: "http://localhost:8080"
+  origin: process.env.BASE_URL + ":" + process.env.CORS_PORT
 }));
 app.use("/", _index["default"]);
 app.use("/games", _games["default"]);

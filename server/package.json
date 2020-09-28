@@ -2,8 +2,11 @@
   "name": "vgm-list",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": "14.8"
+  },
   "scripts": {
-    "start": "node run prod",
+    "start": "npm run prod",
     "build": "npm-run-all clean transpile",
     "server": "node ./dist-server/bin/www",
     "dev": "SET 'NODE_ENV=development' & npm-run-all build server",
