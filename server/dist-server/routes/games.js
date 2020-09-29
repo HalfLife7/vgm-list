@@ -13,8 +13,6 @@ var _express = _interopRequireDefault(require("express"));
 
 var _moment = _interopRequireDefault(require("moment"));
 
-// import config from '../config'
-// import axios from 'axios';
 var router = _express["default"].Router();
 
 var _require = require("objection"),

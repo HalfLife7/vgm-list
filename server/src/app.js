@@ -3,6 +3,11 @@
 // install cors > fix vue axios request error (Reason: CORS header ‘Access-Control-Allow-Origin’ missing)
 // add quotations around 'NODE_ENV=development' to fix undefined error - https://stackoverflow.com/questions/11104028/process-env-node-env-is-undefined
 
+// .env workaround for heroku
+// https:stackoverflow.com/questions/59759085/heroku-failed-to-load-env
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";

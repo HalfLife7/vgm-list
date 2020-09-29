@@ -15,7 +15,6 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.2",
-    "dotenv": "^8.2.0",
     "eslint-plugin-vue": "^6.2.2",
     "swiper": "^5.4.5",
     "tailwindcss": "^1.8.6",

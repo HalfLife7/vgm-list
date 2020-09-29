@@ -12,8 +12,6 @@ var _express = _interopRequireDefault(require("express"));
 
 var _util = _interopRequireDefault(require("util"));
 
-var _config = _interopRequireDefault(require("./config"));
-
 var _fs = _interopRequireDefault(require("fs"));
 
 var _moment = _interopRequireDefault(require("moment"));
@@ -93,7 +91,7 @@ var updateGameDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGenera
                       _context.next = 3;
                       return axios({
                         method: "get",
-                        url: "http://localhost:3000/games/max"
+                        url: process.env.BASE_URL + "/games/max"
                       });
 
                     case 3:
@@ -130,7 +128,7 @@ var updateGameDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGenera
 
           console.log(_util["default"].inspect(maxGameId, false, null, true)); // remove for now, cannot get header to send api key
           // import igdb from 'igdb-api-node';
-          // const client = igdb(config.IGDB_KEY);
+          // const client = igdb(process.env.IGDB_KEY);
 
           getGames = /*#__PURE__*/function () {
             var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
@@ -146,7 +144,7 @@ var updateGameDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGenera
                         method: "POST",
                         headers: {
                           Accept: "application/json",
-                          "user-key": _config["default"].IGDB_KEY
+                          "user-key": process.env.IGDB_KEY
                         },
                         data: "fields aggregated_rating_count, aggregated_rating, alternative_names.*, category, collection.*, first_release_date, name, platforms.*, slug, summary, artworks.*, cover.*, videos.*, screenshots.*, websites.*;  where version_parent = null & id > ".concat(maxGameId, "; limit 500; sort id asc;")
                       });
@@ -492,7 +490,7 @@ var updatePlatforms = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGen
                       _context11.next = 3;
                       return axios({
                         method: "get",
-                        url: "http://localhost:3000/platforms/max"
+                        url: process.env.BASE_URL + "/platforms/max"
                       });
 
                     case 3:
@@ -542,7 +540,7 @@ var updatePlatforms = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGen
                         method: "POST",
                         headers: {
                           Accept: "application/json",
-                          "user-key": _config["default"].IGDB_KEY
+                          "user-key": process.env.IGDB_KEY
                         },
                         data: "fields *, platform_logo.*; where id > ".concat(maxPlatformId, "; limit 500; sort id asc;")
                       });
@@ -676,7 +674,7 @@ var updateCollections = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToG
                       _context15.next = 3;
                       return axios({
                         method: "get",
-                        url: "http://localhost:3000/collections/max"
+                        url: process.env.BASE_URL + "/collections/max"
                       });
 
                     case 3:
@@ -727,7 +725,7 @@ var updateCollections = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToG
                         method: "POST",
                         headers: {
                           Accept: "application/json",
-                          "user-key": _config["default"].IGDB_KEY
+                          "user-key": process.env.IGDB_KEY
                         },
                         data: "fields *; where id > ".concat(maxCollectionId, "; limit 500; sort id asc;")
                       });
@@ -882,7 +880,7 @@ var updateAlbumDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGener
                       _context21.next = 3;
                       return axios({
                         method: "get",
-                        url: "http://localhost:3000/albums/not-updated"
+                        url: process.env.BASE_URL + "/albums/not-updated"
                       });
 
                     case 3:
@@ -1000,7 +998,7 @@ var updateAlbumDb = new CronJob("*/30 * * * * *", /*#__PURE__*/(0, _asyncToGener
                                             // some names from the database have characters that are invalid in urls such as the zero width space
                                             cleanGameName = gameName.replace(/[\u200B-\u200D\uFEFF]/g, "");
                                             gameNameEncoded = encodeURIComponent(cleanGameName);
-                                            encodedURI = "http://localhost:3000/games/search-by-exact-name/".concat(gameNameEncoded);
+                                            encodedURI = "".concat(process.env.BASE_URL, "/games/search-by-exact-name/").concat(gameNameEncoded);
                                             console.log(encodedURI);
                                             _context23.prev = 4;
                                             _context23.next = 7;
