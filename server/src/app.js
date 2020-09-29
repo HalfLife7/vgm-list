@@ -15,7 +15,6 @@ import albumsRouter from "./routes/albums";
 import platformsRouter from "./routes/platforms";
 import platformLogosRouter from "./routes/platformLogos";
 import collectionsRouter from "./routes/collections";
-import cron from "./cron";
 
 // import history from 'connect-history-api-fallback';
 
@@ -43,6 +42,5 @@ app.use("/albums", albumsRouter);
 app.use("/platforms", platformsRouter);
 app.use("/platform-logos", platformLogosRouter);
 app.use("/collections", collectionsRouter);
-app.use(albumsRouter);
 
 module.exports = app;
