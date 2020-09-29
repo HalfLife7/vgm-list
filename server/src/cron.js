@@ -1,6 +1,5 @@
 import express from "express";
 import util from "util";
-import config from "./config";
 import fs from "fs";
 import moment from "moment";
 import Artist from "../models/artist";
@@ -55,7 +54,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
 
   // remove for now, cannot get header to send api key
   // import igdb from 'igdb-api-node';
-  // const client = igdb(config.IGDB_KEY);
+  // const client = igdb(process.env.IGDB_KEY);
 
   const getGames = async () => {
     try {
@@ -65,7 +64,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "user-key": config.IGDB_KEY,
+          "user-key": process.env.IGDB_KEY,
         },
         data: `fields aggregated_rating_count, aggregated_rating, alternative_names.*, category, collection.*, first_release_date, name, platforms.*, slug, summary, artworks.*, cover.*, videos.*, screenshots.*, websites.*;  where version_parent = null & id > ${maxGameId}; limit 500; sort id asc;`,
       });
@@ -234,7 +233,7 @@ const updatePlatforms = new CronJob("*/30 * * * * *", async () => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "user-key": config.IGDB_KEY,
+          "user-key": process.env.IGDB_KEY,
         },
         data: `fields *, platform_logo.*; where id > ${maxPlatformId}; limit 500; sort id asc;`,
       });
@@ -315,7 +314,7 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "user-key": config.IGDB_KEY,
+          "user-key": process.env.IGDB_KEY,
         },
         data: `fields *; where id > ${maxCollectionId}; limit 500; sort id asc;`,
       });
