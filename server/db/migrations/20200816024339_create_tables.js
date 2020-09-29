@@ -333,9 +333,11 @@ exports.up = async (knex) => {
     // set character_encoding to utf8 since Japanese characters stored in DB lead to the following error:
     // character with byte sequence 0xe3 0x83 0x87 in encoding "UTF8" has no equivalent in encoding "WIN1252"
     // https://stackoverflow.com/questions/380924/how-can-i-change-database-encoding-for-a-postgresql-database-using-sql-or-phppga
-    await knex.schema.raw(
-      "UPDATE pg_database set encoding = pg_char_to_encoding('UTF8') where datname = 'vgm_list'"
-    );
+    // this is needed when creating the pg database on windows since it defaults to win1252
+    // NOT NEEDED on heroku since pg databases are set to use UTF8 encoding by default
+    // await knex.schema.raw(
+    //   "UPDATE pg_database set encoding = pg_char_to_encoding('UTF8') where datname = 'vgm_list'"
+    // );
   } catch (err) {
     console.error(err.name);
     console.error(err.message);
