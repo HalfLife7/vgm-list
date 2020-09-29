@@ -1,6 +1,5 @@
 import express from "express";
 import util from "util";
-import config from "./config";
 import fs from "fs";
 import moment from "moment";
 import Artist from "../models/artist";
@@ -40,7 +39,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "http://localhost:3000/games/max",
+        url: process.env.BASE_URL + "/games/max",
       });
       return response.data[0].max;
     } catch (err) {
@@ -55,7 +54,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
 
   // remove for now, cannot get header to send api key
   // import igdb from 'igdb-api-node';
-  // const client = igdb(config.IGDB_KEY);
+  // const client = igdb(process.env.IGDB_KEY);
 
   const getGames = async () => {
     try {
@@ -65,7 +64,7 @@ const updateGameDb = new CronJob("*/30 * * * * *", async () => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "user-key": config.IGDB_KEY,
+          "user-key": process.env.IGDB_KEY,
         },
         data: `fields aggregated_rating_count, aggregated_rating, alternative_names.*, category, collection.*, first_release_date, name, platforms.*, slug, summary, artworks.*, cover.*, videos.*, screenshots.*, websites.*;  where version_parent = null & id > ${maxGameId}; limit 500; sort id asc;`,
       });
@@ -213,7 +212,7 @@ const updatePlatforms = new CronJob("*/30 * * * * *", async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "http://localhost:3000/platforms/max",
+        url: process.env.BASE_URL + "/platforms/max",
       });
       return response.data[0].max;
     } catch (err) {
@@ -234,7 +233,7 @@ const updatePlatforms = new CronJob("*/30 * * * * *", async () => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "user-key": config.IGDB_KEY,
+          "user-key": process.env.IGDB_KEY,
         },
         data: `fields *, platform_logo.*; where id > ${maxPlatformId}; limit 500; sort id asc;`,
       });
@@ -294,7 +293,7 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "http://localhost:3000/collections/max",
+        url: process.env.BASE_URL + "/collections/max",
       });
       return response.data[0].max;
     } catch (err) {
@@ -315,7 +314,7 @@ const updateCollections = new CronJob("*/30 * * * * *", async () => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "user-key": config.IGDB_KEY,
+          "user-key": process.env.IGDB_KEY,
         },
         data: `fields *; where id > ${maxCollectionId}; limit 500; sort id asc;`,
       });
@@ -376,7 +375,7 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "http://localhost:3000/albums/not-updated",
+        url: process.env.BASE_URL + "/albums/not-updated",
       });
       return response.data[0].min;
     } catch (err) {
@@ -420,7 +419,7 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
             // some names from the database have characters that are invalid in urls such as the zero width space
             let cleanGameName = gameName.replace(/[\u200B-\u200D\uFEFF]/g, "");
             let gameNameEncoded = encodeURIComponent(cleanGameName);
-            let encodedURI = `http://localhost:3000/games/search-by-exact-name/${gameNameEncoded}`;
+            let encodedURI = `${process.env.BASE_URL}/games/search-by-exact-name/${gameNameEncoded}`;
             console.log(encodedURI);
             try {
               const response = await axios({
@@ -701,6 +700,6 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
 // addAlbums.start();
 
 // run 15500~ cycles to get all albums for game OST
-updateAlbumDb.start();
+// updateAlbumDb.start();
 
 module.exports = router;

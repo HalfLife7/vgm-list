@@ -204,8 +204,8 @@
             Release Date: {{ album.data.release_date }}
           </div>
           <div
-            class="text-base flex flex-wrap"
             v-if="album.data.arrangers.length"
+            class="text-base flex flex-wrap"
           >
             Arrangers:
             <div
@@ -221,8 +221,8 @@
             </div>
           </div>
           <div
-            class="text-base flex flex-wrap"
             v-if="album.data.composers.length"
+            class="text-base flex flex-wrap"
           >
             Composers:
             <div
@@ -238,8 +238,8 @@
             </div>
           </div>
           <div
-            class="text-base flex flex-wrap"
             v-if="album.data.lyricists.length"
+            class="text-base flex flex-wrap"
           >
             Lyricists:
             <div
@@ -255,8 +255,8 @@
             </div>
           </div>
           <div
-            class="text-base flex flex-wrap"
             v-if="album.data.performers.length"
+            class="text-base flex flex-wrap"
           >
             Performers:
             <div
