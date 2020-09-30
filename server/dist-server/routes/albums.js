@@ -72,9 +72,7 @@ router.get("/:id", function (req, res, next) {
 
 
     if (album.release_date !== undefined && album.release_date) {
-      console.log(album.release_date);
       album.release_date = _moment["default"].utc(album.release_date).format("YYYY-MM-DD");
-      console.log(album.release_date);
     }
 
     if (album.covers !== undefined) {
