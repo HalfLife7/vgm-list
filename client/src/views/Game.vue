@@ -336,8 +336,6 @@
 <script>
 import GameDataService from "../services/GameDataService";
 import AlbumDataService from "../services/AlbumDataService";
-import { VueGoodTable } from "vue-good-table";
-import "vue-good-table/dist/vue-good-table.css";
 import { Swiper, SwiperSlide, directive } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 export default {
@@ -345,7 +343,6 @@ export default {
   components: {
     swiper: Swiper,
     "swiper-slide": SwiperSlide,
-    "vue-good-table": VueGoodTable,
   },
   data: () => {
     return {
