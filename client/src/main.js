@@ -3,8 +3,6 @@ import App from "./App.vue";
 import router from "./router";
 import "./assets/css/tailwind.css";
 import VuePlyr from "vue-plyr";
-import VueGoodTablePlugin from "vue-good-table";
-import "vue-good-table/dist/vue-good-table.css";
 
 new Vue({
   router,
@@ -17,4 +15,3 @@ Vue.use(VuePlyr, {
   },
   emit: ["ended"],
 });
-Vue.use(VueGoodTablePlugin);
