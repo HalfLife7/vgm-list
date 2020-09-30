@@ -437,7 +437,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 @import "./../../node_modules/swiper/css/swiper.css";
-@import "./../../node_modules/vue-good-table/dist/vue-good-table.css";
-</style>
+@import "./../../node_modules/vue-good-table/dist/vue-good-table.css";</style
+>>
