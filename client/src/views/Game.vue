@@ -84,7 +84,7 @@
         <swiper
           v-if="gameDataIsLoaded"
           class="swiper w-full"
-          :options="swiperOption"
+          :options="swiperOptions"
         >
           <swiper-slide
             v-for="(screenshot, index) in game.screenshots"
@@ -92,7 +92,7 @@
             :screenshot="screenshot"
           >
             <img
-              class="m-auto swiper-lazy"
+              class="m-auto"
               :src="game.screenshots[index].url"
               alt="Game Screenshot"
             />
@@ -109,7 +109,7 @@
         <swiper
           v-if="gameDataIsLoaded"
           class="swiper w-full"
-          :options="swiperOption"
+          :options="swiperOptions"
         >
           <swiper-slide
             v-for="(artwork, index) in game.artworks"
@@ -117,7 +117,7 @@
             :artwork="artwork"
           >
             <img
-              class="m-auto swiper-lazy"
+              class="m-auto"
               :src="game.artworks[index].url"
               alt="Game Artwork"
             />
@@ -134,7 +134,7 @@
         <swiper
           v-if="gameDataIsLoaded"
           class="swiper w-full"
-          :options="swiperOption"
+          :options="swiperOptions"
         >
           <swiper-slide
             v-for="(video, index) in game.videos"
@@ -173,7 +173,7 @@
           <swiper
             v-if="album.data.covers.length"
             class="swiper w-full h-120"
-            :options="swiperOption"
+            :options="swiperOptions"
           >
             <swiper-slide
               v-for="(cover, index) in album.data.covers"
@@ -337,13 +337,12 @@
 import GameDataService from "../services/GameDataService";
 import AlbumDataService from "../services/AlbumDataService";
 import { Swiper, SwiperSlide, directive } from "vue-awesome-swiper";
-import { VueGoodTable } from "vue-good-table";
+import "swiper/css/swiper.css";
 export default {
   name: "Game",
   components: {
     swiper: Swiper,
     "swiper-slide": SwiperSlide,
-    "vue-good-table": VueGoodTable,
   },
   data: () => {
     return {
@@ -351,7 +350,7 @@ export default {
       albums: [],
       gameDataIsLoaded: false,
       albumDataIsLoaded: false,
-      swiperOption: {
+      swiperOptions: {
         slidesPerView: 1,
         spaceBetween: 30,
         pagination: {
@@ -437,7 +436,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-@import "./../../node_modules/swiper/css/swiper.css";
-@import "./../../node_modules/vue-good-table/dist/vue-good-table.css";</style
->>

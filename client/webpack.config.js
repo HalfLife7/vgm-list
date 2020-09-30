@@ -1,3 +1,5 @@
+// https://ssr.vuejs.org/guide/css.html#enabling-css-extraction
+// https://vue-loader.vuejs.org/guide/#manual-setup
 // webpack.config.js
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
