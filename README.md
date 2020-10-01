@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="" rel="noopener">
+  <a href="https://vgm-list.netlify.app/" rel="noopener">
  <img width=200px height=200px src="https://github.com/HalfLife7/vgm-list/blob/master/vgm-list-logo.png?raw=true" alt="Project logo"></a>
 </p>
 
@@ -111,18 +111,18 @@ You will need 2 terminals to run the project (one for the backend and one for th
 - [Tailwind CSS](https://tailwindcss.com/) - CSS Framework
 - [vue-awesone-swiper](https://github.surmon.me/vue-awesome-swiper/) - Vue Media Carousel based on [Swiper](https://swiperjs.com/)
 - [vue-good-table](https://xaksis.github.io/vue-good-table/) - Data Tables
-- [vue-plyr](https://github.com/sampotts/plyr) - Vue Media Player Based on [Plyr](https://plyr.io/")
+- [vue-plyr](https://github.com/sampotts/plyr) - Vue Media Player Based on [Plyr](https://plyr.io/)
 
 ### Utilities
 
 - [axios](https://www.npmjs.com/package/axios) - HTTP Client
 - [cron](https://www.npmjs.com/package/cron) - Scheduler
 - [Moment](https://momentjs.com/) - Datetime Library
-- [IGDB](https://www.igdb.com/) - Game API to populate db
+- [IGDB API](https://api-docs.igdb.com/#about) - Game API to populate db
 - [VGMdb API](http://vgmdb.info/) - VGM API to populate db (pulls data from VGMdb.net)
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
 - Big thanks to anyone whose code or tutorials were used (acknowledged in code comments)
-- IGDB and [VGMdb](https://vgmdb.net/) for having up to date information
+- [IGDB](https://www.igdb.com/) and [VGMdb](https://vgmdb.net/) for having up to date information
 - VGMdb.info for creating an API for VGMdb.net
