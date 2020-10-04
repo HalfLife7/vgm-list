@@ -17,9 +17,12 @@ import cors from "cors";
 import indexRouter from "./routes/index";
 import gamesRouter from "./routes/games";
 import albumsRouter from "./routes/albums";
+import albumTracksRouter from "./routes/albumTracks";
 import platformsRouter from "./routes/platforms";
 import platformLogosRouter from "./routes/platformLogos";
 import collectionsRouter from "./routes/collections";
+import gameScreenshotsRouter from "./routes/gameScreenshots";
+import cron from "./cron";
 
 // import history from 'connect-history-api-fallback';
 
@@ -44,8 +47,10 @@ app.use(
 app.use("/", indexRouter);
 app.use("/games", gamesRouter);
 app.use("/albums", albumsRouter);
+app.use("/album-tracks", albumTracksRouter);
 app.use("/platforms", platformsRouter);
 app.use("/platform-logos", platformLogosRouter);
 app.use("/collections", collectionsRouter);
+app.use("/game-screenshots", gameScreenshotsRouter);
 
 module.exports = app;

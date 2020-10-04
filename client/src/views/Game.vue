@@ -165,24 +165,24 @@
         <div class="w-full md:w-3/6 lg:w-2/6">
           <!--
           <img
-            v-if="album.data.covers.length"
-            :src="album.data.covers[0].full"
-            :alt="album.data.name + ' Album Cover'"
+            v-if="album.covers.length"
+            :src="album.covers[0].full"
+            :alt="album.name + ' Album Cover'"
           />
           -->
           <swiper
-            v-if="album.data.covers.length"
+            v-if="album.covers.length"
             class="swiper w-full h-120"
             :options="swiperOptions"
           >
             <swiper-slide
-              v-for="(cover, index) in album.data.covers"
+              v-for="(cover, index) in album.covers"
               :key="index"
               :cover="cover"
             >
               <img
                 class="m-auto w-full h-auto"
-                :src="album.data.covers[index].full"
+                :src="album.covers[index].full"
                 alt="Album cover"
               />
             </swiper-slide>
@@ -198,75 +198,63 @@
           v-if="albumDataIsLoaded"
           class="w-full p-4 md:w-3/6 md:p-0 md:pl-4 lg:w-4/6"
         >
-          <div class="text-4xl">{{ album.data.name }}</div>
+          <div class="text-4xl">{{ album.name }}</div>
           <!-- some albums are missing release date info-->
-          <div v-if="album.data.release_date !== null" class="text-xl">
-            Release Date: {{ album.data.release_date }}
+          <div v-if="album.release_date !== null" class="text-xl">
+            Release Date: {{ album.release_date }}
           </div>
-          <div
-            v-if="album.data.arrangers.length"
-            class="text-base flex flex-wrap"
-          >
+          <div v-if="album.arrangers.length" class="text-base flex flex-wrap">
             Arrangers:
             <div
-              v-for="(arranger, arrangerIndex) in album.data.arrangers"
+              v-for="(arranger, arrangerIndex) in album.arrangers"
               :key="arrangerIndex"
               :arranger="arranger"
               class="text-base flex pl-2"
             >
               {{ arranger.artist.name
-              }}<span v-if="arrangerIndex != album.data.arrangers.length - 1"
+              }}<span v-if="arrangerIndex != album.arrangers.length - 1"
                 >,</span
               >
             </div>
           </div>
-          <div
-            v-if="album.data.composers.length"
-            class="text-base flex flex-wrap"
-          >
+          <div v-if="album.composers.length" class="text-base flex flex-wrap">
             Composers:
             <div
-              v-for="(composer, composerIndex) in album.data.composers"
+              v-for="(composer, composerIndex) in album.composers"
               :key="composerIndex"
               :composer="composer"
               class="text-base flex ml-2"
             >
               {{ composer.artist.name
-              }}<span v-if="composerIndex != album.data.composers.length - 1"
+              }}<span v-if="composerIndex != album.composers.length - 1"
                 >,</span
               >
             </div>
           </div>
-          <div
-            v-if="album.data.lyricists.length"
-            class="text-base flex flex-wrap"
-          >
+          <div v-if="album.lyricists.length" class="text-base flex flex-wrap">
             Lyricists:
             <div
-              v-for="(lyricist, lyricistIndex) in album.data.lyricists"
+              v-for="(lyricist, lyricistIndex) in album.lyricists"
               :key="lyricistIndex"
               :lyricist="lyricist"
               class="text-base flex ml-2"
             >
               {{ lyricist.artist.name
-              }}<span v-if="lyricistIndex != album.data.lyricists.length - 1"
+              }}<span v-if="lyricistIndex != album.lyricists.length - 1"
                 >,</span
               >
             </div>
           </div>
-          <div
-            v-if="album.data.performers.length"
-            class="text-base flex flex-wrap"
-          >
+          <div v-if="album.performers.length" class="text-base flex flex-wrap">
             Performers:
             <div
-              v-for="(performer, performerIndex) in album.data.performers"
+              v-for="(performer, performerIndex) in album.performers"
               :key="performerIndex"
               :performer="performer"
               class="text-base flex ml-2"
             >
               {{ performer.artist.name
-              }}<span v-if="performerIndex != album.data.performers.length - 1"
+              }}<span v-if="performerIndex != album.performers.length - 1"
                 >,</span
               >
             </div>
@@ -274,7 +262,7 @@
 
           <div class="flex flex-wrap">
             <div
-              v-for="(store, storeIndex) in album.data.stores"
+              v-for="(store, storeIndex) in album.stores"
               :key="storeIndex"
               :store="store"
             >
@@ -300,12 +288,12 @@
         <div
           class="text-base whitespace-pre-wrap w-full p-4 lg:w-1/2 lg:p-0 max-h-200 overflow-y-auto"
         >
-          {{ album.data.notes }}
+          {{ album.notes }}
         </div>
         <vue-good-table
-          class="w-full lg:w-1/2 mt-4"
+          class="w-full lg:w-1/2 mt-4 p-1"
           :columns="columns"
-          :rows="album.data.tracks"
+          :rows="album.tracks"
           :search-options="{
             enabled: true,
             trigger: 'enter',
@@ -368,17 +356,17 @@ export default {
       image: "screenshot",
       columns: [
         {
-          label: "Disc #",
+          label: "Disc",
           field: "disc_id",
           type: "number",
         },
         {
-          label: "Track #",
+          label: "Track",
           field: "id",
           type: "number",
         },
         {
-          label: "Track Name",
+          label: "Name",
           field: "name",
         },
         {
@@ -402,7 +390,6 @@ export default {
     async loadGameData() {
       await GameDataService.get(this.$route.params.id)
         .then((response) => {
-          console.log(response.data);
           this.game = response.data;
           this.gameDataIsLoaded = true;
           this.totalScreenshots = this.game.screenshots.length;
@@ -424,8 +411,7 @@ export default {
       this.game.albums.map(async (album) => {
         await AlbumDataService.get(album.album_id)
           .then((response) => {
-            console.log(response.data);
-            this.albums.push(response);
+            this.albums.push(response.data);
             this.albumDataIsLoaded = true;
           })
           .catch((err) => {

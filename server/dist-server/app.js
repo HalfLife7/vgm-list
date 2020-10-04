@@ -18,11 +18,17 @@ var _games = _interopRequireDefault(require("./routes/games"));
 
 var _albums = _interopRequireDefault(require("./routes/albums"));
 
+var _albumTracks = _interopRequireDefault(require("./routes/albumTracks"));
+
 var _platforms = _interopRequireDefault(require("./routes/platforms"));
 
 var _platformLogos = _interopRequireDefault(require("./routes/platformLogos"));
 
 var _collections = _interopRequireDefault(require("./routes/collections"));
+
+var _gameScreenshots = _interopRequireDefault(require("./routes/gameScreenshots"));
+
+var _cron = _interopRequireDefault(require("./cron"));
 
 // initial setup - https://www.freecodecamp.org/news/how-to-enable-es6-and-beyond-syntax-with-node-and-express-68d3e11fe1ab/
 // include @babel/plugin-transform-runtime > fix ReferenceError regeneratorRuntime is not defined > https://github.com/babel/babel/issues/9849
@@ -49,7 +55,9 @@ app.use((0, _cors["default"])({
 app.use("/", _index["default"]);
 app.use("/games", _games["default"]);
 app.use("/albums", _albums["default"]);
+app.use("/album-tracks", _albumTracks["default"]);
 app.use("/platforms", _platforms["default"]);
 app.use("/platform-logos", _platformLogos["default"]);
 app.use("/collections", _collections["default"]);
+app.use("/game-screenshots", _gameScreenshots["default"]);
 module.exports = app;

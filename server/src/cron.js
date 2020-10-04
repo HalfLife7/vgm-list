@@ -366,6 +366,24 @@ const addAlbums = new CronJob("25 15 * * *", async () => {
   );
 });
 
+const refreshAlbums = new CronJob("*/1 * * * *", async () => {
+  console.log("starting refreshAlbums");
+  let rawData = fs.readFileSync("./albums.json");
+  let albumList = JSON.parse(rawData);
+  await Promise.all(
+    albumList.albums.map(async (album) => {
+      try {
+        await Album.query().deleteById(album.album_id);
+        await Album.query().insert({
+          id: album.album_id,
+        });
+      } catch (err) {
+        console.error(err.message);
+      }
+    })
+  );
+});
+
 const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
   let d = new Date();
   console.log(d.toString() + " - starting updateAlbumDb");
@@ -457,6 +475,7 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
     category: album?.category,
     classification: album?.classification,
     media_format: album?.media_format,
+    name: album?.name,
     notes: album?.notes,
     publisher: album?.publisher?.names?.en,
     release_date: album?.release_date,
@@ -508,7 +527,7 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
           } else if (track?.names?.["English (Literal)"] !== undefined) {
             trackName = track?.names?.["English (Literal)"];
           } else {
-            trackName = track?.names?.[0];
+            trackName = Object.values(track?.names)[0];
           }
           await AlbumTrack.query().insert({
             id: trackIndex,
@@ -698,6 +717,9 @@ const updateAlbumDb = new CronJob("*/30 * * * * *", async () => {
 
 // run this cron job to add all initial album names/ids to database
 // addAlbums.start();
+
+// run this cron job to delete albums and re-add them (to reparse them)
+// refreshAlbums.start();
 
 // run 15500~ cycles to get all albums for game OST
 // updateAlbumDb.start();

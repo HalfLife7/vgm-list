@@ -3,6 +3,11 @@
 // webpack.config.js
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+var webpack = require("webpack");
+
+function isProduction() {
+  return process.env.NODE_ENV == "production";
+}
 
 module.exports = {
   module: {

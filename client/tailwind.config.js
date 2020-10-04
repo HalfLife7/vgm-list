@@ -157,6 +157,7 @@ module.exports = {
       "80": "20rem",
       "120": "30rem",
       "128": "32rem",
+      "180": "45rem",
     },
     backgroundColor: (theme) => theme("colors"),
     backgroundOpacity: (theme) => theme("opacity"),

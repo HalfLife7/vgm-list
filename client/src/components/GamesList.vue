@@ -31,18 +31,12 @@ export default {
   },
   watch: {
     query() {
-      console.log("starting watch:query");
-      console.log(this.query);
-      console.log(this.$route.query);
-      console.log(this.$route.query.name);
       if (this.query === undefined) {
         return;
       }
       GameDataService.search(this.query)
         .then((response) => {
           this.games = response.data;
-          console.log("watcher");
-          console.log(response.data);
         })
         .catch((err) => {
           console.error(err.message);
@@ -50,7 +44,6 @@ export default {
     },
   },
   mounted() {
-    console.log("This component is mounted!");
     // when page first loads, determine what to show
     if (
       Object.keys(this.$route.query).length === 0 &&
@@ -68,7 +61,6 @@ export default {
       GameDataService.getAll()
         .then((response) => {
           this.games = response.data;
-          console.log(response.data);
         })
         .catch((err) => {
           console.error(err.message);
@@ -78,8 +70,6 @@ export default {
       GameDataService.search(this.query)
         .then((response) => {
           this.games = response.data;
-          console.log("searchSingle");
-          console.log(response.data);
         })
         .catch((err) => {
           console.error(err.message);

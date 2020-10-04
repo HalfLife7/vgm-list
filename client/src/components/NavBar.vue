@@ -1,21 +1,21 @@
 <template>
-  <div id="nav" class="h-12 mb-20">
+  <div id="nav" class="h-12 mb-20 md:mb-20">
     <div class="antialiased bg-gray-100">
       <div class="w-full text-gray-700 bg-white">
         <div
-          class="flex flex-col max-w-screen-xl px-4 mx-auto md:items-center md:justify-between md:flex-row md:px-6 lg:px-8"
+          class="flex flex-col max-w-screen-xl mx-auto md:items-center md:justify-between md:flex-row md:px-6 lg:px-8"
         >
-          <div class="flex flex-row items-center justify-between p-4">
+          <div class="flex items-center p-4">
             <router-link
               to="/games"
-              class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg focus:outline-none focus:shadow-outline"
-              >VGM-List</router-link
+              class="mr-4 text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg focus:outline-none focus:shadow-outline"
+              >VGML</router-link
             >
-            <div class="ml-5 relative mx-auto text-gray-600">
+            <div class="ml-0 relative mx-auto text-gray-600">
               <input
                 id="search"
                 v-model="search"
-                class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+                class="border-2 border-gray-300 bg-white h-10 pl-5 pr-10 rounded-lg text-sm focus:outline-none"
                 type="search"
                 placeholder="search"
                 name="search"
@@ -46,6 +46,45 @@
                 </svg>
               </button>
             </div>
+            <div class="relative">
+              <!-- Mobile menu button -->
+              <div class="flex md:hidden">
+                <button
+                  type="button"
+                  class="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600"
+                  aria-label="toggle menu"
+                  @click="isOpen = !isOpen"
+                >
+                  <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
+                    <path
+                      fill-rule="evenodd"
+                      d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
+                    ></path>
+                  </svg>
+                </button>
+                <button
+                  v-if="isOpen"
+                  tabindex="-1"
+                  class="fixed inset-0  z-20 h-full w-full bg-black opacity-25 cursor cursor-default"
+                  @click="isOpen = false"
+                ></button>
+              </div>
+              <div
+                v-if="isOpen"
+                class="absolute right-0 top-auto py-2 bg-gray-100 rounded-lg shadow-md z-30 md:hidden"
+              >
+                <router-link
+                  to="/"
+                  class="block w-32 px-4 py-2 text-gray-800 hover:bg-indigo-300 hover:text-white"
+                  >Home</router-link
+                >
+                <router-link
+                  to="/games"
+                  class="block w-32 px-4 py-2 text-gray-800 hover:bg-indigo-300 hover:text-white"
+                  >Games</router-link
+                >
+              </div>
+            </div>
           </div>
           <nav
             class="flex-col flex-grow hidden pb-4 md:pb-0 md:flex md:justify-end md:flex-row"
@@ -55,11 +94,11 @@
               class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
               >Home</router-link
             >
-            <router-link
+            <!-- <router-link
               to="/about"
               class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
               >About</router-link
-            >
+            > -->
             <router-link
               to="/games"
               class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
@@ -79,7 +118,21 @@ export default {
   data: () => {
     return {
       search: "",
+      isOpen: false,
     };
+  },
+  created() {
+    const handleEscape = (e) => {
+      if (e.key === "Esc" || e.key === "Escape") {
+        this.isOpen = false;
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    this.$once("hook:beforeDestroy", () => {
+      document.removeEventListener("keydown", handleEscape);
+    });
   },
   methods: {
     searchQuery() {
