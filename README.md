@@ -115,6 +115,8 @@ You will need 2 terminals to run the project (one for the backend and one for th
 
 ### Utilities
 
+- [webpack](https://webpack.js.org/) - JavaScript Build Tool
+- [Babel](https://babeljs.io/) - JavaScript Transpiler
 - [axios](https://www.npmjs.com/package/axios) - HTTP Client
 - [cron](https://www.npmjs.com/package/cron) - Scheduler
 - [Moment](https://momentjs.com/) - Datetime Library
