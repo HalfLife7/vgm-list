@@ -285,11 +285,7 @@
       </div>
       <div class="flex flex-wrap container m-auto justify-center mt-4">
         <!-- TODO: add more elegant way to hide large bodies of text -->
-        <div
-          class="text-base whitespace-pre-wrap w-full p-4 lg:w-1/2 lg:p-0 max-h-200 overflow-y-auto"
-        >
-          {{ album.notes }}
-        </div>
+        <expandable-text :notes="album.notes"></expandable-text>
         <vue-good-table
           class="w-full lg:w-1/2 mt-4 p-1"
           :columns="columns"
@@ -326,11 +322,13 @@ import GameDataService from "../services/GameDataService";
 import AlbumDataService from "../services/AlbumDataService";
 import { Swiper, SwiperSlide, directive } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
+import ExpandableTextVue from "../components/ExpandableText.vue";
 export default {
   name: "Game",
   components: {
     swiper: Swiper,
     "swiper-slide": SwiperSlide,
+    "expandable-text": ExpandableTextVue,
   },
   data: () => {
     return {
